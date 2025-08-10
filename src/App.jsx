@@ -8,8 +8,11 @@ import OnlineReviewPage from './pages/OnlineReviewPage.jsx';
 import { Routes, Route, Router } from 'react-router-dom';
 
 function App() {
+  // const location = useLocation();
+  // const hideNavbarRoutes = ["/login", "/signup"];
   return (
     <>
+      {/* {!hideNavbarRoutes.includes(location.pathname) && <Navbar />} */}
       <Navbar/>
       <Routes>
         <Route path="/" element={<MainPage />} />

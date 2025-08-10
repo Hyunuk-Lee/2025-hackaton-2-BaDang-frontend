@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 const Logo=styled.div`
     color:  #FF8040;
@@ -19,9 +20,10 @@ const NavbarContainer=styled.div`
     display: flex;
     justify-content: space-between ;
     align-items: center;
-    padding: 24px 120px;
+    padding: 24px 5%;
     background: #FFF;
     box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.05);
+    gap: 16px;
 `
 const Menu =styled.ul`
     width: 602px;
@@ -30,20 +32,13 @@ const Menu =styled.ul`
     justify-content: space-between;
     align-items: center;
     padding-inline-start: 0; 
+    gap: 16px;
 `;
 const MenuItem =styled.li`
-    height: 23px;
-    padding: 9px 13px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color:#17171B;
-    font-family: NanumSquareOTF;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    white-space: nowrap;
+    list-style: none;
 `;
 const LogOut =styled.div`
     color: #9D9D9D;
@@ -56,38 +51,57 @@ const LogOut =styled.div`
     white-space: nowrap;
     cursor: pointer;
 `;
-const StyledLink = styled(Link)`
+const LogoLink=styled(Link)`
   color: inherit;        
-  text-decoration: none;   /* 밑줄 없애기 */
+  text-decoration: none;   
   display: flex;         
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
+`;
+const StyledNavLink = styled(NavLink)`
+    color:#17171B;
+    font-family: 'NanumSquareNeo',  sans-serif;
+    font-size: 20px;
+    font-style: bold;
+    line-height: normal;
+    white-space: nowrap;
+    max-height: 23px;
 
+    text-decoration: none;  
+    display: flex;         
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-radius: 60px;
+    padding: 9px 13px;
+
+    &.active,
+    &:hover {
+        background-color: #0046FF;
+        color: #FAF9F6;
+    }
 `;
 function Navbar() {
-
-
-
   return (
     <NavbarContainer>
         <Logo>
-                <StyledLink to="/">badang</StyledLink>
+            <LogoLink to="/">badang</LogoLink>
         </Logo>
         <Menu>
 
             <MenuItem>
-                <StyledLink to="/online-review">온라인 리뷰 분석</StyledLink>
+                <StyledNavLink to="/online-review">온라인 리뷰 분석</StyledNavLink>
             </MenuItem>
             <MenuItem>
-                <StyledLink to="/custom-keyword-news">맞춤형 키워드 뉴스</StyledLink>
+                <StyledNavLink to="/custom-keyword-news">맞춤형 키워드 뉴스</StyledNavLink>
             </MenuItem>
             <MenuItem>
-                <StyledLink to="/collaboration-management">협업 관리</StyledLink>
+                <StyledNavLink to="/collaboration-management">협업 관리</StyledNavLink>
             </MenuItem>
             <MenuItem>
-                <StyledLink to="/profile-edit">정보 수정</StyledLink>
+                <StyledNavLink to="/profile-edit">정보 수정</StyledNavLink>
             </MenuItem>
         </Menu>
         <LogOut>로그아웃</LogOut>
