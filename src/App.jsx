@@ -11,7 +11,7 @@ function App() {
   // const location = useLocation();
   // const hideNavbarRoutes = ["/login", "/signup"];
   return (
-    <>
+    <div>
       {/* {!hideNavbarRoutes.includes(location.pathname) && <Navbar />} */}
       <Navbar/>
       <Routes>
@@ -22,7 +22,7 @@ function App() {
         <Route path="/profile-edit" element={<ProfileEditPage />} /> */}
       </Routes>
 
-    </>
+    </div>
   );
 }
 

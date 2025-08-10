@@ -5,17 +5,19 @@ import {Link} from 'react-router-dom';
 
 const Logo=styled.div`
     color:  #FF8040;
-    font-family: Paperlogy;
+    font-family: 'Inter', 'Arial', sans-serif;
     font-size: 48px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
 `
 const NavbarContainer=styled.div`
+    z-index: 999;
     position: fixed;
     top: 0;
     right: 0;
     left: 0;
+    box-sizing: border-box;
     height: 105px;
     display: flex;
     justify-content: space-between ;
@@ -67,30 +69,34 @@ const StyledNavLink = styled(NavLink)`
     font-style: bold;
     line-height: normal;
     white-space: nowrap;
-    max-height: 23px;
+    height: 41px;
+    min-width: fit-content;
 
     text-decoration: none;  
     display: flex;         
     justify-content: center;
     align-items: center;
-    width: 100%;
     border-radius: 60px;
     padding: 9px 13px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
 
-    &.active,
-    &:hover {
+    &.active{
         background-color: #0046FF;
         color: #FAF9F6;
+    }
+    &:hover{
+        background-color: #FFF;
+        color: #0046FF;
     }
 `;
 function Navbar() {
   return (
     <NavbarContainer>
         <Logo>
-            <LogoLink to="/">badang</LogoLink>
+            <LogoLink to="/"> ba<span style={{ color: '#0046FF' }}>dang</span></LogoLink>
         </Logo>
         <Menu>
-
             <MenuItem>
                 <StyledNavLink to="/online-review">온라인 리뷰 분석</StyledNavLink>
             </MenuItem>
