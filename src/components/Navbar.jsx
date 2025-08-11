@@ -82,7 +82,7 @@ const StyledNavLink = styled(NavLink)`
         background-color: #0046FF;
         color: #FAF9F6;
     }
-    &:hover{
+    &:hover:not(.active){
         background-color: #FFF;
         color: #0046FF;
     }
