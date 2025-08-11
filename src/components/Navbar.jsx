@@ -2,14 +2,11 @@ import styled from 'styled-components';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {Link} from 'react-router-dom';
+import logoSvg from '../assets/logo.svg';
 
-const Logo=styled.div`
-    color:  #FF8040;
-    font-family: 'Inter', 'Arial', sans-serif;
-    font-size: 48px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+const Logo=styled.img`
+    height: 48px;
+    cursor: pointer;
 `
 const NavbarContainer=styled.div`
     z-index: 999;
@@ -59,7 +56,7 @@ const LogoLink=styled(Link)`
   display: flex;         
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: auto;
   height: 100%;
 `;
 const StyledNavLink = styled(NavLink)`
@@ -93,9 +90,9 @@ const StyledNavLink = styled(NavLink)`
 function Navbar() {
   return (
     <NavbarContainer>
-        <Logo>
-            <LogoLink to="/"> ba<span style={{ color: '#0046FF' }}>dang</span></LogoLink>
-        </Logo>
+        <LogoLink to="/">
+            <Logo src={logoSvg} alt="badang logo" />
+        </LogoLink>
         <Menu>
             <MenuItem>
                 <StyledNavLink to="/online-review">온라인 리뷰 분석</StyledNavLink>
