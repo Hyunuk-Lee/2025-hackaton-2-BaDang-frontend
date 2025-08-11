@@ -4,23 +4,16 @@ import React from 'react';
 import NewsCard from '../components/NewsCard';
 import styled from 'styled-components';
 import ButtonCard from '../components/ButtonCard';
+import Advertisement from '../components/Advertisement';
 import pastIcon from '../assets/PastIcon.svg';
 import makeIcon from '../assets/MakeIcon.svg';
 
 const Page=styled.div`
-  position: absolute;
-  top: 105px;
-  left: 0;
-  right: 0;
-  margin: 0;
-  padding: 0;
+
+  display: flex;
+  flex-direction: column;
 `
-const Advertisement=styled.div`
-  width: 100%;
-  height: 377px;
-  flex-shrink: 0;
-  background-color:#17171B;
-`
+
 const NewsWrapper=styled.div`
   display: flex;
   gap: 24px;
@@ -56,9 +49,7 @@ const KeywordNews=styled.div`
 function MainPage() {
   return (
     <Page>
-      <Advertisement>
-        dd
-      </Advertisement>
+      <Advertisement />
       <Cards>
         <KeywordNews>최신 키워드 뉴스</KeywordNews>
         <NewsWrapper>
@@ -84,10 +75,7 @@ function MainPage() {
           imageUrl={makeIcon}/>
         </ButtonWrapper>
         </NewsWrapper>
-
-        
       </Cards>
-
     </Page>
   );
 }
