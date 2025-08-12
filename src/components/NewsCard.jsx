@@ -1,8 +1,8 @@
 // components/NewsCard.jsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import NoHeart from '../assets/Noheart.svg';
-import YesHeart from '../assets/Yesheart.svg';
+import NoHeart from '../assets/NoHeart.svg';
+import YesHeart from '../assets/YesHeart.svg';
 
 const Card = styled.div`
     display: flex;
