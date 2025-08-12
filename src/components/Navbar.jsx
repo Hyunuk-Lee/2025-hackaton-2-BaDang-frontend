@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {Link} from 'react-router-dom';
-import logoSvg from '../assets/logo.svg';
+import logoSvg from '../assets/Logo.svg';
 
 const Logo=styled.img`
     height: 48px;
