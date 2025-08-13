@@ -1,9 +1,10 @@
 // pages/CustomKeywordNewsPage.jsx
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
-import NewsCard from "../components/NewsCard"; // ✅ 실제로 존재하는 파일만 import
+import NewsCard from "../components/NewsCard";
+import SearchBar from "../components/SearchBar"; // ✅ 실제 SearchBar 사용
 
-/** ===== 임시 Placeholder 컴포넌트들 ===== */
+/** ===== 임시 Placeholder 컴포넌트들 (실제 컴포넌트 준비되면 교체) ===== */
 const Placeholder = styled.div`
   background: #fff;
   border: 1px dashed #c8cbd1;
@@ -12,19 +13,6 @@ const Placeholder = styled.div`
   color: #667085;
   font-size: 14px;
 `;
-function SearchBar({ value, onChange }) {
-  return (
-    <Placeholder>
-      SearchBar Placeholder — 검색어:{" "}
-      <input
-        value={value}
-        onChange={(e) => onChange?.(e.target.value)}
-        placeholder="키워드를 입력하세요"
-        style={{ marginLeft: 8 }}
-      />
-    </Placeholder>
-  );
-}
 function KeywordRequestBox() {
   return <Placeholder>“원하는 키워드가 없다면?” Placeholder</Placeholder>;
 }
@@ -81,6 +69,7 @@ function Pagination({ current, total, onChange }) {
 }
 /** ===== /Placeholder ===== */
 
+/** ===== 레이아웃 ===== */
 const Page = styled.div`
   min-height: 100vh;
   background: #f6f7fb;
@@ -99,7 +88,7 @@ const Row = styled.section`
   gap: 16px;
 
   @media (min-width: 992px) {
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: 1fr 320px; /* 좌: 컨텐츠, 우: 찜 패널 */
     align-items: start;
   }
 `;
@@ -122,11 +111,12 @@ const Section = styled.section`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  // align-items: center;
 `;
 
-// 데이터 (예시)
+/** ===== 데이터(예시) ===== */
 const CATEGORIES = ["전체", "바당이 만든 뉴스", "직접 만든 뉴스"];
-const MOCK_NEWS = Array.from({ length: 12 }).map((_, i) => ({
+const MOCK_NEWS = Array.from({ length: 27 }).map((_, i) => ({
   id: i + 1,
   title:
     "폭폭 찌는 더운 날씨, 사람들의 마음을 사로잡을 수 있는 가게 운영 방법은?",
@@ -143,18 +133,23 @@ const MOCK_NEWS = Array.from({ length: 12 }).map((_, i) => ({
 }));
 const PAGE_SIZE = 9;
 
+/** ===== 페이지 ===== */
 export default function CustomKeywordNewsPage() {
-  const [query, setQuery] = useState("");
+  // 검색 입력값(입력 필드 전용 상태) vs 적용된 쿼리(필터용 상태)
+  const [searchInput, setSearchInput] = useState(""); // 타이핑 중 값
+  const [query, setQuery] = useState(""); // 검색 버튼 눌러 확정된 값
+
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [currentPage, setCurrentPage] = useState(1);
 
+  // 필터링 (카테고리는 즉시 반영, 검색어는 'query'만 사용)
   const filtered = useMemo(() => {
     let base = MOCK_NEWS;
     if (selectedCategory !== "전체") {
       base = base.filter((n) => n.category === selectedCategory);
     }
-    if (query.trim()) {
-      const q = query.trim().toLowerCase();
+    if (query) {
+      const q = query.toLowerCase();
       base = base.filter(
         (n) =>
           n.title.toLowerCase().includes(q) ||
@@ -170,12 +165,29 @@ export default function CustomKeywordNewsPage() {
     currentPage * PAGE_SIZE
   );
 
+  // “검색 버튼 눌렀을 때만 반영”
+  const handleSearch = () => {
+    setQuery(searchInput.trim());
+    setCurrentPage(1);
+  };
+
+  // 탭 변경 시 즉시 반영 + 페이지 리셋
+  const handleCategoryChange = (cat) => {
+    setSelectedCategory(cat);
+    setCurrentPage(1);
+  };
+
   return (
     <Page>
       <Main>
         {/* 상단 검색 + 키워드 요청 */}
         <Section>
-          <SearchBar value={query} onChange={(t) => { setQuery(t); setCurrentPage(1); }} />
+          <SearchBar
+            value={searchInput}
+            onChange={setSearchInput}
+            onSearch={handleSearch}
+            placeholder="찾으시는 단어를 입력하세요"
+          />
           <KeywordRequestBox />
         </Section>
 
@@ -185,7 +197,7 @@ export default function CustomKeywordNewsPage() {
             <CategoryTabs
               categories={CATEGORIES}
               value={selectedCategory}
-              onChange={(c) => { setSelectedCategory(c); setCurrentPage(1); }}
+              onChange={handleCategoryChange}
             />
             <CardsGrid>
               {pageSlice.map((item) => (
