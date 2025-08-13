@@ -19,12 +19,13 @@ const BtnWrapper = styled.div`
     width: fit-content;
     background: transparent;
     cursor: pointer;
-    
+
     &.active{
         background-color: #0046FF;
         color: #FAF9F6;
         border-radius: 20px;
     }
+
 `
 
 const BtnText = styled.div`
@@ -38,6 +39,9 @@ const BtnText = styled.div`
     
     ${BtnWrapper}.active & {
         color: #FFF;
+    }
+    ${BtnWrapper}:hover:not(.active) & {
+        color: #0046FF;
     }
 `
 

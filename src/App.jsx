@@ -44,19 +44,19 @@ function App() {
   return (
     <>
       <GlobalStyle />
-    <AppContainer>
-      {/* {!hideNavbarRoutes.includes(location.pathname) && <Navbar />} */}
-      <Navbar/>
-      <MainContent>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/online-review" element={<OnlineReviewPage />} />
-          {/* <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
-          <Route path="/collaboration-management" element={<CollaborationManagementPage />} />
-          <Route path="/profile-edit" element={<ProfileEditPage />} /> */}
-        </Routes>
-      </MainContent>
-    </AppContainer>
+      <AppContainer>
+        {/* {!hideNavbarRoutes.includes(location.pathname) && <Navbar />} */}
+        <Navbar/>
+        <MainContent>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/online-review" element={<OnlineReviewPage />} />
+            {/* <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
+            <Route path="/collaboration-management" element={<CollaborationManagementPage />} />
+            <Route path="/profile-edit" element={<ProfileEditPage />} /> */}
+          </Routes>
+        </MainContent>
+      </AppContainer>
     </>
 
   );
