@@ -42,8 +42,8 @@ const SmallQIcon = styled.img`
 const PopupIcon = styled.img`
   position: absolute;
   bottom: 34px;
-  right: 16px;
-  width: 200px;
+  right: -40px;
+  width: 380px;
   height: auto;
   z-index: 10;
 `;
