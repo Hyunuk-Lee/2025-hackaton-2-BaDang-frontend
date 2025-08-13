@@ -4,7 +4,7 @@ import React from 'react';
 import NewsCard from '../components/NewsCard';
 import styled from 'styled-components';
 import ButtonCard from '../components/ButtonCard';
-import Advertisement from '../components/Advertisement';
+import Advertisement from '../components/Advertisement1';
 import pastIcon from '../assets/PastIcon.svg';
 import makeIcon from '../assets/MakeIcon.svg';
 
@@ -12,12 +12,12 @@ const Page=styled.div`
 
   display: flex;
   flex-direction: column;
+  justify-content: center;
 `
 
 const NewsWrapper=styled.div`
   display: flex;
   gap: 24px;
-  width: 792px;
   height: 418px;
 `
 const ButtonWrapper=styled.div`
@@ -27,11 +27,12 @@ const ButtonWrapper=styled.div`
 `
 const Cards=styled.div`
   display: flex;
+  margin: auto;
   height: 542px;
   box-sizing: border-box;
   padding: 36px 120px;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   flex-shrink: 0;
 `
@@ -66,6 +67,7 @@ function MainPage() {
           title="긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목"
           isOrange={true}      
           />
+
         <ButtonWrapper>
           <ButtonCard 
           title="지난 콘텐츠 다시 보기"
@@ -75,6 +77,7 @@ function MainPage() {
           imageUrl={makeIcon}/>
         </ButtonWrapper>
         </NewsWrapper>
+
       </Cards>
     </Page>
   );

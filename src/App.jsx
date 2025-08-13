@@ -7,22 +7,43 @@ import OnlineReviewPage from './pages/OnlineReviewPage.jsx';
 // import CollaborationManagementPage from './pages/CollaborationManagementPage.jsx';
 // import ProfileEditPage from './pages/ProfileEditPage.jsx';
 import { Routes, Route, Router } from 'react-router-dom';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  /* 모든 요소 기본 여백 제거 */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* html, body, root 높이 확보 + 배경색 */
+  html, body, #root {
+    height: 100%;
+    background-color: #F1F2F4;
+  }
+`;
 
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: #F1F2F4;
+
 `;
 
 const MainContent = styled.main`
   margin-top: 105px;
   flex: 1;
+
 `;
 
 function App() {
   // const location = useLocation();
   // const hideNavbarRoutes = ["/login", "/signup"];
   return (
+    <>
+      <GlobalStyle />
     <AppContainer>
       {/* {!hideNavbarRoutes.includes(location.pathname) && <Navbar />} */}
       <Navbar/>
@@ -36,6 +57,8 @@ function App() {
         </Routes>
       </MainContent>
     </AppContainer>
+    </>
+
   );
 }
 
