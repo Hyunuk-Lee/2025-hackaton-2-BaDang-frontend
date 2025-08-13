@@ -1,5 +1,5 @@
 // components/ReviewSection.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import SmallQ from '../assets/SmallQ.svg';
 
@@ -36,6 +36,16 @@ const SmallQIcon = styled.img`
   right: 16px;
   width: 18px;
   height: 18px;
+  cursor: pointer;
+`;
+
+const PopupIcon = styled.img`
+  position: absolute;
+  bottom: 34px;
+  right: 16px;
+  width: 200px;
+  height: auto;
+  z-index: 10;
 `;
 
 const SectionContent = styled.div`
@@ -59,7 +69,9 @@ const RatioItem = styled.div`
   color: ${props => props.color};
 `;
 
-function ReviewSection({ title, icon, showSmallQ = true, className, children, ratios, titleColor }) {
+function ReviewSection({ title, icon, showSmallQ = true, className, children, ratios, titleColor, popupImage }) {
+  const [showPopup, setShowPopup] = useState(false);
+
   return (
     <Section className={className}>
       <SectionTitleWrapper>
@@ -67,7 +79,17 @@ function ReviewSection({ title, icon, showSmallQ = true, className, children, ra
         {icon && <SectionIcon src={icon} alt="icon" />}
       </SectionTitleWrapper>
       {children && <SectionContent>{children}</SectionContent>}
-      {showSmallQ && <SmallQIcon src={SmallQ} alt="SmallQ" />}
+      {showSmallQ && (
+        <>
+          <SmallQIcon 
+            src={SmallQ} 
+            alt="SmallQ" 
+            onMouseEnter={() => setShowPopup(true)}
+            onMouseLeave={() => setShowPopup(false)}
+          />
+          {showPopup && popupImage && <PopupIcon src={popupImage} alt="Popup" />}
+        </>
+      )}
       {ratios && (
         <RatioText>
           <RatioItem color="#0046FF">긍정 {ratios.positive}%</RatioItem>
