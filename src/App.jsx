@@ -20,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
   /* html, body, root 높이 확보 + 배경색 */
   html, body, #root {
     height: 100%;
-    background-color: #F1F2F4;
+    background-color: #FFF;
   }
 `;
 
@@ -28,12 +28,12 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #F1F2F4;
+  background-color: #FFF;
 
 `;
 
 const MainContent = styled.main`
-  margin-top: 105px;
+  margin-top: 80px;
   flex: 1;
 
 `;
