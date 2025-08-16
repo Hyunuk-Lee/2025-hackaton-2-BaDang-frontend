@@ -2,9 +2,9 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import Advertisement from '../components/Sw/Advertisement';
-import BigCards from '../components/Sw/BigCards';
-import SmallCards from '../components/Sw/SmallCards';
+import Advertisement from '../components/MainC/Advertisement';
+import BigCards from '../components/MainC/BigCards';
+import SmallCards from '../components/MainC/SmallCards';
 
 const Page=styled.div`
 display: flex;

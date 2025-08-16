@@ -21,7 +21,7 @@ const BtnWrapper = styled.div`
     cursor: pointer;
 
     &.active{
-        background-color: #0046FF;
+        background-color: #759AFC;
         color: #FAF9F6;
         border-radius: 20px;
     }
@@ -29,7 +29,7 @@ const BtnWrapper = styled.div`
 `
 
 const BtnText = styled.div`
-    color: #17171B;
+    color: #494954;
     text-align: center;
     font-family: "NanumSquareOTF";
     font-style: normal;
@@ -41,7 +41,7 @@ const BtnText = styled.div`
         color: #FFF;
     }
     ${BtnWrapper}:hover:not(.active) & {
-        color: #0046FF;
+        color: #759AFC;
     }
 `
 

@@ -1,8 +1,8 @@
 // components/BigCards.jsx
 import React from 'react';
 import styled from 'styled-components';
-import NewsCard from '../../components/NewsCard';
-import BlueCardBtn from '../Sw/BigCardBtn';
+import NewsCard from '../NewsCard';
+import BlueCardBtn from './BigCardBtn';
 
 const Page=styled.div`
     display: flex;

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components';
-import Navbar from  './components/Navbar.jsx';
-import Footer from  './components/Footer.jsx';
+import Navbar from  './components/BaseC/Navbar.jsx';
+import Footer from  './components/BaseC/Footer.jsx';
 
 import MainPage from './pages/MainPage';
 import OnlineReviewPage from './pages/OnlineReviewPage.jsx';
