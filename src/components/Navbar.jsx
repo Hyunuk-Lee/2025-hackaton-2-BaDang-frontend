@@ -15,7 +15,7 @@ const NavbarContainer=styled.div`
     right: 0;
     left: 0;
     box-sizing: border-box;
-    height: 105px;
+    height: 80px;
     display: flex;
     justify-content: space-between ;
     align-items: center;
@@ -23,6 +23,8 @@ const NavbarContainer=styled.div`
     background: #FFF;
     box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.05);
     gap: 16px;
+    border-bottom: 1px solid var(--Primary-gray2, #D8D8D8);
+
 `
 const Menu =styled.ul`
     width: 602px;
@@ -60,10 +62,12 @@ const LogoLink=styled(Link)`
   height: 100%;
 `;
 const StyledNavLink = styled(NavLink)`
-    color:#17171B;
-    font-family: 'NanumSquareNeo',  sans-serif;
+    color:  #494954;
+    text-align: center;
+    font-family: SUIT;
     font-size: 20px;
-    font-style: bold;
+    font-style: normal;
+    font-weight: 700;
     line-height: normal;
     white-space: nowrap;
     height: 41px;
@@ -79,12 +83,12 @@ const StyledNavLink = styled(NavLink)`
     transition: all 0.2s ease;
 
     &.active{
-        background-color: #0046FF;
+        background-color: #759AFC;
         color: #FAF9F6;
     }
     &:hover:not(.active){
         background-color: #FFF;
-        color: #0046FF;
+        color: #759AFC;
     }
 `;
 function Navbar() {
