@@ -21,6 +21,7 @@ const GlobalStyle = createGlobalStyle`
   html, body, #root {
     height: 100%;
     background-color: #FFF;
+    overflow-x: hidden;
   }
 `;
 
@@ -35,7 +36,8 @@ const AppContainer = styled.div`
 const MainContent = styled.main`
   margin-top: 80px;
   flex: 1;
-
+  display: flex;
+  justify-content: center;
 `;
 
 function App() {

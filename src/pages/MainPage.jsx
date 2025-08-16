@@ -1,84 +1,53 @@
 // pages/MainPage.jsx
 
 import React from 'react';
-import NewsCard from '../components/NewsCard';
 import styled from 'styled-components';
 import ButtonCard from '../components/ButtonCard';
-import Advertisement from '../components/Advertisement1';
-import pastIcon from '../assets/PastIcon.svg';
-import makeIcon from '../assets/MakeIcon.svg';
-
+import Advertisement from '../components/Sw/Advertisement';
+import BigCards from '../components/Sw/BigCards';
+import SmallCards from '../components/Sw/SmallCards';
 const Page=styled.div`
-
+display: flex;
+width: 1200px;
+flex-direction: column;
+align-items: flex-start;
+`
+const HelloText=styled.div`
+width: 751px;
+height: 150px;
+margin: 48px auto;
+  color:  #494954;
+text-align: center;
+font-family: SUIT;
+font-size: 40px;
+font-style: normal;
+font-weight: 800;
+line-height: 60px; 
+`
+const Orange=styled.span`
+  color: #FF9762;
+`
+const Blue=styled.span`
+  color: #759AFC;
+`
+const CardWrapper=styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-`
-
-const NewsWrapper=styled.div`
-  display: flex;
-  gap: 24px;
+  gap: 42px;
   height: 418px;
 `
-const ButtonWrapper=styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`
-const Cards=styled.div`
-  display: flex;
-  margin: auto;
-  height: 542px;
-  box-sizing: border-box;
-  padding: 36px 120px;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  flex-shrink: 0;
-`
-const KeywordNews=styled.div`
-  width: 100%;
-  max-height: 45px;
-  color: #17171B;
-  font-family: 'NanumSquareNeo';
-  font-size: 40px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  white-space: nowrap;
-`
+
+
+
 function MainPage() {
   return (
     <Page>
-      <Advertisement />
-      <Cards>
-        <KeywordNews>최신 키워드 뉴스</KeywordNews>
-        <NewsWrapper>
-          <NewsCard 
-          imageUrl="dd"
-          keyword="키워드"
-          date="00년 0월 0주차"
-          title="긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목"      
-          />
-          <NewsCard
-          imageUrl="dd"
-          keyword="키워드"
-          date="00년 0월 0주차"
-          title="긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목 긴 제목"
-          isOrange={true}      
-          />
-
-        <ButtonWrapper>
-          <ButtonCard 
-          title="지난 콘텐츠 다시 보기"
-          imageUrl={pastIcon}/>
-          <ButtonCard
-          title="원하는 키워드로 맞춤형 뉴스 만들기"
-          imageUrl={makeIcon}/>
-        </ButtonWrapper>
-        </NewsWrapper>
-
-      </Cards>
+      <HelloText>안녕하세요 김바당 <Blue>사장님</Blue> <br/>리뷰를 <Orange>분석</Orange>하고 이번주 <Orange>보고서</Orange>를 확인해보세요!</HelloText>
+    <CardWrapper>
+      <BigCards/>
+      <Advertisement/>
+      <SmallCards/>
+    </CardWrapper>
     </Page>
   );
 }

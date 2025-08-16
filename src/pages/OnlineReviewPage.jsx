@@ -3,13 +3,13 @@ import TimeBtnGroup from '../components/TimeBtnGroup';
 import ReviewSection from '../components/ReviewSection';
 import PieChart from '../components/PieChart';
 import styled from 'styled-components';
-import BigQ from '../assets/BigQ.svg';
-import GoodIcon from '../assets/GoodIcon.svg';
-import BadIcon from '../assets/BadIcon.svg';
-import Popup1 from '../assets/Popup1.svg';
-import Popup2 from '../assets/Popup2.svg';
-import Popup3 from '../assets/Popup3.svg';
-import Popup4 from '../assets/Popup4.svg';
+import BigQ from '../assets/Popups/BigQ.svg';
+import GoodIcon from '../assets/Icons/GoodIcon.svg';
+import BadIcon from '../assets/Icons/BadIcon.svg';
+import Popup1 from '../assets/Popups/Popup1.svg';
+import Popup2 from '../assets/Popups/Popup2.svg';
+import Popup3 from '../assets/Popups/Popup3.svg';
+import Popup4 from '../assets/Popups/Popup4.svg';
 
 const Header = styled.div`
   display: flex;
