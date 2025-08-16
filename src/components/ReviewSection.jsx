@@ -4,11 +4,16 @@ import styled from 'styled-components';
 import SmallQ from '../assets/Popups/SmallQ.svg';
 
 const Section = styled.div`
-  background: #FFF;
   position: relative;
   padding: 16px;
   border-radius: 8px;
   min-height: 132px;
+  border-radius: 20px;
+border: 1px solid #D8D8D8;
+background: #FFF;
+
+/* button shadow */
+box-shadow: 0 8px 24.3px 0 rgba(0, 0, 0, 0.06);
 `;
 
 const SectionTitleWrapper = styled.div`

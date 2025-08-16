@@ -2,14 +2,17 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import ButtonCard from '../components/ButtonCard';
 import Advertisement from '../components/Sw/Advertisement';
 import BigCards from '../components/Sw/BigCards';
 import SmallCards from '../components/Sw/SmallCards';
+
 const Page=styled.div`
 display: flex;
 width: 1200px;
 flex-direction: column;
+height: 1238px;
+min-height: 100vh;
+
 align-items: flex-start;
 `
 const HelloText=styled.div`
