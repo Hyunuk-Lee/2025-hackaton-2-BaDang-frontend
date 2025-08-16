@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import styled from 'styled-components';
 import Navbar from  './components/Navbar.jsx';
+import Footer from  './components/Footer.jsx';
+
 import MainPage from './pages/MainPage';
 import OnlineReviewPage from './pages/OnlineReviewPage.jsx';
 import CustomKeywordNewsPage from './pages/CustomKeywordNewsPage.jsx';
@@ -30,14 +32,15 @@ const AppContainer = styled.div`
   flex-direction: column;
   min-height: 100vh;
   background-color: #FFF;
-
+  
 `;
 
-const MainContent = styled.main`
+const MainContent = styled.div`
   margin-top: 80px;
   flex: 1;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
 function App() {
@@ -46,20 +49,23 @@ function App() {
   return (
     <>
       <GlobalStyle />
-    <AppContainer>
-      {/* {!hideNavbarRoutes.includes(location.pathname) && <Navbar />} */}
-      <Navbar/>
-      <MainContent>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/online-review" element={<OnlineReviewPage />} />
-          <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
-          {/* <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
-          <Route path="/collaboration-management" element={<CollaborationManagementPage />} />
-          <Route path="/profile-edit" element={<ProfileEditPage />} /> */}
-        </Routes>
-      </MainContent>
-    </AppContainer>
+      <AppContainer>
+        {/* {!hideNavbarRoutes.includes(location.pathname) && <Navbar />} */}
+        <Navbar/>
+        <MainContent>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/online-review" element={<OnlineReviewPage />} />
+            <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
+            {/* <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
+            <Route path="/collaboration-management" element={<CollaborationManagementPage />} />
+            <Route path="/profile-edit" element={<ProfileEditPage />} /> */}
+          </Routes>
+
+        </MainContent>
+        <Footer/>
+
+      </AppContainer>
     </>
 
   );
