@@ -1,7 +1,7 @@
 // components/ReviewSection.jsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import SmallQ from '../assets/SmallQ.svg';
+import SmallQ from '../assets/Popups/SmallQ.svg';
 
 const Section = styled.div`
   background: #FFF;
