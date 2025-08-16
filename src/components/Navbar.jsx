@@ -23,7 +23,7 @@ const NavbarContainer=styled.div`
     background: #FFF;
     box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.05);
     gap: 16px;
-    border-bottom: 1px solid var(--Primary-gray2, #D8D8D8);
+    border-bottom: 1px solid #D8D8D8;
 
 `
 const Menu =styled.ul`
