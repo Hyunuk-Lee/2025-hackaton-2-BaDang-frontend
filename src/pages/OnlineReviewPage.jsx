@@ -131,6 +131,7 @@ const PageContainer = styled.div`
 
 function OnlineReviewPage() {
   const [selectedRange, setSelectedRange] = useState("전체");
+  const [storeData, setStoreData] = useState({ storeName: "맛있는 집", storeLocation: "동국시 멋사로 13-1" });
   const options = ["전체", "한 달", "일주일"];
 
   return (
@@ -138,7 +139,7 @@ function OnlineReviewPage() {
       <Header>
         <TitleSection>
           <Title>
-            <TitleLarge>지점</TitleLarge>
+            <TitleLarge>{storeData.storeName}</TitleLarge>
             <TitleSmall>의 전체 리뷰 분석</TitleSmall>
           </Title>
           
