@@ -16,27 +16,26 @@ const SVG = styled.svg`
 
 const DonutSegment = styled.circle`
   fill: none;
-  stroke-width: 40;
+  stroke-width: ${props => props.strokeWidth};
   stroke: ${props => props.color};
   stroke-dasharray: ${props => props.dashArray};
   stroke-dashoffset: ${props => props.dashOffset};
   transition: all 0.5s ease;
 `;
 
+
 function PieChart({ positive = 50, neutral = 30, negative = 20 }) {
-  const size = 200;
-  const radius = 80;
+  const size = 334;          // 전체 SVG 크기
+  const innerRadius = 83;     // 중앙 빈 원 반지름
+  const strokeWidth = 84;     // 도넛 두께
+  const radius = innerRadius + strokeWidth / 2; // circle의 r 값
   const circumference = 2 * Math.PI * radius;
-  
+
   const total = positive + neutral + negative;
-  const positivePercent = (positive / total) * 100;
-  const neutralPercent = (neutral / total) * 100;
-  const negativePercent = (negative / total) * 100;
-  
-  const positiveDash = (positivePercent / 100) * circumference;
-  const neutralDash = (neutralPercent / 100) * circumference;
-  const negativeDash = (negativePercent / 100) * circumference;
-  
+  const positiveDash = (positive / total) * circumference;
+  const neutralDash = (neutral / total) * circumference;
+  const negativeDash = (negative / total) * circumference;
+
   const positiveOffset = 0;
   const neutralOffset = -positiveDash;
   const negativeOffset = -(positiveDash + neutralDash);
@@ -48,7 +47,8 @@ function PieChart({ positive = 50, neutral = 30, negative = 20 }) {
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          color="#0046FF"
+          strokeWidth={strokeWidth}
+          color="#759AFC"
           dashArray={`${positiveDash} ${circumference}`}
           dashOffset={positiveOffset}
         />
@@ -56,7 +56,8 @@ function PieChart({ positive = 50, neutral = 30, negative = 20 }) {
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          color="#17171B"
+          strokeWidth={strokeWidth}
+          color="#494954"
           dashArray={`${neutralDash} ${circumference}`}
           dashOffset={neutralOffset}
         />
@@ -64,7 +65,8 @@ function PieChart({ positive = 50, neutral = 30, negative = 20 }) {
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          color="#FF8040"
+          strokeWidth={strokeWidth}
+          color="#FF9762"
           dashArray={`${negativeDash} ${circumference}`}
           dashOffset={negativeOffset}
         />
@@ -72,5 +74,6 @@ function PieChart({ positive = 50, neutral = 30, negative = 20 }) {
     </ChartContainer>
   );
 }
+
 
 export default PieChart;

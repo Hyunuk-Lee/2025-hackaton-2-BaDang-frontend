@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TimeBtnGroup from '../components/TimeBtnGroup';
-import ReviewSection from '../components/ReviewSection';
-import PieChart from '../components/PieChart';
+import ReviewSection from '../components/ReviewC/ReviewSection';
+import PieChart from '../components/ReviewC/PieChart';
 import styled from 'styled-components';
 import BigQ from '../assets/Popups/BigQ.svg';
 import GoodIcon from '../assets/Icons/GoodIcon.svg';
@@ -123,7 +123,6 @@ const StyledReviewSection = styled(ReviewSection)`
 const PageContainer = styled.div`
   display: flex;
   width: 1440px;
-  padding-bottom: 70px;
   flex-direction: column;
   align-items: center;
   margin: auto;
