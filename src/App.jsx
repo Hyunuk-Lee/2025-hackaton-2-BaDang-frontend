@@ -10,6 +10,7 @@ import CustomKeywordNewsPage from './pages/CustomKeywordNewsPage.jsx';
 // import ProfileEditPage from './pages/ProfileEditPage.jsx';
 import { Routes, Route, Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
+import CoworkPage from './pages/CoworkPage.jsx';
 
 const GlobalStyle = createGlobalStyle`
   /* 모든 요소 기본 여백 제거 */
@@ -57,8 +58,9 @@ function App() {
             <Route path="/" element={<MainPage />} />
             <Route path="/online-review" element={<OnlineReviewPage />} />
             <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
+            <Route path="/collaboration-management" element={<CoworkPage />} />
+
             {/* <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
-            <Route path="/collaboration-management" element={<CollaborationManagementPage />} />
             <Route path="/profile-edit" element={<ProfileEditPage />} /> */}
           </Routes>
 
