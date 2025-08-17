@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TimeBtnGroup from '../components/TimeBtnGroup';
 import ReviewSection from '../components/ReviewC/ReviewSection';
 import PieChart from '../components/ReviewC/PieChart';
@@ -130,15 +130,30 @@ const PageContainer = styled.div`
 
 function OnlineReviewPage() {
   const [selectedRange, setSelectedRange] = useState("전체");
-  const [storeData, setStoreData] = useState({ storeName: "맛있는 집", storeLocation: "동국시 멋사로 13-1" });
+ const [storeName, setStoreName] = useState("맛있는 집");
   const options = ["전체", "한 달", "일주일"];
-
+useEffect(() => {
+  const fetchStoreData = async () => {
+    try {
+      const response = await fetch('/api/stores/');
+      if (!response.ok) throw new Error('스토어 정보 가져오기 실패');
+      const data = await response.json();
+      if (data.length > 0) {
+        setStoreName(data[0].name);
+      }
+    } catch (err) {
+      console.error(err);
+      setStoreName("가게이름없음"); // 기본값
+    }
+  };
+    fetchStoreData();
+  }, []);
   return (
     <PageContainer>
       <Header>
         <TitleSection>
           <Title>
-            <TitleLarge>{storeData.storeName}</TitleLarge>
+            <TitleLarge>{storeName}</TitleLarge>
             <TitleSmall>의 전체 리뷰 분석</TitleSmall>
           </Title>
           

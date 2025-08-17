@@ -1,18 +1,17 @@
 import styled from 'styled-components';
 
 const Box=styled.div`
-margin-top: 48px;
+    margin-top: 48px;
     display: flex;
     height: 211px;
-    padding: 37px 925px 38px 120px;
+    padding-left: 40px;
     align-items: center;
     background:#2B3884;
-    
     color:#FAF9F6;
     font-family: SUIT;
     font-size: 20px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 34px; /* 170% */
 `
 function Footer() {
