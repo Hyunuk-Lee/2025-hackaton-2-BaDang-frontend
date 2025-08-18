@@ -6,8 +6,10 @@ const ChartContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-width: 334px;
-height: 334px;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  padding-bottom: 60px;
 `;
 
 const SVG = styled.svg`

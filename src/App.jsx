@@ -43,6 +43,7 @@ const MainContent = styled.div.attrs({ id: "main-scroll" })`
   align-items: center;
   flex-direction: column;
   overflow-y: auto; 
+  overflow-x: hidden;
 `;
 
 function App() {
