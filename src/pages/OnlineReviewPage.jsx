@@ -129,6 +129,7 @@ const PageContainer = styled.div`
 function OnlineReviewPage() {
   const [selectedRange, setSelectedRange] = useState("전체");
   const [storeName, setStoreName] = useState("아직연결안됨");
+
   const options = ["전체", "한 달", "일주일"];
 
   //  storeName만 최초 1회 API에서 불러오기
