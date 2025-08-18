@@ -111,7 +111,7 @@ const Section = styled.section`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  // align-items: center;
+  // align-items: center;   w
 `;
 
 /** ===== 데이터(예시) ===== */

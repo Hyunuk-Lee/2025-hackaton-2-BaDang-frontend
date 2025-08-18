@@ -11,7 +11,7 @@ import CoworkPage from './pages/CoworkPage.jsx';
 // import ProfileEditPage from './pages/ProfileEditPage.jsx';
 import { Routes, Route, Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
-import ScrollToTop from '../src/components/BaseC/ScrollToTop.jsx';
+import ScrollToTop from './components/BaseC/ScrollToTop.jsx';
 const GlobalStyle = createGlobalStyle`
   /* 모든 요소 기본 여백 제거 */
   * {
@@ -22,7 +22,7 @@ const GlobalStyle = createGlobalStyle`
 
   /* html, body, root 높이 확보 + 배경색 */
   html, body, #root {
-    height: 100%;
+    min-height: 100%;
     background-color: #FFF;
     overflow-x: hidden;
   }
@@ -36,12 +36,13 @@ const AppContainer = styled.div`
   
 `;
 
-const MainContent = styled.div`
+const MainContent = styled.div.attrs({ id: "main-scroll" })`
   padding-top: 80px;
   flex: 1;
   display: flex;
   align-items: center;
   flex-direction: column;
+  overflow-y: auto; 
 `;
 
 function App() {
