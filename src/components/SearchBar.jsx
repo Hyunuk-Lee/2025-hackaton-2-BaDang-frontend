@@ -11,7 +11,7 @@ const Wrap = styled.form`
   border: 1px solid #e5e7eb;
   border-radius: 50px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  max-width: 800px;
+  width: 648px;
 `;
 
 const Icon = styled.span`
