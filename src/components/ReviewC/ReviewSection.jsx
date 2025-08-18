@@ -5,6 +5,8 @@ import SmallQ from '../../assets/Popups/SmallQ.svg';
 
 const Section = styled.div`
   position: relative;
+   display: flex;
+   flex-direction: column;
   padding: 16px;
   border-radius: 20px;
   min-height: 132px;
@@ -14,7 +16,6 @@ const Section = styled.div`
 `;
 
 const SectionTitleWrapper = styled.div`
-  position: absolute;
   top: 16px;
   left: 16px;
   display: flex;
@@ -32,6 +33,7 @@ const SectionTitle = styled.div`
   font-weight: 700;
   line-height: normal;
     color: #17171B; 
+    
 `;
 
 const SectionIcon = styled.img`
@@ -59,9 +61,17 @@ const PopupIcon = styled.img`
 
 const SectionContent = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: start;
+  align-items: flex-start;
+  justify-content: flex-start;
   height: 100%;
+  padding: 13px 0px;
+  color: #494954;
+font-family: SUIT;
+font-size: 20px;
+font-style: normal;
+font-weight: 500;
+line-height: 28px; /* 140% */
 `;
 
 const RatioText = styled.div`
@@ -106,9 +116,9 @@ function ReviewSection({ title, icon, showSmallQ = true, className, children, ra
 
       {ratios && (
         <RatioText>
-          <RatioItem color="#759AFC">긍정 {ratios.positive}%</RatioItem>
-          <RatioItem color="#494954">중립 {ratios.neutral}%</RatioItem>
-          <RatioItem color="#FF9762">부정 {ratios.negative}%</RatioItem>
+          <RatioItem color="#759AFC">긍정 {ratios.goodPercentage}%</RatioItem>
+          <RatioItem color="#494954">중립 {ratios.middlePercentage}%</RatioItem>
+          <RatioItem color="#FF9762">부정 {ratios.badPercentage}%</RatioItem>
         </RatioText>
       )}
     </Section>

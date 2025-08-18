@@ -129,8 +129,17 @@ const PageContainer = styled.div`
 
 function OnlineReviewPage() {
   const [selectedRange, setSelectedRange] = useState("전체");
-  const [storeName, setStoreName] = useState("아직연결안됨");
-
+  const [storeName, setStoreName] = useState("가게 이름 불러오는 중...");
+  const [goodPoint, setGoodPoint] = useState("리뷰 데이터 불러오는 중...");
+  const [badPoint, setBadPoint] = useState("리뷰 데이터 불러오는 중...");
+  const [percentage, setPercentage] = useState({
+  goodPercentage: 0,
+  middlePercentage: 0,
+  badPercentage: 0
+});
+const [analysisKeyword, setAnalysisKeyword] = useState("키워드 분석 데이터 불러오는 중...");
+const [analysisProblem, setAnalysisProblem] = useState("개선점 데이터 불러오는 중...");
+const [analysisSolution, setAnalysisSolution] = useState("제안 데이터 불러오는 중...");
   const options = ["전체", "한 달", "일주일"];
 
   useEffect(() => {
@@ -139,10 +148,10 @@ function OnlineReviewPage() {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const secretKey = import.meta.env.VITE_SECRET_KEY;
 
-        const response = await axios.get(`${backendUrl}api/analysis`, {
+        const response = await axios.get(`${backendUrl}review/test`, {
           params: {
             storeId: 1,
-            term: 1
+            term: 0
           },
           headers: {
             'Authorization': `Bearer ${secretKey}`,
@@ -152,6 +161,12 @@ function OnlineReviewPage() {
 
         if (response.data.statusCode === 200 && response.data.data) {
           setStoreName(response.data.data.storeName);
+          setGoodPoint(data.goodPoint);
+        setBadPoint(data.badPoint);
+        setPercentage(data.percentage);
+        setAnalysisKeyword(data.analysisKeyword);
+        setAnalysisProblem(data.analysisProblem);
+        setAnalysisSolution(data.analysisSolution);
         } else {
           setStoreName("API 호출 실패");
         }
@@ -187,41 +202,55 @@ function OnlineReviewPage() {
 
       <GridContainer>
         <StyledReviewSection
-          title="좋았어요"
-          icon={GoodIcon}
-          className="section-1"
-          showSmallQ={false}
-        />
+        title="좋았어요"
+        icon={GoodIcon}
+        className="section-1"
+        showSmallQ={false}
+        children={goodPoint}
+      />
 
-        <StyledReviewSection
-          title="아쉬워요"
-          icon={BadIcon}
-          className="section-2"
-          showSmallQ={false}
+      <StyledReviewSection
+        title="아쉬워요"
+        icon={BadIcon}
+        className="section-2"
+        showSmallQ={false}
+        children={badPoint}
+      />
+
+      <StyledReviewSection
+        title="긍·부정 비율"
+        showSmallQ={false}
+        className="section-3"
+        ratios={percentage}
+      >
+        <PieChart
+          positive={percentage.goodPercentage}
+          neutral={percentage.middlePercentage}
+          negative={percentage.badPercentage}
         />
-        <StyledReviewSection
-          title="긍·부정 비율"
-          showSmallQ={false}
-          className="section-3"
-          ratios={{ positive: 60, neutral: 25, negative: 15 }}
-        >
-          <PieChart positive={60} neutral={25} negative={15} />
-        </StyledReviewSection>
-        <StyledReviewSection
-          title="키워드 분석"
-          className="section-4"
-          popupImage={Popup2}
-        />
-        <StyledReviewSection
-          title="리뷰 기반 개선점"
-          className="section-5"
-          popupImage={Popup3}
-        />
-        <StyledReviewSection
-          title="사장님을 위한 제안"
-          className="section-6"
-          popupImage={Popup4}
-        />
+      </StyledReviewSection>
+
+      <StyledReviewSection
+        title="키워드 분석"
+        className="section-4"
+        popupImage={Popup2}
+        children={analysisKeyword}
+      />
+
+      <StyledReviewSection
+        title="리뷰 기반 개선점"
+        className="section-5"
+        popupImage={Popup3}
+        children={analysisProblem}
+      />
+
+      <StyledReviewSection
+        title="사장님을 위한 제안"
+        className="section-6"
+        popupImage={Popup4}
+        children={analysisSolution}
+      />
+
       </GridContainer>
     </PageContainer>
   );
