@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import TimeBtnGroup from '../components/TimeBtnGroup';
 import ReviewSection from '../components/ReviewC/ReviewSection';
@@ -132,37 +133,36 @@ function OnlineReviewPage() {
 
   const options = ["전체", "한 달", "일주일"];
 
-  //  storeName만 최초 1회 API에서 불러오기
-useEffect(() => {
-  const fetchStoreName = async () => {
-    try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      const secretKey = import.meta.env.VITE_SECRET_KEY;
+  useEffect(() => {
+    const fetchStoreName = async () => {
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const secretKey = import.meta.env.VITE_SECRET_KEY;
 
-      const response = await fetch(`${backendUrl}api/analysis?storeId=1&term=1`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${secretKey}`, // API 키 넣기
-          'Content-Type': 'application/json',
-        },
-      });
+        const response = await axios.get(`${backendUrl}api/analysis`, {
+          params: {
+            storeId: 1,
+            term: 1
+          },
+          headers: {
+            'Authorization': `Bearer ${secretKey}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-      if (!response.ok) throw new Error('스토어 이름 가져오기 실패');
-      const data = await response.json();
-
-      if (data.statusCode === 200 && data.data) {
-        setStoreName(data.data.storeName);
+        if (response.data.statusCode === 200 && response.data.data) {
+          setStoreName(response.data.data.storeName);
+        } else {
+          setStoreName("API 호출 실패");
+        }
+      } catch (err) {
+        console.error(err);
+        setStoreName("API 호출 실패");
       }
-    } catch (err) {
-      console.error(err);
-      setStoreName("API 호출 실패"); // 기본값
-    }
-  };
+    };
 
-  fetchStoreName();
-}, []);
-
-
+    fetchStoreName();
+  }, []);
   return (
     <PageContainer>
       <Header>
@@ -192,6 +192,7 @@ useEffect(() => {
           className="section-1"
           showSmallQ={false}
         />
+
         <StyledReviewSection
           title="아쉬워요"
           icon={BadIcon}
