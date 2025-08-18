@@ -3,7 +3,12 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import StoreList from '../components/CoworkC/StoreList';
 import Popup from '../components/CoworkC/CoworkPopup';
+import StoreListPopup from '../components/CoworkC/StoreListPopup.jsx'
+import RequestPopup from '../components/CoworkC/RequestPopup.jsx'
+
 import Map from '../components/CoworkC/CoworkMap.jsx'
+import axios from 'axios';
+
 const Page=styled.div`
   display: flex;
 width: 1200px;
@@ -28,7 +33,7 @@ function CoworkPage() {
 
     <Map/>
     {showPopup && (
-        <Popup
+        <RequestPopup
           storeName="아코 헤어"
           storeType="생활 서비스 - 미용실"
           requestContent="안녕하세요 사장님 각자 가게 영수증 가지고 가면 10% 할인해주는 이벤트 어떠세요?"
