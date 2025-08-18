@@ -78,7 +78,8 @@ const BtnWrapper=styled.div`
     height: 59px;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: center;
+    gap: 24px;
     align-items: center;
 `
 
@@ -98,8 +99,8 @@ function CoworkPopup({ storeName, storeType, requestContent, onClose}) {
         
         </TextWrapper>
        <BtnWrapper>
-            <Btn btnName='수락하기'/>
-            <Btn btnName='거절하기'/>
+            <Btn btnName='수락하기' color='#759AFC' width="221px"/>
+            <Btn btnName='거절하기' color='#FF9762' width="221px"/>
         </BtnWrapper>
     </PopupBox>
     </Overlay>
