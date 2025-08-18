@@ -114,7 +114,7 @@ function RequestPopup({ storeName, storeType, requestContent, onClose }) {
           </ContentWrapper>
         </TextWrapper>
         <BtnWrapper>
-          <Btn btnName="요청하기" />
+          <Btn btnName="요청하기" width="467px" color="#759AFC"/>
         </BtnWrapper>
       </PopupBox>
     </Overlay>

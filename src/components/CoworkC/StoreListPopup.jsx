@@ -77,7 +77,8 @@ const BtnWrapper = styled.div`
   height: 59px;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: center;
+  gap: 24px;
   align-items: center;
 `;
 const TextBox = styled.textarea`
@@ -130,9 +131,8 @@ function StoreListPopup({
           </ContentWrapper>
         </TextWrapper>
         <BtnWrapper>
-          <Btn btnName="수정완료" onClick={handleSave} />
-
-          <Btn btnName="협업종료" />
+          <Btn btnName="수정완료" width="221px" color="#9D9D9D" onClick={handleSave} />
+          <Btn btnName="협업종료"  width="221px" color="#FF9762"/>
         </BtnWrapper>
       </PopupBox>
     </Overlay>
