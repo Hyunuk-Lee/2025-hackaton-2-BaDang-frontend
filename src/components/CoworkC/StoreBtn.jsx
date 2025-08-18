@@ -29,8 +29,8 @@ const BtnWrapper = styled.button`
 
 `;
 
-function StoreBtn({ storeName = "가게 이름" }) {
-  return <BtnWrapper>{storeName}</BtnWrapper>;
+function StoreBtn({ storeName = "가게 이름", onClick}) {
+  return <BtnWrapper onClick={onClick}>{storeName}</BtnWrapper>;
 }
 
 export default StoreBtn;

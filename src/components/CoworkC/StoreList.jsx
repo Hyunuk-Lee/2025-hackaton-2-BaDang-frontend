@@ -25,15 +25,12 @@ display: flex;
 flex-direction: row;
     gap: 24px;
 `
-function StoreList({title, storeName}) {
+function StoreList({title, storeName, onClick}) {
   return (
     <Box>
         <Title>{title}</Title>
         <List>
-          <StoreBtn storeName={storeName}/>
-          <StoreBtn storeName={storeName}/>
-          <StoreBtn storeName={storeName}/>
-          <StoreBtn storeName={storeName}/>
+          <StoreBtn storeName={storeName} onClick={onClick}/>
 
         </List>
 
