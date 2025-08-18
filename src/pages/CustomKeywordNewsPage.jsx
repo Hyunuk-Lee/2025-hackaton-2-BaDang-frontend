@@ -4,8 +4,11 @@ import styled from "styled-components";
 import NewsCard from "../components/NewsCard";
 import SearchBar from "../components/SearchBar";
 import KeywordRequestBox from "../components/KeywordRequestBox";
+import CategoryTabs from "../components/CategoryTabs";
+import FavoritePanel from "../components/FavoritePanel";
+import Pagination from "../components/Pagination";
 
-/** ===== 임시 Placeholder들 (필요한 것만 유지) ===== */
+/** ===== 임시 Placeholder (페이지네이션만 유지) ===== */
 const Placeholder = styled.div`
   background: #fff;
   border: 1px dashed #c8cbd1;
@@ -14,57 +17,7 @@ const Placeholder = styled.div`
   color: #667085;
   font-size: 14px;
 `;
-function CategoryTabs({ categories, value, onChange }) {
-  return (
-    <Placeholder>
-      {categories.map((c) => (
-        <button
-          key={c}
-          onClick={() => onChange?.(c)}
-          style={{
-            marginRight: 8,
-            padding: "6px 10px",
-            borderRadius: 6,
-            border: value === c ? "2px solid #0046FF" : "1px solid #D0D5DD",
-            background: value === c ? "#E8F0FF" : "#FFF",
-            cursor: "pointer",
-          }}
-        >
-          {c}
-        </button>
-      ))}
-    </Placeholder>
-  );
-}
-function FavoritePanel() {
-  return <Placeholder>찜한 뉴스 패널 Placeholder</Placeholder>;
-}
-function Pagination({ current, total, onChange }) {
-  return (
-    <Placeholder>
-      페이지네이션 Placeholder —
-      {Array.from({ length: total }).map((_, i) => {
-        const p = i + 1;
-        return (
-          <button
-            key={p}
-            onClick={() => onChange?.(p)}
-            style={{
-              marginLeft: 6,
-              padding: "4px 8px",
-              borderRadius: 6,
-              border: current === p ? "2px solid #0046FF" : "1px solid #D0D5DD",
-              background: current === p ? "#E8F0FF" : "#FFF",
-              cursor: "pointer",
-            }}
-          >
-            {p}
-          </button>
-        );
-      })}
-    </Placeholder>
-  );
-}
+
 /** ===== /Placeholder ===== */
 
 /** ===== 레이아웃 ===== */
@@ -74,8 +27,8 @@ const Page = styled.div`
 
 const Main = styled.main`
   width: 100%;
-  max-width: 1200px;      /* 페이지 전체 컨테이너 폭 */
-  margin: 0 auto;         /* 가운데 정렬 */
+  max-width: 1200px;
+  margin: 0 auto; /* 가운데 정렬 */
   padding: 24px 16px 48px;
   display: flex;
   flex-direction: column;
@@ -85,8 +38,8 @@ const Main = styled.main`
 /* 상단(검색바 + 최근검색/보고서)만 중앙 고정 폭 */
 const SearchSection = styled.section`
   width: 100%;
-  max-width: 670px;       /* 필요시 840~960 사이로 조절 */
-  margin: 0 auto;         /* 가운데 정렬 */
+  max-width: 670px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -99,16 +52,20 @@ const CenterLine = styled.div`
   justify-content: center;
 `;
 
-const Row = styled.section`
+/* 컨트롤 줄: 카테고리 탭(좌) + 찜 패널(우) */
+const ControlsRow = styled.div`
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;  /* 좌우 끝 정렬 */
+`;
 
-  @media (min-width: 992px) {
-    grid-template-columns: 1fr 320px; /* 좌 컨텐츠 / 우 찜 패널 */
-    align-items: start;
-  }
+/* 본문 섹션 */
+const Section = styled.section`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const CardsGrid = styled.section`
@@ -124,14 +81,6 @@ const CardsGrid = styled.section`
     grid-template-columns: repeat(3, 384px);
     justify-content: space-between;
   }
-`;
-
-/* 일반 섹션: 폭 100%, 중앙으로 잘 들어오게 */
-const Section = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 `;
 
 /** ===== 데이터(예시) ===== */
@@ -162,12 +111,27 @@ export default function CustomKeywordNewsPage() {
   // 최근 검색어(최대 3개, 최신 우선, 중복 제거)
   const [recent, setRecent] = useState([]);
 
+  // 카테고리/페이지
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // ❤️ 좋아요 상태 + 찜 필터 토글
+  const [likedIds, setLikedIds] = useState(new Set());
+  const [favoriteOnly, setFavoriteOnly] = useState(false);
 
   // 최근 검색어 삭제
   const handleRemoveRecent = (kw) => {
     setRecent((prev) => prev.filter((x) => x !== kw));
+  };
+
+  // 카드 하트 토글
+  const handleToggleLike = (id) => {
+    setLikedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   };
 
   // 필터링
@@ -184,8 +148,11 @@ export default function CustomKeywordNewsPage() {
           n.keyword.toLowerCase().includes(q)
       );
     }
+    if (favoriteOnly) {
+      base = base.filter((n) => likedIds.has(n.id));
+    }
     return base;
-  }, [query, selectedCategory]);
+  }, [query, selectedCategory, favoriteOnly, likedIds]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageSlice = filtered.slice(
@@ -238,37 +205,48 @@ export default function CustomKeywordNewsPage() {
           <KeywordRequestBox
             recent={recent}
             onSelect={handleSelectRecent}
-            onRemove={handleRemoveRecent} 
+            onRemove={handleRemoveRecent}
             onMakeReport={() => {
               console.log("보고서 직접 만들기 클릭");
             }}
           />
         </SearchSection>
 
-        {/* 본문: 그리드(좌 컨텐츠 / 우 찜) */}
-        <Row>
-          <Section>
-            <CategoryTabs
-              categories={CATEGORIES}
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-            />
-            <CardsGrid>
-              {pageSlice.map((item) => (
-                <NewsCard
-                  key={item.id}
-                  title={item.title}
-                  keyword={item.keyword}
-                  date={item.date}
-                  imageUrl={item.imageUrl}
-                  isOrange={item.isOrange}
-                />
-              ))}
-            </CardsGrid>
-          </Section>
+        {/* 컨트롤 줄: 탭 ↔︎ 찜 패널 (같은 라인) */}
+        <ControlsRow>
+          <CategoryTabs
+            options={CATEGORIES}
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+          />
+          <FavoritePanel
+            active={favoriteOnly}
+            count={likedIds.size}
+            onToggle={() => {
+              setFavoriteOnly((v) => !v);
+              setCurrentPage(1);
+            }}
+          />
+        </ControlsRow>
 
-          <FavoritePanel />
-        </Row>
+        {/* 카드 그리드 */}
+        <Section>
+          <CardsGrid>
+            {pageSlice.map((item) => (
+              <NewsCard
+                key={item.id}
+                id={item.id}
+                title={item.title}
+                keyword={item.keyword}
+                date={item.date}
+                imageUrl={item.imageUrl}
+                isOrange={item.isOrange}
+                liked={likedIds.has(item.id)}
+                onToggleLike={handleToggleLike}
+              />
+            ))}
+          </CardsGrid>
+        </Section>
 
         {/* 하단 페이지네이션 */}
         <Section style={{ alignItems: "center" }}>
@@ -282,4 +260,5 @@ export default function CustomKeywordNewsPage() {
     </Page>
   );
 }
+
 

@@ -91,11 +91,19 @@ const Title=styled.h3`
   }
 `
   
-function NewsCard({ title, keyword, date, imageUrl, isOrange }) {
-  const [isLiked, setIsLiked] = useState(false);
+function NewsCard({ id, title, keyword, date, imageUrl, isOrange, liked, onToggleLike }) {
+  const [localLiked, setLocalLiked] = useState(false);
 
-  const handleHeartClick = () => {
-    setIsLiked(!isLiked);
+  // 상위에서 liked를 내려주면 그 값을 우선 사용
+  const isLiked = typeof liked === 'boolean' ? liked : localLiked;
+
+  const handleHeartClick = (e) => {
+    e.stopPropagation();
+    if (onToggleLike) {
+      onToggleLike(id);          // 상위에서 토글 처리
+    } else {
+      setLocalLiked(!isLiked);   // 하위에서 자체 처리(기존 동작)
+    }
   };
 
   return (
@@ -114,7 +122,7 @@ function NewsCard({ title, keyword, date, imageUrl, isOrange }) {
           <Date isOrange={isOrange}>{date}</Date>
         </KeyWrapper>
         <Title isOrange={isOrange}>{title}</Title>
-        </Textbox>
+      </Textbox>
     </Card>
   );
 }
