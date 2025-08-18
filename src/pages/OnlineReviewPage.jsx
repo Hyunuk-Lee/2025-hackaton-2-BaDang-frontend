@@ -43,7 +43,6 @@ const TitleSection = styled.div`
   align-items: center;
   justify-content: center;
   gap: 16px;
-  
 `;
 
 const Title = styled.div`
@@ -51,26 +50,25 @@ const Title = styled.div`
   display: flex;
   align-items: baseline;
   gap: 4px;
-
 `;
 
 const TitleLarge = styled.span`
-color: #17171B;
-text-align: center;
-font-family: 'NanumSquareOTF';
-font-size: 40px;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
+  color: #17171B;
+  text-align: center;
+  font-family: 'NanumSquareOTF';
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 `;
 
 const TitleSmall = styled.span`
-color: #17171B;
-font-family: 'NanumSquareOTF';
-font-size: 28px;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
+  color: #17171B;
+  font-family: 'NanumSquareOTF';
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 `;
 
 const QIcon = styled.img`
@@ -130,24 +128,41 @@ const PageContainer = styled.div`
 
 function OnlineReviewPage() {
   const [selectedRange, setSelectedRange] = useState("전체");
-  const [storeName, setStoreName] = useState("맛있는 집");
+  const [storeName, setStoreName] = useState("아직연결안됨");
+
   const options = ["전체", "한 달", "일주일"];
+
+  //  storeName만 최초 1회 API에서 불러오기
 useEffect(() => {
-  const fetchStoreData = async () => {
+  const fetchStoreName = async () => {
     try {
-      const response = await fetch('/api/stores/');
-      if (!response.ok) throw new Error('스토어 정보 가져오기 실패');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      const secretKey = import.meta.env.VITE_SECRET_KEY;
+
+      const response = await fetch(`${backendUrl}api/analysis?storeId=1&term=1`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${secretKey}`, // API 키 넣기
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) throw new Error('스토어 이름 가져오기 실패');
       const data = await response.json();
-      if (data.length > 0) {
-        setStoreName(data[0].name);
+
+      if (data.statusCode === 200 && data.data) {
+        setStoreName(data.data.storeName);
       }
     } catch (err) {
       console.error(err);
-      setStoreName("가게이름없음"); // 기본값
+      setStoreName("API 호출 실패"); // 기본값
     }
   };
-    fetchStoreData();
-  }, []);
+
+  fetchStoreName();
+}, []);
+
+
   return (
     <PageContainer>
       <Header>
@@ -156,7 +171,7 @@ useEffect(() => {
             <TitleLarge>{storeName}</TitleLarge>
             <TitleSmall>의 전체 리뷰 분석</TitleSmall>
           </Title>
-          
+
           <QWrapper>
             <QIcon src={BigQ} alt="BigQ" />
             <BigQPopup src={Popup1} alt="Popup1" />
