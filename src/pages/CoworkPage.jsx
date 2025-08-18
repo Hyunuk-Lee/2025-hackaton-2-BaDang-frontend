@@ -27,6 +27,7 @@ const ListBox =styled.div`
 function CoworkPage({ is_willing_collaborate = false}) {
 
   const [showPopup, setShowPopup] = useState(true);
+  const [showListPopup, setShowListPopup] = useState(false); 
 
      //협업 불가 시
     //    if (!is_willing_collaborate) {
@@ -43,8 +44,15 @@ function CoworkPage({ is_willing_collaborate = false}) {
           onClose={() => setShowPopup(false)}
         />
       )}
+
+      {showListPopup && (
+        <StoreListPopup
+          onClose={() => setShowListPopup(false)}
+          storeName="하얀집 3호점"
+        />
+      )}
       <ListBox>
-      <StoreList title="협업 요청받은 가게" storeName="하얀집 3호점"/>
+      <StoreList title="협업 요청받은 가게" storeName="하얀집 3호점"onClick={() => setShowListPopup(true)}/>
       <StoreList title="협업 요청한 가게" storeName="하얀집 3호점"/>
       <StoreList title="협업 중인 가게" storeName="하얀집 3호점"/>
       </ListBox>
