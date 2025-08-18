@@ -7,18 +7,7 @@ import KeywordRequestBox from "../components/KeywordRequestBox";
 import CategoryTabs from "../components/CategoryTabs";
 import FavoritePanel from "../components/FavoritePanel";
 import Pagination from "../components/Pagination";
-
-/** ===== 임시 Placeholder (페이지네이션만 유지) ===== */
-const Placeholder = styled.div`
-  background: #fff;
-  border: 1px dashed #c8cbd1;
-  border-radius: 8px;
-  padding: 16px;
-  color: #667085;
-  font-size: 14px;
-`;
-
-/** ===== /Placeholder ===== */
+import NoResult from "../components/NoResult";
 
 /** ===== 레이아웃 ===== */
 const Page = styled.div`
@@ -28,7 +17,7 @@ const Page = styled.div`
 const Main = styled.main`
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto; /* 가운데 정렬 */
+  margin: 0 auto;
   padding: 24px 16px 48px;
   display: flex;
   flex-direction: column;
@@ -57,7 +46,7 @@ const ControlsRow = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;  /* 좌우 끝 정렬 */
+  justify-content: space-between;
 `;
 
 /* 본문 섹션 */
@@ -134,7 +123,7 @@ export default function CustomKeywordNewsPage() {
     });
   };
 
-  // 필터링
+  // 결과 필터링
   const filtered = useMemo(() => {
     let base = MOCK_NEWS;
     if (selectedCategory !== "전체") {
@@ -188,6 +177,11 @@ export default function CustomKeywordNewsPage() {
     setCurrentPage(1);
   };
 
+  const handleMakeReport = () => {
+    // TODO: 라우팅/모달 연결
+    console.log("보고서 만들러 가기 클릭");
+  };
+
   return (
     <Page>
       <Main>
@@ -206,13 +200,11 @@ export default function CustomKeywordNewsPage() {
             recent={recent}
             onSelect={handleSelectRecent}
             onRemove={handleRemoveRecent}
-            onMakeReport={() => {
-              console.log("보고서 직접 만들기 클릭");
-            }}
+            onMakeReport={handleMakeReport}
           />
         </SearchSection>
 
-        {/* 컨트롤 줄: 탭 ↔︎ 찜 패널 (같은 라인) */}
+        {/* 컨트롤 줄: 탭 ↔︎ 찜 패널 */}
         <ControlsRow>
           <CategoryTabs
             options={CATEGORIES}
@@ -229,36 +221,43 @@ export default function CustomKeywordNewsPage() {
           />
         </ControlsRow>
 
-        {/* 카드 그리드 */}
+        {/* 카드 영역 (없으면 NoResult 표시) */}
         <Section>
-          <CardsGrid>
-            {pageSlice.map((item) => (
-              <NewsCard
-                key={item.id}
-                id={item.id}
-                title={item.title}
-                keyword={item.keyword}
-                date={item.date}
-                imageUrl={item.imageUrl}
-                isOrange={item.isOrange}
-                liked={likedIds.has(item.id)}
-                onToggleLike={handleToggleLike}
-              />
-            ))}
-          </CardsGrid>
+          {pageSlice.length === 0 ? (
+            <NoResult onMakeReport={handleMakeReport} />
+          ) : (
+            <CardsGrid>
+              {pageSlice.map((item) => (
+                <NewsCard
+                  key={item.id}
+                  id={item.id}
+                  title={item.title}
+                  keyword={item.keyword}
+                  date={item.date}
+                  imageUrl={item.imageUrl}
+                  isOrange={item.isOrange}
+                  liked={likedIds.has(item.id)}
+                  onToggleLike={handleToggleLike}
+                />
+              ))}
+            </CardsGrid>
+          )}
         </Section>
 
-        {/* 하단 페이지네이션 */}
-        <Section style={{ alignItems: "center" }}>
-          <Pagination
-            current={currentPage}
-            total={totalPages}
-            onChange={setCurrentPage}
-          />
-        </Section>
+        {/* 하단 페이지네이션: 결과 없을 땐 숨김 */}
+        {pageSlice.length > 0 && (
+          <Section style={{ alignItems: "center" }}>
+            <Pagination
+              current={currentPage}
+              total={totalPages}
+              onChange={setCurrentPage}
+            />
+          </Section>
+        )}
       </Main>
     </Page>
   );
 }
+
 
 
