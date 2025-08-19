@@ -99,7 +99,7 @@ const Box = styled.textarea`
   font-weight: 500;
   line-height: normal;
 `;
-function RequestPopup({ storeName, storeType, requestContent, onClose }) {
+function RequestPopup({ store, onClose }) {
   const [message, setMessage] = useState(""); // 입력 내용
 
   const handleRequest = async () => {
@@ -123,10 +123,10 @@ function RequestPopup({ storeName, storeType, requestContent, onClose }) {
       <PopupBox onClick={(e) => e.stopPropagation()}>
         <CloseBtn src={Close} alt="닫기" onClick={onClose} />
         <TextWrapper>
-          <Title>{storeName}에 협업을 요청할까요?</Title>
+          <Title>{store.place_name}에 협업을 요청할까요?</Title>
           <ContentWrapper>
             <Content>
-              {storeName} : {storeType}
+              {/* {store} : {store} */}
             </Content>
             <Box placeholder="원하시는 협업 내용을 간단히 입력해주세요"
             value={message}

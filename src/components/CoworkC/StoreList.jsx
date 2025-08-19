@@ -25,13 +25,18 @@ display: flex;
 flex-direction: row;
     gap: 24px;
 `
-function StoreList({title, storeName, onClick}) {
+function StoreList({title, storeNames=[], onClick}) {
   return (
     <Box>
         <Title>{title}</Title>
         <List>
-          <StoreBtn storeName={storeName} onClick={onClick}/>
-
+          {storeNames.length > 0 ? (
+          storeNames.map((name, idx) => (
+            <StoreBtn key={idx} storeName={name} onClick={onClick} />
+          ))
+        ) : (
+          <StoreBtn storeName="없음" onClick={() => {}} /> // 클릭해도 아무 동작 없음
+        )}
         </List>
 
 
