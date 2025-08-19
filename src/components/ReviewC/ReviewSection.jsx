@@ -90,7 +90,7 @@ const RatioItem = styled.div`
   color: ${props => props.color};
 `;
 
-function ReviewSection({ title, icon, showSmallQ = true, className, children, ratios, popupImage }) {
+function ReviewSection({ title, icon, showSmallQ = true, className, ratios, popupImage }) {
   const [showPopup, setShowPopup] = useState(false);
 
   return (
@@ -100,7 +100,6 @@ function ReviewSection({ title, icon, showSmallQ = true, className, children, ra
         {icon && <SectionIcon src={icon} alt="icon" />}
       </SectionTitleWrapper>
 
-      {children && <SectionContent>{children}</SectionContent>}
 
       {showSmallQ && (
         <>

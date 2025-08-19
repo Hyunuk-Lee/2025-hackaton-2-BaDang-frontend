@@ -1,16 +1,16 @@
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import TimeBtnGroup from '../components/TimeBtnGroup';
-import ReviewSection from '../components/ReviewC/ReviewSection';
-import PieChart from '../components/ReviewC/PieChart';
-import styled from 'styled-components';
-import BigQ from '../assets/Popups/BigQ.svg';
-import GoodIcon from '../assets/Icons/GoodIcon.svg';
-import BadIcon from '../assets/Icons/BadIcon.svg';
-import Popup1 from '../assets/Popups/Popup1.svg';
-import Popup2 from '../assets/Popups/Popup2.svg';
-import Popup3 from '../assets/Popups/Popup3.svg';
-import Popup4 from '../assets/Popups/Popup4.svg';
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import TimeBtnGroup from "../components/TimeBtnGroup";
+import ReviewSection from "../components/ReviewC/ReviewSection";
+import PieChart from "../components/ReviewC/PieChart";
+import styled from "styled-components";
+import BigQ from "../assets/Popups/BigQ.svg";
+import GoodIcon from "../assets/Icons/GoodIcon.svg";
+import BadIcon from "../assets/Icons/BadIcon.svg";
+import Popup1 from "../assets/Popups/Popup1.svg";
+import Popup2 from "../assets/Popups/Popup2.svg";
+import Popup3 from "../assets/Popups/Popup3.svg";
+import Popup4 from "../assets/Popups/Popup4.svg";
 
 const Header = styled.div`
   display: flex;
@@ -54,9 +54,9 @@ const Title = styled.div`
 `;
 
 const TitleLarge = styled.span`
-  color: #17171B;
+  color: #17171b;
   text-align: center;
-  font-family: 'NanumSquareOTF';
+  font-family: "NanumSquareOTF";
   font-size: 40px;
   font-style: normal;
   font-weight: 700;
@@ -64,8 +64,8 @@ const TitleLarge = styled.span`
 `;
 
 const TitleSmall = styled.span`
-  color: #17171B;
-  font-family: 'NanumSquareOTF';
+  color: #17171b;
+  font-family: "NanumSquareOTF";
   font-size: 28px;
   font-style: normal;
   font-weight: 700;
@@ -128,56 +128,73 @@ const PageContainer = styled.div`
 `;
 
 function OnlineReviewPage() {
+ const options = ["전체", "한 달", "일주일"];
+  const termMap = {
+    전체: 0,
+    "한 달": 1,
+    일주일: 2,
+  };
+ 
+  const storeId = 1; // 테스트용으로 storeId 1로 고정
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const secretKey = import.meta.env.VITE_SECRET_KEY;
+  
   const [selectedRange, setSelectedRange] = useState("전체");
   const [storeName, setStoreName] = useState("가게 이름 불러오는 중...");
   const [goodPoint, setGoodPoint] = useState("리뷰 데이터 불러오는 중...");
   const [badPoint, setBadPoint] = useState("리뷰 데이터 불러오는 중...");
   const [percentage, setPercentage] = useState({
-  goodPercentage: 0,
-  middlePercentage: 0,
-  badPercentage: 0
-});
-const [analysisKeyword, setAnalysisKeyword] = useState("키워드 분석 데이터 불러오는 중...");
-const [analysisProblem, setAnalysisProblem] = useState("개선점 데이터 불러오는 중...");
-const [analysisSolution, setAnalysisSolution] = useState("제안 데이터 불러오는 중...");
-  const options = ["전체", "한 달", "일주일"];
+    goodPercentage: 0,
+    middlePercentage: 0,
+    badPercentage: 0,
+  });
+  const [analysisKeyword, setAnalysisKeyword] = useState(
+    "키워드 분석 데이터 불러오는 중..."
+  );
+  const [analysisProblem, setAnalysisProblem] =
+    useState("개선점 데이터 불러오는 중...");
+  const [analysisSolution, setAnalysisSolution] =
+    useState("제안 데이터 불러오는 중...");
 
+
+
+  
   useEffect(() => {
-    const fetchStoreName = async () => {
+    const fetchData = async () => {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const secretKey = import.meta.env.VITE_SECRET_KEY;
-
         const response = await axios.get(`${backendUrl}review/analysis`, {
-          params: {
-            storeId: 1,
-            term: 1
-          },
+          params: { storeId, term: termMap[selectedRange] ?? 0 },
           headers: {
-            'Authorization': `Bearer ${secretKey}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${secretKey}`,
+            "Content-Type": "application/json",
+          },
         });
-        if (response.data.statusCode === 200 && response.data.data) {
-           const data = response.data.data; 
-          setStoreName(data.storeName);
-          setGoodPoint(data.goodPoint);
-        setBadPoint(data.badPoint);
-        setPercentage(data.percentage);
-        setAnalysisKeyword(data.analysisKeyword);
-        setAnalysisProblem(data.analysisProblem);
-        setAnalysisSolution(data.analysisSolution);
+
+        if (response.data.statusCode === 200 && data) {
+          setStoreName(data.storeName || "정보 없음");
+          setGoodPoint(data.goodPoint || "데이터 없음");
+          setBadPoint(data.badPoint || "데이터 없음");
+          setPercentage(
+            data.percentage || {
+              goodPercentage: 0,
+              middlePercentage: 0,
+              badPercentage: 0,
+            }
+          );
+          setAnalysisKeyword(data.analysisKeyword || "데이터 없음");
+          setAnalysisProblem(data.analysisProblem || "데이터 없음");
+          setAnalysisSolution(data.analysisSolution || "데이터 없음");
         } else {
           setStoreName("API 호출 실패");
         }
       } catch (err) {
         console.error(err);
-        setStoreName("에러");
+        setStoreName("에러 발생");
       }
     };
+    fetchData();
+  }, [selectedRange]);
 
-    fetchStoreName();
-  }, []);
   return (
     <PageContainer>
       <Header>
@@ -202,55 +219,54 @@ const [analysisSolution, setAnalysisSolution] = useState("제안 데이터 불�
 
       <GridContainer>
         <StyledReviewSection
-        title="좋았어요"
-        icon={GoodIcon}
-        className="section-1"
-        showSmallQ={false}
-        children={goodPoint}
-      />
-
-      <StyledReviewSection
-        title="아쉬워요"
-        icon={BadIcon}
-        className="section-2"
-        showSmallQ={false}
-        children={badPoint}
-      />
-
-      <StyledReviewSection
-        title="긍·부정 비율"
-        showSmallQ={false}
-        className="section-3"
-        ratios={percentage}
-      >
-        <PieChart
-          positive={percentage.goodPercentage}
-          neutral={percentage.middlePercentage}
-          negative={percentage.badPercentage}
-        />
-      </StyledReviewSection>
-
-      <StyledReviewSection
-        title="키워드 분석"
-        className="section-4"
-        popupImage={Popup2}
-        children={analysisKeyword}
-      />
-
-      <StyledReviewSection
-        title="리뷰 기반 개선점"
-        className="section-5"
-        popupImage={Popup3}
-        children={analysisProblem}
-      />
-
-      <StyledReviewSection
-        title="사장님을 위한 제안"
-        className="section-6"
-        popupImage={Popup4}
-        children={analysisSolution}
-      />
-
+          title="좋았어요"
+          icon={GoodIcon}
+          className="section-1"
+          showSmallQ={false}
+        >
+          {goodPoint}
+        </StyledReviewSection>
+        <StyledReviewSection
+          title="아쉬워요"
+          icon={BadIcon}
+          className="section-2"
+          showSmallQ={false}
+        >
+          {badPoint}
+        </StyledReviewSection>
+        <StyledReviewSection
+          title="긍·부정 비율"
+          className="section-3"
+          showSmallQ={false}
+          ratios={percentage}
+        >
+          <PieChart
+            positive={percentage.goodPercentage}
+            neutral={percentage.middlePercentage}
+            negative={percentage.badPercentage}
+          />
+        </StyledReviewSection>
+        <StyledReviewSection
+          title="키워드 분석"
+          className="section-4"
+          popupImage={Popup2}
+        >
+          {analysisKeyword}
+        </StyledReviewSection>
+        <StyledReviewSection
+          title="리뷰 기반 개선점"
+          className="section-5"
+          popupImage={Popup3}
+        >
+          {analysisProblem}
+        </StyledReviewSection>
+        <StyledReviewSection
+          title="사장님을 위한 제안"
+          className="section-6"
+          popupImage={Popup4}
+        >
+          {analysisSolution}
+        </StyledReviewSection>
       </GridContainer>
     </PageContainer>
   );
