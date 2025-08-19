@@ -41,24 +41,7 @@ const CardWrapper=styled.div`
 
 
 function MainPage() {
-  const [name, setName] = useState('');
-
-  useEffect(() => {
-    // 예시: 로그인 후 현재 사용자 정보 가져오기
-    const fetchUserName = async () => {
-      try {
-        const response = await fetch('/api/users/current'); // 현재 로그인한 사용자 정보 엔드포인트
-        if (!response.ok) throw new Error('사용자 정보 가져오기 실패');
-        const data = await response.json();
-        setName(data.name); // API에서 받은 name 사용
-      } catch (err) {
-        console.error(err);
-        setName('이름없음'); // 기본값
-      }
-    };
-
-    fetchUserName();
-  }, []);
+  const [name, setName] = useState('noname');
 
   return (
     <Page>
