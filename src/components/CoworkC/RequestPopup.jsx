@@ -100,6 +100,24 @@ const Box = styled.textarea`
   line-height: normal;
 `;
 function RequestPopup({ storeName, storeType, requestContent, onClose }) {
+  const [message, setMessage] = useState(""); // 입력 내용
+
+  const handleRequest = async () => {
+    try {
+      const response = await axios.post("/collaboration", {
+        fromStoreId,
+        toStoreId,
+        initialMessage: message,
+      });
+      if (response.status === 200) {
+        alert(response.data.message); // "신청이 완료되었습니다"
+        onClose(); // 팝업 닫기
+      }
+    } catch (error) {
+      console.error(error);
+      alert("협업 요청에 실패했습니다.");
+    }
+  };
   return (
     <Overlay onClick={onClose}>
       <PopupBox onClick={(e) => e.stopPropagation()}>
@@ -110,11 +128,17 @@ function RequestPopup({ storeName, storeType, requestContent, onClose }) {
             <Content>
               {storeName} : {storeType}
             </Content>
-            <Box placeholder="원하시는 협업 내용을 간단히 입력해주세요" />
+            <Box placeholder="원하시는 협업 내용을 간단히 입력해주세요"
+            value={message}
+              onChange={(e) => setMessage(e.target.value)} />
           </ContentWrapper>
         </TextWrapper>
         <BtnWrapper>
-          <Btn btnName="요청하기" width="467px" color="#759AFC"/>
+          <Btn 
+          btnName="요청하기" 
+          width="467px" 
+          color="#759AFC" 
+          onClick={handleRequest}/>
         </BtnWrapper>
       </PopupBox>
     </Overlay>

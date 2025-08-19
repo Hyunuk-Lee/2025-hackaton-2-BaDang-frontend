@@ -148,19 +148,19 @@ const [analysisSolution, setAnalysisSolution] = useState("제안 데이터 불�
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const secretKey = import.meta.env.VITE_SECRET_KEY;
 
-        const response = await axios.get(`${backendUrl}review/test`, {
+        const response = await axios.get(`${backendUrl}review/analysis`, {
           params: {
             storeId: 1,
-            term: 0
+            term: 1
           },
           headers: {
             'Authorization': `Bearer ${secretKey}`,
             'Content-Type': 'application/json'
           }
         });
-
         if (response.data.statusCode === 200 && response.data.data) {
-          setStoreName(response.data.data.storeName);
+           const data = response.data.data; 
+          setStoreName(data.storeName);
           setGoodPoint(data.goodPoint);
         setBadPoint(data.badPoint);
         setPercentage(data.percentage);
@@ -172,7 +172,7 @@ const [analysisSolution, setAnalysisSolution] = useState("제안 데이터 불�
         }
       } catch (err) {
         console.error(err);
-        setStoreName("API 호출 실패");
+        setStoreName("에러");
       }
     };
 
