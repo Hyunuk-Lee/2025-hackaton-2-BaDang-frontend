@@ -1,5 +1,6 @@
 // pages/CustomKeywordNewsPage.jsx
 import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import styled from "styled-components";
 import NewsCard from "../components/NewsCard";
 import SearchBar from "../components/SearchBar";
@@ -16,9 +17,9 @@ const Page = styled.div`
 
 const Main = styled.main`
   width: 100%;
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: 24px 16px 48px;
+  padding: 24px 16px 10px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -66,7 +67,7 @@ const CardsGrid = styled.section`
     grid-template-columns: repeat(2, 384px);
     justify-content: space-between;
   }
-  @media (min-width: 1200px) {
+  @media (min-width: 1300px) {
     grid-template-columns: repeat(3, 384px);
     justify-content: space-between;
   }
@@ -93,6 +94,7 @@ const PAGE_SIZE = 9;
 
 /** ===== 페이지 ===== */
 export default function CustomKeywordNewsPage() {
+  const navigate = useNavigate(); 
   // 검색 입력값 vs 실제 적용된 쿼리
   const [searchInput, setSearchInput] = useState("");
   const [query, setQuery] = useState("");
@@ -178,8 +180,9 @@ export default function CustomKeywordNewsPage() {
   };
 
   const handleMakeReport = () => {
-    // TODO: 라우팅/모달 연결
-    console.log("보고서 만들러 가기 클릭");
+    // 현재 입력/검색어를 함께 넘기고 싶다면 state로 전달
+    const term = (searchInput || query || "").trim();
+    navigate("/create-report", { state: { keyword: term } });
   };
 
   return (

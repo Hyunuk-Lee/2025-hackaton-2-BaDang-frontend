@@ -6,12 +6,13 @@ const Wrap = styled.form`
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 16px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #0046ff;
   border-radius: 50px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  width: 648px;
+  width: 620px;
+  height: 69px;
+  padding-left: 12px;
 `;
 
 const Icon = styled.span`
@@ -55,8 +56,10 @@ const SearchBtn = styled.button`
   border: none;
   background: #0046ff;
   color: #fff;
-  border-radius: 8px;
+  border-radius: 0 80px 80px 0;
   padding: 8px 14px;
+  height: 69px;
+  width: 70px;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
