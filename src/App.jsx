@@ -7,6 +7,7 @@ import MainPage from './pages/MainPage';
 import OnlineReviewPage from './pages/OnlineReviewPage.jsx';
 import CustomKeywordNewsPage from './pages/CustomKeywordNewsPage.jsx';
 import CoworkPage from './pages/CoworkPage.jsx';
+import CreateReportPage from './pages/CreateReportPage.jsx';
 
 // import ProfileEditPage from './pages/ProfileEditPage.jsx';
 import { Routes, Route, Router } from 'react-router-dom';
@@ -63,7 +64,7 @@ function App() {
             <Route path="/online-review" element={<OnlineReviewPage />} />
             <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
             <Route path="/collaboration-management" element={<CoworkPage />} />
-
+            <Route path="/create-report" element={<CreateReportPage />} />
             {/* <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
             <Route path="/profile-edit" element={<ProfileEditPage />} /> */}
           </Routes>

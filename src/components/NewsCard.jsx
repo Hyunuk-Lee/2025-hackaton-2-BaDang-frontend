@@ -40,7 +40,7 @@ const Textbox = styled.div`
 display: flex;
 width: 384px;
 height: 130px;
-padding: 16px 58px 16px 16px;
+padding: 16px 16px 16px 16px;
 flex-direction: column;
 align-items: flex-start;
 gap: 16px;
@@ -69,10 +69,12 @@ const Keyword = styled(BaseText)`
   color: #FAF9F6;
   background-color: ${props => props.isOrange ? '#FF8040' : '#0046FF'};
   border-color: ${props => props.isOrange ? '#FF8040' : '#0046FF'};
+  font-family: NanumSquareOTF;
 `
 const Date = styled(BaseText)`
   color: #17171B;
   border-color: ${props => props.isOrange ? '#FF8040' : '#0046FF'};
+  font-family: NanumSquareOTF;
 `
 const Title=styled.h3`
   width:310px;
@@ -85,7 +87,7 @@ const Title=styled.h3`
   line-height: 1.2;
   color: #17171B;
   transition: color 0.2s ease;
-  
+  font-family: SUIT;
   ${Card}:hover & {
     color: ${props => props.isOrange ? '#FF8040' : '#0046FF'};
   }

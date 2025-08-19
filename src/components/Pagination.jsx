@@ -78,6 +78,7 @@ const Nav = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-top: 24px;
 `;
 
 const circle = `
