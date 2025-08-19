@@ -9,6 +9,7 @@ import CategoryTabs from "../components/CategoryTabs";
 import FavoritePanel from "../components/FavoritePanel";
 import Pagination from "../components/Pagination";
 import NoResult from "../components/NoResult";
+import { useFavorites } from "../context/FavoritesContext";
 
 /** ===== 레이아웃 ===== */
 const Page = styled.div`
@@ -107,7 +108,7 @@ export default function CustomKeywordNewsPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   // ❤️ 좋아요 상태 + 찜 필터 토글
-  const [likedIds, setLikedIds] = useState(new Set());
+  const { likedIds, isLiked, toggleLike } = useFavorites();
   const [favoriteOnly, setFavoriteOnly] = useState(false);
 
   // 최근 검색어 삭제
@@ -115,15 +116,6 @@ export default function CustomKeywordNewsPage() {
     setRecent((prev) => prev.filter((x) => x !== kw));
   };
 
-  // 카드 하트 토글
-  const handleToggleLike = (id) => {
-    setLikedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
 
   // 결과 필터링
   const filtered = useMemo(() => {
@@ -139,11 +131,9 @@ export default function CustomKeywordNewsPage() {
           n.keyword.toLowerCase().includes(q)
       );
     }
-    if (favoriteOnly) {
-      base = base.filter((n) => likedIds.has(n.id));
-    }
+    if (favoriteOnly) base = base.filter((n) => isLiked(n.id));
     return base;
-  }, [query, selectedCategory, favoriteOnly, likedIds]);
+  }, [query, selectedCategory, favoriteOnly, isLiked]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageSlice = filtered.slice(
@@ -239,8 +229,13 @@ export default function CustomKeywordNewsPage() {
                   date={item.date}
                   imageUrl={item.imageUrl}
                   isOrange={item.isOrange}
-                  liked={likedIds.has(item.id)}
-                  onToggleLike={handleToggleLike}
+                  liked={isLiked(item.id)}
+                  onToggleLike={() => toggleLike(item.id)}
+                  onClick={() =>
+                    navigate(`/news/${item.id}`, {
+                      state: { item, liked: isLiked(item.id) },
+                    })
+                  }
                 />
               ))}
             </CardsGrid>
