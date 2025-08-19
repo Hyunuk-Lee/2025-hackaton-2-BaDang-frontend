@@ -103,70 +103,26 @@ const ButtonsBox = styled.div`
 
 // 카테고리별 소분류 옵션
 const subCategoryOptions = {
-  음식: [
-    "한식",
-    "중식",
-    "일식",
-    "서양식",
-    "기타외국식",
-    "분식",
-    "패스트푸드",
-    "제과제빵",
-    "카페",
-  ],
-  소매: [
-    "슈퍼마켓",
-    "편의점",
-    "전통시장",
-    "농축수산물",
-    "건강식품",
-    "의류",
-    "패션잡화",
-    "생활잡화",
-    "가전제품",
-    "서적/문구",
-    "애완용품",
-  ],
-  생활서비스: [
-    "미용실",
-    "네일숍",
-    "피부관리",
-    "세탁소",
-    "수선/수리",
-    "사진관",
-    "예식/행사",
-    "인테리어",
-  ],
-  교육: [
-    "입시/보습학원",
-    "외국어학원",
-    "예체능학원",
-    "컴퓨터/IT교육",
-    "평생교육",
-  ],
-  숙박: ["호텔", "모텔", "게스트하우스", "펜션/민박"],
-  "오락/여가": [
-    "PC방",
-    "노래방",
-    "게임방",
-    "스크린골프",
-    "당구장",
-    "헬스/요가/필라테스",
-  ],
-  "의료/건강": ["약국", "한의원", "병원", "안경점", "헬스용품"],
-  "운송/자동차": ["주유소", "세차장", "자동차수리", "렌터카"],
-  "제조/생산": ["식품제조", "의류제조", "가구제조", "인쇄/출판"],
-  기타: ["부동산중개", "여행사", "종교단체", "비영리단체"],
+  음식: ["한식","중식","일식","서양식","기타외국식","분식","패스트푸드","제과제빵","카페"],
+  소매: ["슈퍼마켓","편의점","전통시장","농축수산물","건강식품","의류","패션잡화","생활잡화","가전제품","서적/문구","애완용품"],
+  생활서비스: ["미용실","네일숍","피부관리","세탁소","수선/수리","사진관","예식/행사","인테리어"],
+  교육: ["입시/보습학원","외국어학원","예체능학원","컴퓨터/IT교육","평생교육"],
+  숙박: ["호텔","모텔","게스트하우스","펜션/민박"],
+  "오락/여가": ["PC방","노래방","게임방","스크린골프","당구장","헬스/요가/필라테스"],
+  "의료/건강": ["약국","한의원","병원","안경점","헬스용품"],
+  "운송/자동차": ["주유소","세차장","자동차수리","렌터카"],
+  "제조/생산": ["식품제조","의류제조","가구제조","인쇄/출판"],
+  기타: ["부동산중개","여행사","종교단체","비영리단체"],
 };
 
 function CoworkMap({ onStoreClick }) {
   const mapRef = useRef(null);
-  const [map, setMap] = useState(null);
-  const [categoryBig, setCategoryBig] = useState(""); // 대분류 초기값: 빈 문자열
-  const [categorySub, setCategorySub] = useState(""); // 소분류 초기값: 빈 문자열
-  const [keyword, setKeyword] = useState(""); // 검색어
-  const [places, setPlaces] = useState([]);
-  const markersRef = useRef([]);
+  const [map, setMap] = useState(null);// 카카오 지도 인스턴스
+  const [categoryBig, setCategoryBig] = useState(""); // 대분류
+  const [categorySub, setCategorySub] = useState(""); // 소분류
+  const [keyword, setKeyword] = useState(""); // 검색 키워드 
+  const [places, setPlaces] = useState([]); //검색 결과
+  const markersRef = useRef([]); //지도 마커 배열
 
   useEffect(() => {
     const key = import.meta.env.VITE_REACT_APP_KAKAO_API_KEY;
@@ -190,7 +146,7 @@ function CoworkMap({ onStoreClick }) {
         const container = mapRef.current;
         const options = {
           center: new window.kakao.maps.LatLng(37.5665, 126.978),
-          level: 4,
+          level: 1,
         };
         const mapInstance = new window.kakao.maps.Map(container, options);
         setMap(mapInstance);
@@ -326,25 +282,24 @@ function CoworkMap({ onStoreClick }) {
               <option value="기타">기타</option>
             </Select>
 
-<Select
-  value={categorySub}
-  onChange={(e) => {
-    setCategorySub(e.target.value);
-    handleSearch(); // 소분류 선택 시 검색
-  }}
-  disabled={!categoryBig} // 대분류 선택 전에는 비활성화
->
-  <option value="" disabled>
-    소분류를 선택하세요
-  </option>
-  {categoryBig &&
-    subCategoryOptions[categoryBig]?.map((sub, idx) => (
-      <option key={idx} value={sub}>
-        {sub}
-      </option>
-    ))}
-</Select>
-
+            <Select
+              value={categorySub}
+              onChange={(e) => {
+                setCategorySub(e.target.value);
+                handleSearch(); // 소분류 선택 시 검색
+              }}
+              disabled={!categoryBig} // 대분류 선택 전에는 비활성화
+            >
+              <option value="" disabled>
+                소분류를 선택하세요
+              </option>
+              {categoryBig &&
+                subCategoryOptions[categoryBig]?.map((sub, idx) => (
+                  <option key={idx} value={sub}>
+                    {sub}
+                  </option>
+                ))}
+            </Select>
           </SelectWrapper>
         </Controls>
 

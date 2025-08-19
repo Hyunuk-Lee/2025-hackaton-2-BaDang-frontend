@@ -1,22 +1,13 @@
-import React from 'react';
-import styled from 'styled-components';
-import CardBox from '../../assets/Cards/OrangeCard.svg'; // 카드 배경 이미지
-import Arrow from '../../assets/Icons/ArrowIcon.svg';
-import { Link } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import CardBox from "../../assets/Cards/OrangeCard.svg";
+import Arrow from "../../assets/Icons/ArrowIcon.svg";
+import { Link } from "react-router-dom";
 
-const Card = styled(Link)` /* Link로 변경 */
-  position: relative;
-  width: 384px;
-  height: 197px;
-  display: block;
-  text-decoration: none; /* 링크 밑줄 제거 */
-`;
 const Background = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-
-
 `;
 
 const Content = styled.div`
@@ -31,17 +22,54 @@ const Content = styled.div`
 
 const Icon = styled.img`
   height: 70px;
+  transition: transform 0.5s ease, opacity 0.5s ease;
 `;
 
 const Text = styled.div`
-   width: 140px;
-  color: #FAF9F6;
+  width: 140px;
+  color: #faf9f6;
   font-family: SUIT;
   font-size: 25px;
   font-style: normal;
   font-weight: 800;
-  line-height: 35px; /* 140% */
-  white-space: pre-line; /* 줄바꿈 적용 */
+  line-height: 35px;
+  white-space: pre-line;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+`;
+const HoverText = styled.div`
+  width: 300px;
+  transform: translate(13%, -200%); /* 가로/세로 중앙 정렬 */
+  color: #faf9f6;
+  font-family: SUIT;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 35px;
+  white-space: pre-line;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+`;
+const Card = styled(Link)`
+  /* Link로 변경 */
+  position: relative;
+  width: 384px;
+  height: 197px;
+  display: block;
+  text-decoration: none; /* 링크 밑줄 제거 */
+  &:hover ${HoverText} {
+    opacity: 1; /* hover 시 나타남 */
+  }
+
+  &:hover ${Icon} {
+    transform: translateX(-100px); /* 왼쪽으로 이동 */
+    opacity: 0; /* 자연스럽게 사라지게 */
+  }
+
+  &:hover ${Text} {
+    transform: translateX(+100px); /* 왼쪽으로 이동 */
+    opacity: 0; /* 자연스럽게 사라지게 */
+  }
 `;
 const ArrowBtn = styled.img`
   position: absolute;
@@ -49,9 +77,8 @@ const ArrowBtn = styled.img`
   bottom: 0px;
   width: 40px;
   height: 40px;
-  
 `;
-function SmallCardBtn({ imgSrc, text, to }) {
+function SmallCardBtn({ imgSrc, text, hovertext, to }) {
   return (
     <Card to={to}>
       <Background src={CardBox} alt="card background" />
@@ -59,7 +86,9 @@ function SmallCardBtn({ imgSrc, text, to }) {
         <Icon src={imgSrc} alt={text} />
         <Text>{text}</Text>
       </Content>
-        <ArrowBtn src={Arrow} alt="arrow" />
+        <HoverText>{hovertext}</HoverText>
+
+      <ArrowBtn src={Arrow} alt="arrow" />
     </Card>
   );
 }
