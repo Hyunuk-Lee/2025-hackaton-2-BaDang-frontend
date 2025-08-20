@@ -24,62 +24,92 @@ const ListBox = styled.div`
   align-items: flex-start;
   gap: 36px;
 `;
-function CoworkPage({ is_willing_collaborate, storeId = "1" }) {
+function CoworkPage({ storeId = "1" }) {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const secretKey = import.meta.env.VITE_SECRET_KEY;
-  //협업 불가 시
-  //    if (!is_willing_collaborate) {
-  //    return <CoworkUnavailable />;
-  //  }
+  const [popup, setPopup] = useState({ type: null, store: null });
+
+  const [isWilling, setIsWilling] = useState(true); // 협업 가능 여부
+
+  const [collaborateStores, setCollaborateStores] = useState([]); // 협업 중인 가게
+  const [requestStores, setRequestStores] = useState([]); // 협업 요청받은 가게
+  const [requestSentStores, setRequestSentStores] = useState([]); // 협업 요청한 가게
 
   // 팝업 관리------------------------------------------------------
-  const [popup, setPopup] = useState({ type: null, store: null });
   // type: 'cowork' | 'request' | 'list' | null
   const handleStoreClick = (store, type) => {
-      console.log("클릭된 가게 정보:", store);
-  console.log("팝업 타입:", type);
+    console.log("클릭된 가게 정보:", store);
+    console.log("팝업 타입:", type);
     setPopup({ type, store });
-
   };
   const handleClosePopup = () => {
     setPopup({ type: null, store: null });
   };
   // 팝업 관리------------------------------------------------------
 
-  //리스트 관리---------------------------------------------
-  const [collaborateStores, setCollaborateStores] = useState([]); // 협업 중인 가게
-  const [requestStores, setRequestStores] = useState([]); // 협업 요청받은 가게
-
   useEffect(() => {
-    if (!storeId) return; // storeId 없으면 호출 안 함
+    if (!storeId) return;
 
-    axios
-      .get(`${backendUrl}collaboration/active/${storeId}`, {
-        headers: { Authorization: `Bearer ${secretKey}` },
-      })
-      .then((res) => {
-        const data = res.data.data;
+    const fetchData = async () => {
+      try {
+        //  협업 가능 여부 확인
+        const storeRes = await axios.get(
+          `${backendUrl}main/stores/${storeId}`,
+          { headers: { Authorization: `Bearer ${secretKey}` } }
+        );
+        const isWilling = storeRes.data.isWillingCollaborate;
+        console.log("협업 가능 여부:", isWilling);
+        setIsWilling(isWilling);
 
-        // 협업 중인 가게 이름
-        const collaborateNames = data.collaborateStores.flatMap((store) => {
-          if (store.collaborateStore) {
-            return store.collaborateStore.map((s) => s.collaborateStoreName);
-          } else if (store.requestStore) {
-            return store.requestStore.map((s) => s.requestStoreName);
-          }
-          return [];
-        });
-        setCollaborateStores(collaborateNames);
+        //  나머지 세 요청 병렬 처리
+        const [activeRes, responseRes, requestRes] = await Promise.all([
+          axios.get(`${backendUrl}collaboration/active/${storeId}`, {
+            headers: { Authorization: `Bearer ${secretKey}` },
+          }),
+          axios.get(`${backendUrl}collaboration/response/${storeId}`, {
+            headers: { Authorization: `Bearer ${secretKey}` },
+          }),
+          axios.get(`${backendUrl}collaboration/request/${storeId}`, {
+            headers: { Authorization: `Bearer ${secretKey}` },
+          }),
+        ]);
 
-        // 협업 요청받은 가게 이름
-        const requestNames =
-          data.requestStores?.map((s) => s.responseStore.storeName) || [];
-        setRequestStores(requestNames);
-      })
-      .catch((err) => console.error(err));
+        // 협업 중인 가게
+        // console.log("activeRes", activeRes.data);
+        setCollaborateStores(
+          activeRes.data.data.collaborateStores.map(
+            (item) => item.collaborateStore
+          )
+        );
+        console.log("협업 중인 가게 배열:", collaborateStores);
+
+        // 협업 요청받은 가게
+        // console.log("responseRes", responseRes.data);
+        setRequestStores(
+          responseRes.data.data.responsetStores.map(
+            (item) => item.responseStore
+          )
+        );
+        console.log("협업 요청받은 가게 배열:", requestStores);
+
+        // 협업 요청한 가게
+        // console.log("requestRes", requestRes.data);
+        setRequestSentStores(
+          requestRes.data.data.requestStores.map((item) => item.responseStore)
+        );
+        console.log("협업 요청한 가게 배열:", requestSentStores);
+
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
   }, [storeId]);
-  // 리스트 관리---------------------------------------------
 
+  if (!isWilling) {
+    return <CoworkUnavailable />; // unavailable 페이지 띄우기
+  }
   return (
     <Page>
       <Map onStoreClick={(store) => handleStoreClick(store, "request")} />
@@ -104,12 +134,18 @@ function CoworkPage({ is_willing_collaborate, storeId = "1" }) {
         <StoreList
           title="협업 요청받은 가게"
           storeNames={requestStores}
+          nothing="아직 협업을 요청한 가게가 없어요"
           onClick={(store) => handleStoreClick(store, "cowork")}
         />
-        <StoreList title="협업 요청한 가게" storeName="하얀집 3호점" />
+        <StoreList
+          title="협업 요청한 가게"
+          storeName="하얀집 3호점"
+          nothing="아직 협업 요청을 보내지 않으셨어요"
+        />
         <StoreList
           title="협업 중인 가게"
           storeNames={collaborateStores}
+          nothing="아직 협업 중인 가게가 없어요"
           onClick={(store) => handleStoreClick(store, "list")}
         />
       </ListBox>
