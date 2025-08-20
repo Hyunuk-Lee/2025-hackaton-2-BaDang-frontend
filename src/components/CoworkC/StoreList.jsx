@@ -19,13 +19,21 @@ const Title= styled.div`
     font-weight: 700;
     line-height: normal;
 `
-
+const NothingText=styled.div`
+  height: 63px;
+color: #494954;
+font-family: SUIT;
+font-size: 20px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+`
 const List=styled.div`
 display: flex;
 flex-direction: row;
     gap: 24px;
 `
-function StoreList({title, storeNames=[], onClick}) {
+function StoreList({title,nothing, storeNames=[], onClick}) {
   return (
     <Box>
         <Title>{title}</Title>
@@ -35,8 +43,7 @@ function StoreList({title, storeNames=[], onClick}) {
             <StoreBtn key={idx} storeName={name} onClick={onClick} />
           ))
         ) : (
-          <StoreBtn storeName="없음" onClick={() => {}} /> // 클릭해도 아무 동작 없음
-        )}
+        <NothingText>{nothing}</NothingText>        )}
         </List>
 
 
