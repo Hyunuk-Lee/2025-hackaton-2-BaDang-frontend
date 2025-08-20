@@ -10,6 +10,7 @@ import CoworkPage from './pages/CoworkPage.jsx';
 import CreateReportPage from './pages/CreateReportPage.jsx';
 import NewsDetailPage from './pages/NewsDetailPage.jsx';
 import { FavoritesProvider } from "./context/FavoritesContext";
+import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import { Routes, Route, /* Router */ useLocation } from 'react-router-dom';
 import ScrollToTop from './components/BaseC/ScrollToTop.jsx';
@@ -44,7 +45,7 @@ const PlainContent = styled.div.attrs({ id: "main-scroll" })`
 
 function App() {
   const location = useLocation();
-  const hideChromeRoutes = ['/signup'];       // 네비/푸터/메인 레이아웃 숨길 경로
+  const hideChromeRoutes = ['/signup', '/login'];       // 네비/푸터/메인 레이아웃 숨길 경로
   const hideChrome = hideChromeRoutes.some(p => location.pathname.startsWith(p));
 
   return (
@@ -56,9 +57,10 @@ function App() {
         <ScrollToTop />
         <FavoritesProvider>
           {hideChrome ? (
-            // ✅ signup: MainContent 대신 PlainContent 사용
+            //  signup: MainContent 대신 PlainContent 사용
             <PlainContent>
               <Routes>
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
               </Routes>
             </PlainContent>
