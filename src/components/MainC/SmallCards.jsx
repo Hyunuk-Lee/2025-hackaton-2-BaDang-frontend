@@ -27,7 +27,7 @@ function SmallCards() {
         imgSrc={MakeIcon}
         text={`키워드 보고서\n직접 만들기`}
         hovertext={`원하는 키워드를 넣으면 \n바당이 보고서를 만들어드려요`}
-        to="/custom-keyword-news"
+        to="/create-report"
       />
       <Card
         imgSrc={CoworkIcon}
