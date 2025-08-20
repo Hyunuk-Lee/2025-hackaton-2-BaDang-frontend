@@ -57,7 +57,7 @@ function App() {
         <ScrollToTop />
         <FavoritesProvider>
           {hideChrome ? (
-            // ✅ signup: MainContent 대신 PlainContent 사용
+            //  signup: MainContent 대신 PlainContent 사용
             <PlainContent>
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
