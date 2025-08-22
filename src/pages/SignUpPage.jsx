@@ -82,33 +82,48 @@ export default function SignUpPage() {
         const finalData = { ...data, ...step4Data };
         setData(finalData);
         setLoading(true);
-
+    
+        // API 요청을 위한 데이터 형태로 변환
         const payload = {
-            // ... (페이로드 변환 로직)
+            type: CATEGORY_MAIN_MAP[finalData.main],
+            category: CATEGORY_SUB_MAP[finalData.sub],
+            visitor: {
+                gender: finalData.gender === "남자" ? "M" : "F",
+                age_group: AGE_MAP[finalData.ages[0]] ?? 1,
+                is_foreign: finalData.ages.includes("외국인"),
+            },
+            isWillingCollaborate: finalData.consent === "동의",
+            storeContent: finalData.note,
+            menus: finalData.items.map(item => ({ name: item.name, price: Number(item.price) })),
         };
-
+    
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/stores/detail`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                // ✅ HttpOnly 쿠키를 자동으로 주고받도록 설정
-                credentials: 'include',
-                body: JSON.stringify(payload),
+          // ✅ 백엔드의 storeView에 맞게 URL을 수정하고, 메서드를 PATCH로 변경
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/main/stores`, {
+                method: 'PATCH', // ✅ POST에서 PATCH로 변경
+                headers: { 
+                'Content-Type': 'application/json' 
+            },
+            // 쿠키 인증을 위해 credentials 옵션 유지
+            credentials: 'include',
+            body: JSON.stringify(payload),
             });
-
+    
             if (!response.ok) {
-                // ...
+                const err = await response.json();
+                throw new Error(err.message || '상세 정보 등록에 실패했습니다.');
             }
-
+    
             alert("회원가입이 성공적으로 완료되었습니다!");
             navigate("/");
-
+    
         } catch (error) {
-            // ...
+            console.error("API Error:", error);
+            alert(`오류가 발생했습니다: ${error.message}`);
         } finally {
             setLoading(false);
         }
-    };
+        };
 
     const steps = [
         <SignUpStep1 defaultValues={data} onNext={handleNext} />,

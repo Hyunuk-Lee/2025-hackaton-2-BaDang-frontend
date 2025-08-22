@@ -39,15 +39,13 @@ export default function SignUpStep4({ defaultValues, onComplete }) {
       consent,
       note: note.trim(),
     };
+    
+    // ❌ 임시 로그인 처리 및 페이지 이동 코드 제거
+    // localStorage.setItem("isAuthed", "1");
+    // navigate("/");
 
-    // ✨ 임시 로그인 처리 (원하면 실제 API 연동으로 교체)
-    localStorage.setItem("isAuthed", "1");
-
-    // 부모 단계 관리로 전달도 가능
+    // ✅ 부모 컴포넌트에 데이터만 전달하는 역할만 수행
     onComplete?.(payload);
-
-    // 메인으로 이동
-    navigate("/");
   };
 
   return (
