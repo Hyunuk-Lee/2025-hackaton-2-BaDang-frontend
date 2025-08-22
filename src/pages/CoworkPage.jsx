@@ -103,9 +103,9 @@ function CoworkPage({ storeId = "4" }) {
     fetchData();
   }, [storeId]);
 
-  if (!isWilling) {
-    return <CoworkUnavailable />; // unavailable 페이지 띄우기
-  }
+  // if (!isWilling) {
+  //   return <CoworkUnavailable />; // unavailable 페이지 띄우기
+  // }
   return (
     <Page>
       <Map
@@ -119,19 +119,26 @@ function CoworkPage({ storeId = "4" }) {
         store={popup.store} 
         onClose={handleClosePopup} />
       )}
-      {popup.type === "cowork" && (
-        <CoworkPopup
-          storeName="아코 헤어"
-          storeType="생활 서비스 - 미용실"
-          requestContent="안녕하세요 사장님 각자 가게 영수증 가지고 가면 10% 할인해주는 이벤트 어떠세요?"
-          onClose={handleClosePopup}
-        />
-      )}
-      {popup.type === "list" && (
-        <StoreListPopup 
-        onClose={handleClosePopup} 
-        storeName="하얀집 3호점" />
-      )}
+{popup.type === "cowork" && popup.store && (
+  <CoworkPopup
+    storeName={popup.store.name}
+    storeType={popup.store.type}
+    requestContent={popup.store.requestContent || ""}
+    collaborateId={popup.store.collaborateId}
+    onClose={handleClosePopup}
+  />
+)}
+
+      {popup.type === "list" && popup.store && (
+  <StoreListPopup
+    onClose={handleClosePopup}
+    storeName={popup.store.name}
+    storeType={popup.store.type}
+    phoneNumber={popup.store.phoneNumber}
+    requestContent={popup.store.memo || ""}
+    collaborateId={popup.store.collaborateId}
+  />
+)}
 
       <ListBox>
         <StoreList

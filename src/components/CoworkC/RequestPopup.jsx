@@ -99,9 +99,8 @@ const Box = styled.textarea`
   font-weight: 500;
   line-height: normal;
 `;
-function RequestPopup({ id, store, onClose }) {
+function RequestPopup({ store, onClose }) {
   const [message, setMessage] = useState(""); // 입력 내용
-  const fromStoreId = id;
   const toStoreId = store.store.storeId;
   
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -110,7 +109,6 @@ function RequestPopup({ id, store, onClose }) {
     try {const response = await axios.post(
   `${backendUrl}collaboration`,
   {
-    fromStoreId,
     toStoreId,
     initialMessage: message,
   },
