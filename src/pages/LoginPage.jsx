@@ -4,9 +4,6 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Robot from "../assets/Icons/LoginRobotIcon.svg";
 
-// 로고가 따로 없다면 텍스트 로고로 렌더링(아래 컴포넌트 참고)
-// import Logo from "../assets/Logos/Badang.svg";
-
 export default function LoginPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: "", password: "" });
@@ -29,18 +26,35 @@ export default function LoginPage() {
     setTouched({ username: true, password: true });
     if (!canSubmit) return;
 
+    setSubmitting(true);
     try {
-      setSubmitting(true);
+      // ✅ 1. 로그인 API 호출
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/main/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // ✅ 2. HttpOnly 쿠키를 주고받기 위한 설정
+        credentials: 'include',
+        body: JSON.stringify({
+          // 백엔드 API가 id를 받으므로 username을 id로 매핑
+          id: form.username.trim(),
+          password: form.password,
+        }),
+      });
 
-      // 👉 실제 API 연동 시 여기에서 로그인 요청
-      // const res = await api.login(form.username, form.password);
-      // localStorage.setItem('authToken', res.token);
+      // ✅ 3. 로그인 실패 시 에러 처리
+      if (!response.ok) {
+        const errorData = await response.json();
+        // 백엔드에서 보내주는 에러 메시지를 alert로 표시
+        throw new Error(errorData.error || "아이디 또는 비밀번호가 올바르지 않습니다.");
+      }
+      
+      // ✅ 4. 로그인 성공 시 메인 페이지로 이동
+      // 성공 시 서버가 쿠키를 설정해주므로 프론트에서 별도 토큰 저장은 불필요
+      navigate("/", { replace: true });
 
-      // 데모: 로컬스토리지에 로그인 플래그 저장
-      localStorage.setItem("badang:isAuthed", "true");
-      localStorage.setItem("badang:username", form.username.trim());
-
-      navigate("/", { replace: true }); // 메인으로
+    } catch (error) {
+      console.error("Login Error:", error);
+      alert(error.message);
     } finally {
       setSubmitting(false);
     }
@@ -50,7 +64,6 @@ export default function LoginPage() {
     <Page>
       <Card onSubmit={handleSubmit}>
         <Head>
-          {/* <img src={Logo} alt="Badang" /> */}
           <RobotIcon src={Robot} alt="Badang 로봇" />
           <Wordmark>
             <span className="ba">Ba</span>
