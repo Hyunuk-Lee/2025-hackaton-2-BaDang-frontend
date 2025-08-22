@@ -103,13 +103,35 @@ function StoreListPopup({
   storeType,
   phoneNumber,
   requestContent,
+  collaborateId, // 꼭 받아오기
   onClose,
 }) {
   const [content, setContent] = useState(requestContent);
-  const handleSave = () => {
-    console.log("수정된 내용:", content);
-    // 여기서 API 호출로 저장하면 됨
-    onClose();
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const secretKey = import.meta.env.VITE_SECRET_KEY;
+
+  const handleSave = async () => {
+    try {
+      const response = await axios.patch(
+        `${backendUrl}/collaboration/memo`,
+        {
+          collaborateId: collaborateId,
+          memo: content,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${secretKey}`,
+          },
+        }
+      );
+
+      console.log(response.data); // {status:200, message:"수정 완료", data:{memo: "..."}}
+      onClose(); // 팝업 닫기
+    } catch (err) {
+      console.error('메모 수정 실패:', err);
+    }
   };
 
   return (
@@ -138,5 +160,6 @@ function StoreListPopup({
     </Overlay>
   );
 }
+
 
 export default StoreListPopup;
