@@ -40,35 +40,17 @@ const CardWrapper = styled.div`
 `;
 
 function MainPage() {
-  const storeId = 4; // 테스트용으로 storeId 고정
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const secretKey = import.meta.env.VITE_SECRET_KEY;
 
   const [username, setUsername] = useState(""); // 초기값 빈 문자열
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${backendUrl}main/stores/${storeId}`,
-          {
-            params: {
-              storeId: storeId,
-            },
-            headers: {
-              Authorization: `Bearer ${secretKey}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        setUsername(response.data.username);
-        console.log(response.data.username); // 서버에서 받은 데이터 확인
-        console.log(response)
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchData();
+    const savedUsername = localStorage.getItem("badang:username");
+    const savedUserId = localStorage.getItem("badang:userId");
+
+    if (savedUsername) setUsername(savedUsername);
+    if (savedUserId) setUserId(savedUserId);
   }, []);
 
   return (

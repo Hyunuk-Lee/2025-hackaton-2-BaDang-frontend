@@ -103,9 +103,9 @@ function CoworkPage({ storeId = "4" }) {
     fetchData();
   }, [storeId]);
 
-  if (!isWilling) {
-    return <CoworkUnavailable />; // unavailable 페이지 띄우기
-  }
+  // if (!isWilling) {
+  //   return <CoworkUnavailable />; // unavailable 페이지 띄우기
+  // }
   return (
     <Page>
       <Map
