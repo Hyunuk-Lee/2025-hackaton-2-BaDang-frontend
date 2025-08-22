@@ -1,19 +1,24 @@
 // App.jsx
-import { useState } from 'react'
+import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+
 import Navbar from './components/BaseC/Navbar.jsx';
 import Footer from './components/BaseC/Footer.jsx';
+import ScrollToTop from './components/BaseC/ScrollToTop.jsx';
+import PrivateRoute from './context/PrivateRoute.jsx'; // PrivateRoute 임포트
+
 import MainPage from './pages/MainPage';
 import OnlineReviewPage from './pages/OnlineReviewPage.jsx';
 import CustomKeywordNewsPage from './pages/CustomKeywordNewsPage.jsx';
 import CoworkPage from './pages/CoworkPage.jsx';
 import CreateReportPage from './pages/CreateReportPage.jsx';
 import NewsDetailPage from './pages/NewsDetailPage.jsx';
-import { FavoritesProvider } from "./context/FavoritesContext";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
-import { Routes, Route, /* Router */ useLocation } from 'react-router-dom';
-import ScrollToTop from './components/BaseC/ScrollToTop.jsx';
+
+import { FavoritesProvider } from "./context/FavoritesContext";
+import { useAuth } from './context/AuthContext'; // useAuth 훅 임포트
 
 const GlobalStyle = createGlobalStyle`
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,26 +32,20 @@ const AppContainer = styled.div`
   background-color: #FFF;
 `;
 
-const MainContent = styled.div.attrs({ id: "main-scroll" })`
-  /* 네비바가 있을 때만 상단 여백을 준다 */
-  padding-top: ${(p) => (p.withNavbar ? '80px' : '0')};
+const MainContent = styled.div`
+  padding-top: 80px;
   flex: 1;
   display: flex;
-  align-items: center;
   flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-`;
-
-const PlainContent = styled.div.attrs({ id: "main-scroll" })`
-  flex: 1;        /* 높이만 채우고 나머지는 페이지 내부에서 레이아웃 */
-  width: 100%;
 `;
 
 function App() {
   const location = useLocation();
-  const hideChromeRoutes = ['/signup', '/login'];       // 네비/푸터/메인 레이아웃 숨길 경로
-  const hideChrome = hideChromeRoutes.some(p => location.pathname.startsWith(p));
+  const { isLoggedIn } = useAuth(); // 로그인 상태 가져오기
+
+  // 네비바/푸터를 숨길 경로
+  const hideChromeRoutes = ['/signup', '/login'];
+  const hideChrome = hideChromeRoutes.includes(location.pathname);
 
   return (
     <>
@@ -56,29 +55,40 @@ function App() {
 
         <ScrollToTop />
         <FavoritesProvider>
-          {hideChrome ? (
-            //  signup: MainContent 대신 PlainContent 사용
-            <PlainContent>
-              <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/signup" element={<SignUpPage />} />
-              </Routes>
-            </PlainContent>
-          ) : (
-            // 일반 페이지: 기존 MainContent 사용
-            <MainContent withNavbar>
-              <Routes>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/online-review" element={<OnlineReviewPage />} />
-                <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
-                <Route path="/collaboration-management" element={<CoworkPage />} />
-                <Route path="/create-report" element={<CreateReportPage />} />
-                <Route path="/news/:id" element={<NewsDetailPage />} />
-              </Routes>
-            </MainContent>
-          )}
+          <Routes>
+            {/* 로그인/회원가입 페이지 */}
+            <Route
+              path="/login"
+              element={isLoggedIn ? <Navigate to="/" replace /> : <LoginPage />}
+            />
+            <Route
+              path="/signup"
+              element={isLoggedIn ? <Navigate to="/" replace /> : <SignUpPage />}
+            />
+            
+            {/* 로그인이 필요한 페이지들 (PrivateRoute로 감싸기) */}
+            <Route element={<PrivateRoute />}>
+              <Route
+                path="/*"
+                element={
+                  <MainContent>
+                    <Routes>
+                      <Route path="/" element={<MainPage />} />
+                      <Route path="/online-review" element={<OnlineReviewPage />} />
+                      <Route path="/custom-keyword-news" element={<CustomKeywordNewsPage />} />
+                      <Route path="/collaboration-management" element={<CoworkPage />} />
+                      <Route path="/create-report" element={<CreateReportPage />} />
+                      <Route path="/news/:id" element={<NewsDetailPage />} />
+                      {/* 정의되지 않은 다른 모든 경로는 메인으로 리다이렉트 */}
+                      <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                  </MainContent>
+                }
+              />
+            </Route>
+          </Routes>
         </FavoritesProvider>
-
+        
         {!hideChrome && <Footer />}
       </AppContainer>
     </>
