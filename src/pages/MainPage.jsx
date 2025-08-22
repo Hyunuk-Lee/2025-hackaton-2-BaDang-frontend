@@ -40,7 +40,7 @@ const CardWrapper = styled.div`
 `;
 
 function MainPage() {
-  const storeId = 1; // 테스트용으로 storeId 1로 고정
+  const storeId = 4; // 테스트용으로 storeId 고정
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const secretKey = import.meta.env.VITE_SECRET_KEY;

@@ -59,7 +59,7 @@ function formatStoreName(name) {
 
   return firstLine + "\n" + secondLine;
 }
-function StoreBtn({ storeName = "가게 이름", onClick }) {
+function StoreBtn({ storeName, onClick }) {
   return (
     <BtnWrapper onClick={onClick}>
       <StoreName>{formatStoreName(storeName)}</StoreName>

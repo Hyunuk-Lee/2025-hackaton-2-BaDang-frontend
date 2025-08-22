@@ -24,12 +24,12 @@ const ListBox = styled.div`
   align-items: flex-start;
   gap: 36px;
 `;
-function CoworkPage({ storeId = "1" }) {
+function CoworkPage({ storeId = "4" }) {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const secretKey = import.meta.env.VITE_SECRET_KEY;
   const [popup, setPopup] = useState({ type: null, store: null });
 
-  const [isWilling, setIsWilling] = useState(true); // 협업 가능 여부
+  const [isWilling, setIsWilling] = useState(); // 협업 가능 여부
 
   const [collaborateStores, setCollaborateStores] = useState([]); // 협업 중인 가게
   const [requestStores, setRequestStores] = useState([]); // 협업 요청받은 가게
@@ -58,8 +58,8 @@ function CoworkPage({ storeId = "1" }) {
           { headers: { Authorization: `Bearer ${secretKey}` } }
         );
         const isWilling = storeRes.data.isWillingCollaborate;
-        console.log("협업 가능 여부:", isWilling);
         setIsWilling(isWilling);
+        console.log("협업 가능 여부:", storeRes.data.isWillingCollaborate);
 
         //  나머지 세 요청 병렬 처리
         const [activeRes, responseRes, requestRes] = await Promise.all([
@@ -74,31 +74,27 @@ function CoworkPage({ storeId = "1" }) {
           }),
         ]);
 
+        // 협업 요청받은 가게
+        // console.log("협업 요청받은 가게:", responseRes.data.data);
+        setRequestStores(
+          responseRes.data.data.responseStores.map((item) => item.responseStore)
+        );
+        console.log("(1) 협업 요청받은 가게 배열:", requestStores);
+
+        // 협업 요청한 가게
+        // console.log("협업 요청한 가게", requestRes.data.data);
+        setRequestSentStores(
+          requestRes.data.data.requestStores.map((item) => item.responseStore)
+        );
+        console.log("(2) 협업 요청한 가게 배열:", requestSentStores);
         // 협업 중인 가게
-        // console.log("activeRes", activeRes.data);
+        // console.log("협업 중인 가게:", activeRes.data.data);
         setCollaborateStores(
           activeRes.data.data.collaborateStores.map(
             (item) => item.collaborateStore
           )
         );
-        console.log("협업 중인 가게 배열:", collaborateStores);
-
-        // 협업 요청받은 가게
-        // console.log("responseRes", responseRes.data);
-        setRequestStores(
-          responseRes.data.data.responsetStores.map(
-            (item) => item.responseStore
-          )
-        );
-        console.log("협업 요청받은 가게 배열:", requestStores);
-
-        // 협업 요청한 가게
-        // console.log("requestRes", requestRes.data);
-        setRequestSentStores(
-          requestRes.data.data.requestStores.map((item) => item.responseStore)
-        );
-        console.log("협업 요청한 가게 배열:", requestSentStores);
-
+        console.log("(3) 협업 중인 가게 배열:", collaborateStores);
       } catch (err) {
         console.error(err);
       }
@@ -112,11 +108,16 @@ function CoworkPage({ storeId = "1" }) {
   }
   return (
     <Page>
-      <Map onStoreClick={(store) => handleStoreClick(store, "request")} />
+      <Map
+        storeId={storeId} // 부모에서 가지고 있는 storeId
+        onStoreClick={(store) => handleStoreClick(store, "request")}
+      />
 
       {/* 팝업 렌더링 */}
       {popup.type === "request" && (
-        <RequestPopup store={popup.store} onClose={handleClosePopup} />
+        <RequestPopup 
+        store={popup.store} 
+        onClose={handleClosePopup} />
       )}
       {popup.type === "cowork" && (
         <CoworkPopup
@@ -127,13 +128,15 @@ function CoworkPage({ storeId = "1" }) {
         />
       )}
       {popup.type === "list" && (
-        <StoreListPopup onClose={handleClosePopup} storeName="하얀집 3호점" />
+        <StoreListPopup 
+        onClose={handleClosePopup} 
+        storeName="하얀집 3호점" />
       )}
 
       <ListBox>
         <StoreList
           title="협업 요청받은 가게"
-          storeNames={requestStores}
+          stores={requestStores}
           nothing="아직 협업을 요청한 가게가 없어요"
           onClick={(store) => handleStoreClick(store, "cowork")}
         />
@@ -144,7 +147,7 @@ function CoworkPage({ storeId = "1" }) {
         />
         <StoreList
           title="협업 중인 가게"
-          storeNames={collaborateStores}
+          stores={collaborateStores}
           nothing="아직 협업 중인 가게가 없어요"
           onClick={(store) => handleStoreClick(store, "list")}
         />

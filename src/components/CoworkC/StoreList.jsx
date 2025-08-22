@@ -1,54 +1,55 @@
 // components/CoworkC/StoreList.jsx
-import React from 'react';
-import styled from 'styled-components';
-import StoreBtn from './StoreBtn'
-const Box=styled.div`
+import React from "react";
+import styled from "styled-components";
+import StoreBtn from "./StoreBtn";
+const Box = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
-`
-const Title= styled.div`
-    color:#17171B;
-    text-align: center;
-    height: 31px;
-    font-family: SUIT;
-    font-size: 25px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-`
-const NothingText=styled.div`
+`;
+const Title = styled.div`
+  color: #17171b;
+  text-align: center;
+  height: 31px;
+  font-family: SUIT;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+`;
+const NothingText = styled.div`
   height: 63px;
-color: #494954;
-font-family: SUIT;
-font-size: 20px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-`
-const List=styled.div`
-display: flex;
-flex-direction: row;
-    gap: 24px;
-`
-function StoreList({title,nothing, storeNames=[], onClick}) {
+  color: #494954;
+  font-family: SUIT;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+const List = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+`;
+function StoreList({ title, nothing, stores = [], onClick }) {
   return (
     <Box>
-        <Title>{title}</Title>
-        <List>
-          {storeNames.length > 0 ? (
-          storeNames.map((name, idx) => (
-            <StoreBtn key={idx} storeName={name} onClick={onClick} />
+      <Title>{title}</Title>
+      <List>
+        {stores.length > 0 ? (
+          stores.map((store, idx) => (
+            <StoreBtn 
+            key={idx}
+            storeName={store.name} 
+            onClick={onClick} />
           ))
         ) : (
-        <NothingText>{nothing}</NothingText>        )}
-        </List>
-
-
+          <NothingText>{nothing}</NothingText>
+        )}
+      </List>
     </Box>
-
   );
 }
 

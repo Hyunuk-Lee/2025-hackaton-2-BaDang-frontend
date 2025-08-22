@@ -1,6 +1,9 @@
+// components/CoworkC/CoworkMap.jsx
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import StoreBtn from "../CoworkC/StoreBtn";
+import StoreBtn from "./StoreBtn";
+import axios from "axios";
+
 const Container = styled.div`
   display: flex;
   width: 1200px;
@@ -36,13 +39,13 @@ const InputWrapper = styled.div`
 `;
 
 const Input = styled.input`
-  all: unset; /* 기본 스타일 초기화 */
-  box-sizing: border-box; /* padding 포함 width/height 계산 */
+  all: unset;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding-left: 28px; /* 텍스트 위치 조정 */
+  padding-left: 28px;
   font-size: 16px;
-  line-height: 1.2; /* 텍스트 수직 정렬 안정화 */
+  line-height: 1.2;
   border-radius: 53px;
   border: 1.5px solid #9d9d9d;
   background: #fff;
@@ -72,6 +75,7 @@ const Title = styled.div`
   font-size: 25px;
   font-weight: 700;
   line-height: normal;
+  margin-top: 20px;
 `;
 
 const SelectWrapper = styled.div`
@@ -103,132 +107,170 @@ const ButtonsBox = styled.div`
 
 // 카테고리별 소분류 옵션
 const subCategoryOptions = {
-  음식: ["한식","중식","일식","서양식","기타외국식","분식","패스트푸드","제과제빵","카페"],
-  소매: ["슈퍼마켓","편의점","전통시장","농축수산물","건강식품","의류","패션잡화","생활잡화","가전제품","서적/문구","애완용품"],
-  생활서비스: ["미용실","네일숍","피부관리","세탁소","수선/수리","사진관","예식/행사","인테리어"],
-  교육: ["입시/보습학원","외국어학원","예체능학원","컴퓨터/IT교육","평생교육"],
-  숙박: ["호텔","모텔","게스트하우스","펜션/민박"],
-  "오락/여가": ["PC방","노래방","게임방","스크린골프","당구장","헬스/요가/필라테스"],
-  "의료/건강": ["약국","한의원","병원","안경점","헬스용품"],
-  "운송/자동차": ["주유소","세차장","자동차수리","렌터카"],
-  "제조/생산": ["식품제조","의류제조","가구제조","인쇄/출판"],
-  기타: ["부동산중개","여행사","종교단체","비영리단체"],
+  음식: [
+    "한식",
+    "중식",
+    "일식",
+    "서양식",
+    "기타외국식",
+    "분식",
+    "패스트푸드",
+    "제과제빵",
+    "카페",
+  ],
+  소매: [
+    "슈퍼마켓",
+    "편의점",
+    "전통시장",
+    "농축수산물",
+    "건강식품",
+    "의류",
+    "패션잡화",
+    "생활잡화",
+    "가전제품",
+    "서적/문구",
+    "애완용품",
+  ],
+  생활서비스: [
+    "미용실",
+    "네일숍",
+    "피부관리",
+    "세탁소",
+    "수선/수리",
+    "사진관",
+    "예식/행사",
+    "인테리어",
+  ],
+  교육: [
+    "입시/보습학원",
+    "외국어학원",
+    "예체능학원",
+    "컴퓨터/IT교육",
+    "평생교육",
+  ],
+  숙박: ["호텔", "모텔", "게스트하우스", "펜션/민박"],
+  "오락/여가": [
+    "PC방",
+    "노래방",
+    "게임방",
+    "스크린골프",
+    "당구장",
+    "헬스/요가/필라테스",
+  ],
+  "의료/건강": ["약국", "한의원", "병원", "안경점", "헬스용품"],
+  "운송/자동차": ["주유소", "세차장", "자동차수리", "렌터카"],
+  "제조/생산": ["식품제조", "의류제조", "가구제조", "인쇄/출판"],
+  기타: ["부동산중개", "여행사", "종교단체", "비영리단체"],
 };
-
-function CoworkMap({ onStoreClick }) {
+function CoworkMap({ storeId, onStoreClick }) {
   const mapRef = useRef(null);
-  const [map, setMap] = useState(null);// 카카오 지도 인스턴스
-  const [categoryBig, setCategoryBig] = useState(""); // 대분류
-  const [categorySub, setCategorySub] = useState(""); // 소분류
-  const [keyword, setKeyword] = useState(""); // 검색 키워드 
-  const [places, setPlaces] = useState([]); //검색 결과
-  const markersRef = useRef([]); //지도 마커 배열
+  const [map, setMap] = useState(null);
+  const [categoryBig, setCategoryBig] = useState("");
+  const [categorySub, setCategorySub] = useState("");
+  const [keyword, setKeyword] = useState("");
+  const [places, setPlaces] = useState([]);
+  const markersRef = useRef([]);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const secretKey = import.meta.env.VITE_SECRET_KEY;
+  const kakaoKey = import.meta.env.VITE_REACT_APP_KAKAO_API_KEY;
 
   useEffect(() => {
-    const key = import.meta.env.VITE_REACT_APP_KAKAO_API_KEY;
-    if (!key) {
-      console.error("Kakao Map Key is undefined! Check your .env file.");
-      return;
-    }
-
+    if (!kakaoKey) return;
     const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&libraries=services&autoload=false`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&libraries=services&autoload=false`;
     script.async = true;
     document.head.appendChild(script);
-
     script.onload = () => {
-      if (!window.kakao) {
-        console.error("Kakao object not found after SDK load!");
-        return;
-      }
+      if (!window.kakao) return;
+      window.kakao.maps.load(async () => {
+        let userLat = 37.55886; //임의로 동국대 위치 넣은 것
+        let userLng = 126.99989;
+        try {
+          const res = await axios.get(`${backendUrl}main/stores/${storeId}`, {
+            headers: { Authorization: `Bearer ${secretKey}` },
+          });
+          const data = res.data;
+          if (data.latitude && data.longitude) {
+            userLat = data.latitude;
+            userLng = data.longitude;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+        console.log(userLat, userLng);
 
-      window.kakao.maps.load(() => {
         const container = mapRef.current;
         const options = {
-          center: new window.kakao.maps.LatLng(37.5665, 126.978),
-          level: 1,
+          center: new window.kakao.maps.LatLng(userLat, userLng),
+          level: 3,
         };
         const mapInstance = new window.kakao.maps.Map(container, options);
         setMap(mapInstance);
       });
     };
 
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+    return () => document.head.removeChild(script);
+  }, [storeId]);
 
   const clearMarkers = () => {
-    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current.forEach((m) => m.setMap(null));
     markersRef.current = [];
   };
-  const getDistance = (lat1, lng1, lat2, lng2) => {
-    return Math.sqrt((lat1 - lat2) ** 2 + (lng1 - lng2) ** 2);
-  };
 
-  const handleSearch = () => {
-    if (!map || !window.kakao) return;
+  const handleSearch = async (
+    newBig = categoryBig,
+    newSub = categorySub,
+    searchKeyword = keyword
+  ) => {
+    if (!map) return;
 
-    const ps = new window.kakao.maps.services.Places();
-    const donggukLat = 37.5665;
-    const donggukLng = 126.978;
+    const typeIndex = newBig
+      ? Object.keys(subCategoryOptions).indexOf(newBig) + 1
+      : null;
 
-    const callback = (data, status) => {
-      if (status === window.kakao.maps.services.Status.OK) {
-        let result = data;
+    const categoryIndex =
+      newBig && newSub ? subCategoryOptions[newBig].indexOf(newSub) + 1 : null;
 
-        if (categorySub && categorySub !== "전체") {
-          result = result.filter((place) =>
-            place.place_name.includes(categorySub)
-          );
+    console.log("type, category", typeIndex, categoryIndex);
+    console.log("키워드", searchKeyword.trim() ? searchKeyword.trim() : "");
+    console.log("스토어아이디", storeId);
+
+    try {
+      const res = await axios.post(
+        `${backendUrl}collaboration/search`,
+        {
+          type: typeIndex || "", // 비워서 보내기
+          category: categoryIndex || "", // 비워서 보내기
+          query: searchKeyword.trim() ? searchKeyword.trim() : "",
+          storeId: storeId || "", // 비워서 보내기
+        },
+        {
+          headers: {
+            "Content-Type": "application/json", // 필수
+            Authorization: `Bearer ${secretKey}`,
+          },
         }
-        result.sort(
-          (a, b) =>
-            getDistance(donggukLat, donggukLng, a.y, a.x) -
-            getDistance(donggukLat, donggukLng, b.y, b.x)
-        );
-        result = result.slice(0, 8);
-
-        if (result.length === 0) {
-          alert("검색 결과가 없습니다.");
-          return;
-        }
-
-        clearMarkers();
-
-        const newMarkers = result.map((place) => {
-          const position = new window.kakao.maps.LatLng(place.y, place.x);
-          const marker = new window.kakao.maps.Marker({
-            map: map,
-            position: position,
-          });
-          return marker;
-        });
-
-        markersRef.current = newMarkers;
-        setPlaces(result);
-
-        const first = result[0];
-        map.setCenter(new window.kakao.maps.LatLng(first.y, first.x));
-      }
-    };
-
-    if (keyword.trim() !== "") {
-      ps.keywordSearch(keyword, callback, { useMapBounds: true });
-    } else {
-      ps.categorySearch(category, callback, { useMapBounds: true });
+      );
+ if (res.data && res.data.data && res.data.data.store) {
+    setPlaces(res.data.data.store);
+  }
+      console.log(res.data.data.store);
+      console.log("협업할 가게", res.data);
+      
+    } catch (err) {
+      console.error(err);
     }
   };
-  if (categorySub) {
-    result = result.filter((place) => place.place_name.includes(categorySub));
-  }
+useEffect(() => {
+  console.log("업데이트된 places:", places);
+}, [places]);
+
   const moveToPlace = (place) => {
     if (!map) return;
-    const position = new window.kakao.maps.LatLng(place.y, place.x);
-    map.setCenter(position);
-
+    const pos = new window.kakao.maps.LatLng(place.latitude, place.longitude);
+    map.setCenter(pos);
     clearMarkers();
-    const marker = new window.kakao.maps.Marker({ map: map, position });
+    const marker = new window.kakao.maps.Marker({ map, position: pos });
     markersRef.current = [marker];
   };
 
@@ -244,15 +286,10 @@ function CoworkMap({ onStoreClick }) {
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && keyword.trim() !== "") {
-                  handleSearch();
-                }
+                if (e.key === "Enter") handleSearch();
               }}
             />
-            <SearchButton
-              onClick={keyword.trim() !== "" ? handleSearch : undefined}
-              $active={keyword.trim() !== ""}
-            >
+            <SearchButton onClick={() => handleSearch()} $active={!!keyword}>
               검색
             </SearchButton>
           </InputWrapper>
@@ -262,39 +299,31 @@ function CoworkMap({ onStoreClick }) {
             <Select
               value={categoryBig}
               onChange={(e) => {
-                setCategoryBig(e.target.value);
-                setCategorySub(""); // 소분류 초기화
-                handleSearch(); // 선택 바뀌면 검색
+                const newBig = e.target.value || "";
+                setCategoryBig(newBig);
+                setCategorySub("");
+                handleSearch(newBig, "", keyword);
               }}
             >
-              <option value="" disabled>
-                대분류를 선택하세요
-              </option>
-              <option value="음식">음식점</option>
-              <option value="소매">소매</option>
-              <option value="생활서비스">생활서비스</option>
-              <option value="교육">교육</option>
-              <option value="숙박">숙박</option>
-              <option value="오락/여가">오락/여가</option>
-              <option value="의료/건강">의료/건강</option>
-              <option value="운송/자동차">운송/자동차</option>
-              <option value="제조/생산">제조/생산</option>
-              <option value="기타">기타</option>
+              <option value="">대분류를 선택하세요</option>
+              {Object.keys(subCategoryOptions).map((key, idx) => (
+                <option key={idx} value={key}>
+                  {key}
+                </option>
+              ))}
             </Select>
-
             <Select
               value={categorySub}
               onChange={(e) => {
-                setCategorySub(e.target.value);
-                handleSearch(); // 소분류 선택 시 검색
+                const newSub = e.target.value || "";
+                setCategorySub(newSub);
+                handleSearch(categoryBig, newSub, keyword);
               }}
-              disabled={!categoryBig} // 대분류 선택 전에는 비활성화
+              disabled={!categoryBig}
             >
-              <option value="" disabled>
-                소분류를 선택하세요
-              </option>
+              <option value="">소분류를 선택하세요</option>
               {categoryBig &&
-                subCategoryOptions[categoryBig]?.map((sub, idx) => (
+                subCategoryOptions[categoryBig].map((sub, idx) => (
                   <option key={idx} value={sub}>
                     {sub}
                   </option>
@@ -306,12 +335,13 @@ function CoworkMap({ onStoreClick }) {
         <ButtonsBox>
           {places.map((place, idx) => (
             <StoreBtn
+            id={storeId}
               key={idx}
-              storeName={place.place_name}
+              storeName={place.store.name}
               onClick={() => {
                 moveToPlace(place);
                 onStoreClick && onStoreClick(place);
-              }} // 클릭 시 지도 중심 이동
+              }}
             />
           ))}
         </ButtonsBox>
@@ -320,4 +350,4 @@ function CoworkMap({ onStoreClick }) {
   );
 }
 
-export default CoworkMap;
+export default CoworkMap; 
