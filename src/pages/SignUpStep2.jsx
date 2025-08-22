@@ -6,7 +6,7 @@ import Robot from "../assets/Icons/WelcomeRobotIcon.svg";
 /** 2단계: 전화번호 / 주소 / 가게명 */
 export default function SignUpStep2({ defaultValues, onNext }) {
   const [form, setForm] = useState({
-    phone: defaultValues?.phone ?? "",
+    phoneNumber: defaultValues?.phoneNumber ?? "",
     address: defaultValues?.address ?? "",
     storeName: defaultValues?.storeName ?? "",
   });
@@ -22,13 +22,13 @@ export default function SignUpStep2({ defaultValues, onNext }) {
     return `${d.slice(0, 3)}-${d.slice(3, 7)}-${d.slice(7)}`;
   };
 
-  const handlePhoneChange = (e) => set("phone", formatTel(e.target.value));
+  const handlePhoneChange = (e) => set("phoneNumber", formatTel(e.target.value));
 
   // 유효성 검사
   const errors = useMemo(() => {
     const e = {};
-    const digits = form.phone.replace(/\D/g, "");
-    if (digits.length < 10 || digits.length > 11) e.phone = "올바른 전화번호를 입력해 주세요.";
+    const digits = form.phoneNumber.replace(/\D/g, "");
+    if (digits.length < 10 || digits.length > 11) e.phoneNumber = "올바른 전화번호를 입력해 주세요.";
     if (!form.address.trim()) e.address = "주소를 입력해 주세요.";
     if (!form.storeName.trim()) e.storeName = "가게명을 입력해 주세요.";
     return e;
@@ -38,10 +38,10 @@ export default function SignUpStep2({ defaultValues, onNext }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTouched({ phone: true, address: true, storeName: true });
+    setTouched({ phoneNumber: true, address: true, storeName: true });
     if (!isValid) return;
     onNext?.({
-      phone: form.phone.trim(),            // 하이픈 포함 문자열(원하면 digits로 바꿔 넘겨도 OK)
+      phoneNumber: form.phoneNumber.trim(),            // 하이픈 포함 문자열(원하면 digits로 바꿔 넘겨도 OK)
       address: form.address.trim(),
       storeName: form.storeName.trim(),
     });
@@ -60,13 +60,13 @@ export default function SignUpStep2({ defaultValues, onNext }) {
             <Label>전화번호</Label>
             <Input
               type="tel"
-              value={form.phone}
+              value={form.phoneNumber}
               placeholder="전화번호를 입력하세요"
               onChange={handlePhoneChange}
-              onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
-              aria-invalid={!!(touched.phone && errors.phone)}
+              onBlur={() => setTouched((t) => ({ ...t, phoneNumber: true }))}
+              aria-invalid={!!(touched.phoneNumber && errors.phoneNumber)}
             />
-            {touched.phone && errors.phone && <Error>{errors.phone}</Error>}
+            {touched.phoneNumber && errors.phoneNumber && <Error>{errors.phoneNumber}</Error>}
           </Group>
 
           <Group>
