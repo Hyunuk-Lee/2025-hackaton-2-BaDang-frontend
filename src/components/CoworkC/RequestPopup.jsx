@@ -99,17 +99,27 @@ const Box = styled.textarea`
   font-weight: 500;
   line-height: normal;
 `;
-function RequestPopup({ store, onClose }) {
+function RequestPopup({ id, store, onClose }) {
   const [message, setMessage] = useState(""); // 입력 내용
-
+  const fromStoreId = id;
+  const toStoreId = store.store.storeId;
+  
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const secretKey = import.meta.env.VITE_SECRET_KEY;
   const handleRequest = async () => {
-    try {
-      const response = await axios.post("/collaboration", {
-        fromStoreId,
-        toStoreId,
-        initialMessage: message,
-      });
-      if (response.status === 200) {
+    try {const response = await axios.post(
+  `${backendUrl}collaboration`,
+  {
+    fromStoreId,
+    toStoreId,
+    initialMessage: message,
+  },
+  {
+    headers: { Authorization: `Bearer ${secretKey}` },
+  }
+);
+
+      if (response.status === 201) {
         alert(response.data.message); // "신청이 완료되었습니다"
         onClose(); // 팝업 닫기
       }
@@ -118,27 +128,29 @@ function RequestPopup({ store, onClose }) {
       alert("협업 요청에 실패했습니다.");
     }
   };
+
   return (
     <Overlay onClick={onClose}>
       <PopupBox onClick={(e) => e.stopPropagation()}>
         <CloseBtn src={Close} alt="닫기" onClick={onClose} />
         <TextWrapper>
-          <Title>{store.place_name}에 협업을 요청할까요?</Title>
+          <Title>{store.store.name}에 협업을 요청할까요?</Title>
           <ContentWrapper>
-            <Content>
-              {/* {store} : {store} */}
-            </Content>
-            <Box placeholder="원하시는 협업 내용을 간단히 입력해주세요"
-            value={message}
-              onChange={(e) => setMessage(e.target.value)} />
+            <Content>{store.store.name} : {store.store.address}</Content>
+            <Box
+              placeholder="원하시는 협업 내용을 간단히 입력해주세요"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
           </ContentWrapper>
         </TextWrapper>
         <BtnWrapper>
-          <Btn 
-          btnName="요청하기" 
-          width="467px" 
-          color="#759AFC" 
-          onClick={handleRequest}/>
+          <Btn
+            btnName="요청하기"
+            width="467px"
+            color="#759AFC"
+            onClick={handleRequest}
+          />
         </BtnWrapper>
       </PopupBox>
     </Overlay>
