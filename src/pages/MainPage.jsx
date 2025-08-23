@@ -6,8 +6,9 @@ import styled from "styled-components";
 import Advertisement from "../components/MainC/Advertisement";
 import BigCards from "../components/MainC/BigCards";
 import SmallCards from "../components/MainC/SmallCards";
+
 const Page = styled.div`
-margin: auto;
+  margin: auto;
   display: flex;
   width: 1200px;
   flex-direction: column;
@@ -15,6 +16,7 @@ margin: auto;
   min-height: 100vh;
   align-items: flex-start;
 `;
+
 const HelloText = styled.div`
   width: 751px;
   height: 150px;
@@ -27,12 +29,15 @@ const HelloText = styled.div`
   font-weight: 800;
   line-height: 60px;
 `;
+
 const Orange = styled.span`
   color: #ff9762;
 `;
+
 const Blue = styled.span`
   color: #759afc;
 `;
+
 const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -41,16 +46,31 @@ const CardWrapper = styled.div`
 `;
 
 function MainPage() {
-
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const secretKey = import.meta.env.VITE_SECRET_KEY;
 
   const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const savedUsername = localStorage.getItem("ownerName");
-  if (savedUsername) setUsername(savedUsername);
-}, []);
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/main/me`, {
+          withCredentials: true, // 쿠키 기반 인증일 경우 필요
+        });
+            console.log("me response:", response.data); // <- 여기 추가
+
+        setUsername(response.data.username); // me 안의 ownerName 사용
+      } catch (error) {
+        console.error("Failed to fetch me:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMe();
+  }, [backendUrl]);
+
+  if (loading) return <Page>Loading...</Page>;
 
   return (
     <Page>
