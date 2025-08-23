@@ -162,8 +162,12 @@ const subCategoryOptions = {
   "제조/생산": ["식품제조", "의류제조", "가구제조", "인쇄/출판"],
   기타: ["부동산중개", "여행사", "종교단체", "비영리단체"],
 };
-function CoworkMap({ storeId, onStoreClick }) {
+function CoworkMap({ onStoreClick }) {
   const mapRef = useRef(null);
+  const [storeId, setStoreId] = useState(null); // 가게 번호
+  const [userLat, setUserLat] = useState(37.55886);
+  const [userLng, setUserLng] = useState(126.99989);
+
   const [map, setMap] = useState(null);
   const [categoryBig, setCategoryBig] = useState("");
   const [categorySub, setCategorySub] = useState("");
@@ -171,9 +175,29 @@ function CoworkMap({ storeId, onStoreClick }) {
   const [places, setPlaces] = useState([]);
   const markersRef = useRef([]);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const secretKey = import.meta.env.VITE_SECRET_KEY;
   const kakaoKey = import.meta.env.VITE_REACT_APP_KAKAO_API_KEY;
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/main/me`, {
+          withCredentials: true,
+        });
+        // console.log("맵 콘솔로그:", response.data);
+        const id = response.data.stores[0]?.id;
+        setStoreId(id);
+        const lat = response.data.stores[0]?.latitude;
+        setUserLat(lat);
+        const lng = response.data.stores[0]?.longitude;
+        setUserLng(lng);
 
+        // console.log("스토어아이디", id);
+      } catch (error) {
+        console.error("Failed to fetch me:", error);
+      } finally {
+      }
+    };
+    fetchMe();
+  }, [backendUrl]);
   useEffect(() => {
     if (!kakaoKey) return;
     const script = document.createElement("script");
@@ -183,22 +207,6 @@ function CoworkMap({ storeId, onStoreClick }) {
     script.onload = () => {
       if (!window.kakao) return;
       window.kakao.maps.load(async () => {
-        let userLat = 37.55886; //임의로 동국대 위치 넣은 것
-        let userLng = 126.99989;
-        try {
-          const res = await axios.get(`${backendUrl}/main/stores/${storeId}`, {
-            headers: { Authorization: `Bearer ${secretKey}` },
-          });
-          const data = res.data;
-          if (data.latitude && data.longitude) {
-            userLat = data.latitude;
-            userLng = data.longitude;
-          }
-        } catch (err) {
-          console.error(err);
-        }
-        console.log(userLat, userLng);
-
         const container = mapRef.current;
         const options = {
           center: new window.kakao.maps.LatLng(userLat, userLng),
@@ -208,6 +216,8 @@ function CoworkMap({ storeId, onStoreClick }) {
         setMap(mapInstance);
       });
     };
+    console.log("userlat", userLat);
+    console.log("userlng", userLng);
 
     return () => document.head.removeChild(script);
   }, [storeId]);
@@ -231,39 +241,29 @@ function CoworkMap({ storeId, onStoreClick }) {
     const categoryIndex =
       newBig && newSub ? subCategoryOptions[newBig].indexOf(newSub) + 1 : null;
 
-    console.log("type, category", typeIndex, categoryIndex);
-    console.log("키워드", searchKeyword.trim() ? searchKeyword.trim() : "");
-    console.log("스토어아이디", storeId);
-
     try {
+      // 쿠키 기반 인증 적용
       const res = await axios.post(
-        `${backendUrl}collaboration/search`,
+        `${backendUrl}/collaboration/search`,
         {
-          type: typeIndex || "", // 비워서 보내기
-          category: categoryIndex || "", // 비워서 보내기
-          query: searchKeyword.trim() ? searchKeyword.trim() : "",
-          storeId: storeId || "", // 비워서 보내기
+          type: typeIndex || "",
+          category: categoryIndex || "",
+          query: searchKeyword.trim() || "",
+          storeId: storeId || "",
         },
         {
-          headers: {
-            "Content-Type": "application/json", // 필수
-            Authorization: `Bearer ${secretKey}`,
-          },
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
         }
       );
- if (res.data && res.data.data && res.data.data.store) {
-    setPlaces(res.data.data.store);
-  }
-      console.log(res.data.data.store);
-      console.log("협업할 가게", res.data);
-      
+
+      if (res.data?.data?.store) {
+        setPlaces(res.data.data.store);
+      }
     } catch (err) {
       console.error(err);
     }
   };
-useEffect(() => {
-  console.log("업데이트된 places:", places);
-}, [places]);
 
   const moveToPlace = (place) => {
     if (!map) return;
@@ -335,7 +335,7 @@ useEffect(() => {
         <ButtonsBox>
           {places.map((place, idx) => (
             <StoreBtn
-            id={storeId}
+              id={storeId}
               key={idx}
               storeName={place.store.name}
               onClick={() => {
@@ -350,4 +350,4 @@ useEffect(() => {
   );
 }
 
-export default CoworkMap; 
+export default CoworkMap;

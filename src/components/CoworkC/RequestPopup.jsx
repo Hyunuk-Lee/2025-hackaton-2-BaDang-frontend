@@ -102,20 +102,22 @@ const Box = styled.textarea`
 function RequestPopup({ store, onClose }) {
   const [message, setMessage] = useState(""); // 입력 내용
   const toStoreId = store.store.storeId;
-  
+
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const secretKey = import.meta.env.VITE_SECRET_KEY;
   const handleRequest = async () => {
-    try {const response = await axios.post(
-  `${backendUrl}collaboration`,
-  {
-    toStoreId,
-    initialMessage: message,
-  },
-  {
-    headers: { Authorization: `Bearer ${secretKey}` },
-  }
-);
+    try {
+      const response = await axios.post(
+        `${backendUrl}/collaboration/`,
+        {
+          toStoreId,
+          initialMessage: message,
+        },
+        {
+             withCredentials: true, 
+        }
+      );
+      console.log("toStoreId:", toStoreId);
+      console.log("message:", message);
 
       if (response.status === 201) {
         alert(response.data.message); // "신청이 완료되었습니다"
@@ -134,7 +136,9 @@ function RequestPopup({ store, onClose }) {
         <TextWrapper>
           <Title>{store.store.name}에 협업을 요청할까요?</Title>
           <ContentWrapper>
-            <Content>{store.store.name} : {store.store.address}</Content>
+            <Content>
+              {store.store.name} : {store.store.address}
+            </Content>
             <Box
               placeholder="원하시는 협업 내용을 간단히 입력해주세요"
               value={message}
