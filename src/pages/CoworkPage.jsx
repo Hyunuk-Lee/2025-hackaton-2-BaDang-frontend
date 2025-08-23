@@ -25,7 +25,8 @@ const ListBox = styled.div`
   align-items: flex-start;
   gap: 36px;
 `;
-function CoworkPage({ storeId = "4" }) {
+function CoworkPage() {
+   const storeId = localStorage.getItem("storeId");
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const secretKey = import.meta.env.VITE_SECRET_KEY;
   const [popup, setPopup] = useState({ type: null, store: null });
@@ -55,8 +56,9 @@ function CoworkPage({ storeId = "4" }) {
       try {
         //  협업 가능 여부 확인
         const storeRes = await axios.get(
-          `${backendUrl}main/stores/${storeId}`,
-          { headers: { Authorization: `Bearer ${secretKey}` } }
+          `${backendUrl}/main/stores/${storeId}`,
+          { headers: { Authorization: `Bearer ${secretKey}`  ,
+           withCredentials: true, } }
         );
         const isWilling = storeRes.data.isWillingCollaborate;
         setIsWilling(isWilling);
@@ -64,13 +66,13 @@ function CoworkPage({ storeId = "4" }) {
 
         //  나머지 세 요청 병렬 처리
         const [activeRes, responseRes, requestRes] = await Promise.all([
-          axios.get(`${backendUrl}collaboration/active/${storeId}`, {
+          axios.get(`${backendUrl}/collaboration/active/${storeId}`, {
             headers: { Authorization: `Bearer ${secretKey}` },
           }),
-          axios.get(`${backendUrl}collaboration/response/${storeId}`, {
+          axios.get(`${backendUrl}/collaboration/response/${storeId}`, {
             headers: { Authorization: `Bearer ${secretKey}` },
           }),
-          axios.get(`${backendUrl}collaboration/request/${storeId}`, {
+          axios.get(`${backendUrl}/collaboration/request/${storeId}`, {
             headers: { Authorization: `Bearer ${secretKey}` },
           }),
         ]);
