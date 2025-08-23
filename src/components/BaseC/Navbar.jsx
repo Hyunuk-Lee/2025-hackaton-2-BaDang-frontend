@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import React from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom'; // useNavigate 추가
 import logoSvg from '../../assets/BadangLogo.svg';
+import { useAuth } from '../../context/AuthContext';
 
 // Styled-components 코드는 기존과 동일...
 const Logo=styled.img`
@@ -95,24 +96,20 @@ const StyledNavLink = styled(NavLink)`
 
 
 function Navbar() {
-  // ✅ 1. useNavigate 훅을 사용하여 페이지 이동 함수를 가져옵니다.
   const navigate = useNavigate();
+  const { logout } = useAuth(); // ✅ 2. AuthContext에서 logout 함수 가져오기
 
-  // ✅ 2. 로그아웃 처리 함수를 생성합니다.
   const handleLogout = async () => {
     try {
-      // 서버에 로그아웃 요청을 보냅니다.
       await fetch(`${import.meta.env.VITE_BACKEND_URL}/main/logout`, {
         method: 'POST',
-        // 인증된 사용자임을 알리기 위해 쿠키를 함께 보냅니다.
         credentials: 'include',
       });
-      // 서버 응답이 성공이든 실패든, 클라이언트에서는 로그아웃 처리를 완료합니다.
     } catch (error) {
       console.error("로그아웃 중 오류 발생:", error);
     } finally {
-      // ✅ 3. 모든 로직이 끝난 후 로그인 페이지로 이동시킵니다.
-      // replace: true 옵션은 뒤로가기로 다시 돌아오는 것을 방지합니다.
+      // ✅ 3. 로그아웃 시 전역 상태 업데이트
+      logout();
       navigate('/login', { replace: true });
     }
   };
