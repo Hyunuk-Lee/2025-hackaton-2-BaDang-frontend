@@ -1,4 +1,3 @@
-// components/ReviewSection.jsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import SmallQ from '../../assets/Popups/SmallQ.svg';
@@ -90,7 +89,7 @@ const RatioItem = styled.div`
   color: ${props => props.color};
 `;
 
-function ReviewSection({ title, icon, showSmallQ = true, className, ratios, popupImage }) {
+function ReviewSection({ title, icon, showSmallQ = true, className, ratios, popupImage, children }) {
   const [showPopup, setShowPopup] = useState(false);
 
   return (
@@ -112,6 +111,10 @@ function ReviewSection({ title, icon, showSmallQ = true, className, ratios, popu
           {showPopup && popupImage && <PopupIcon src={popupImage} alt="Popup" />}
         </>
       )}
+      {/* 콘텐츠를 children 프롭스로 받아오는 구조라 해당 부분 추가 */}
+      <SectionContent>
+        {typeof children !== 'undefined' ? children : null}
+      </SectionContent>
 
       {ratios && (
         <RatioText>

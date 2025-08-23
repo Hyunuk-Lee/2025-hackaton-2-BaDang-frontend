@@ -1,6 +1,12 @@
-// pages/OnlineReviewPage.jsx
+/**
+ * 리뷰 분석 데이터 객체 묶음 처리 및 커스텀 훅으로 api 연동 리팩토링
+ * 확인 시 주석 지우고 깃에 올려주세요
+ * 추가로 css 수정도 필요해보입니다.
+ *
+ * @author 곽도윤
+ * **/
 
-import axios from "axios";
+
 import React, { useState, useEffect } from "react";
 import TimeBtnGroup from "../components/TimeBtnGroup";
 import ReviewSection from "../components/ReviewC/ReviewSection";
@@ -14,6 +20,7 @@ import Popup2 from "../assets/Popups/Popup2.svg";
 import Popup3 from "../assets/Popups/Popup3.svg";
 import Popup4 from "../assets/Popups/Popup4.svg";
 import LoadingPage from "./LoadingPage"
+import useGetReviewAnalysis from "../hooks/queries/useGetReviewAnalysis";
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -107,65 +114,29 @@ const PageContainer = styled.div`
 
 function OnlineReviewPage() {
   const options = ["전체", "한 달", "일주일"];
-  const termMap = { 전체: 0, "한 달": 1, 일주일: 2 };
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [selectedOption, setSelectedOption] = useState("전체");
 
-  const [selectedRange, setSelectedRange] = useState("전체");
-  const [loading, setLoading] = useState(true); // ✅ 로딩 상태 추가
+  const { analysisData, loading, error } = useGetReviewAnalysis(selectedOption); // 옵션 상태 변경 시 훅 재호출.
 
-  const [storeName, setStoreName] = useState("");
-  const [goodPoint, setGoodPoint] = useState("");
-  const [badPoint, setBadPoint] = useState("");
-  const [percentage, setPercentage] = useState({
-    goodPercentage: 0,
-    middlePercentage: 0,
-    badPercentage: 0,
-  });
-  const [analysisKeyword, setAnalysisKeyword] = useState("");
-  const [analysisProblem, setAnalysisProblem] = useState("");
-  const [analysisSolution, setAnalysisSolution] = useState("");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true); // ✅ 로딩 시작
-      try {
-        const response = await axios.get(`${backendUrl}/review/analysis`, {
-          params: { term: termMap[selectedRange] ?? 0 },
-          withCredentials: true,
-        });
-
-        const data = response.data.data;
-
-        setStoreName(data.storeName || "정보 없음");
-        setGoodPoint(data.goodPoint || "데이터 없음");
-        setBadPoint(data.badPoint || "데이터 없음");
-        setPercentage(
-          data.percentage || {
-            goodPercentage: 0,
-            middlePercentage: 0,
-            badPercentage: 0,
-          }
-        );
-        setAnalysisKeyword(data.analysisKeyword || "데이터 없음");
-        setAnalysisProblem(data.analysisProblem || "데이터 없음");
-        setAnalysisSolution(data.analysisSolution || "데이터 없음");
-      } catch (err) {
-        console.error("데이터 불러오기 실패:", err);
-        setStoreName("에러 발생");
-      } finally {
-        setLoading(false); // ✅ 로딩 끝
-      }
-    };
-
-    fetchData();
-  }, [selectedRange]);
-
-  // ✅ 로딩 중이면 LoadingPage 렌더링
   if (loading) {
     return <LoadingPage />;
   }
 
+  if (error) {
+    return <div>데이터 불러오기 실패: {error.message}</div>; // 에러 발생 시 보여줄 404 페이지 만들어주세요...
+  }
 
+  console.log(analysisData);
+
+  const {
+    storeName,
+    goodPoint,
+    badPoint,
+    percentage,
+    analysisKeyword,
+    analysisProblem,
+    analysisSolution,
+  } = analysisData;
 
   return (
     <PageContainer>
@@ -183,8 +154,8 @@ function OnlineReviewPage() {
 
         <TimeBtnGroup
           options={options}
-          selectedValue={selectedRange}
-          onSelect={setSelectedRange}
+          selectedValue={selectedOption}
+          onSelect={setSelectedOption}
         />
       </Header>
 
