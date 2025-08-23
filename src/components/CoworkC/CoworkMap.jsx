@@ -186,7 +186,7 @@ function CoworkMap({ storeId, onStoreClick }) {
         let userLat = 37.55886; //임의로 동국대 위치 넣은 것
         let userLng = 126.99989;
         try {
-          const res = await axios.get(`${backendUrl}main/stores/${storeId}`, {
+          const res = await axios.get(`${backendUrl}/main/stores/${storeId}`, {
             headers: { Authorization: `Bearer ${secretKey}` },
           });
           const data = res.data;
