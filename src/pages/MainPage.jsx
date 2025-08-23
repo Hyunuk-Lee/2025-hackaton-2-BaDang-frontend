@@ -7,6 +7,7 @@ import Advertisement from "../components/MainC/Advertisement";
 import BigCards from "../components/MainC/BigCards";
 import SmallCards from "../components/MainC/SmallCards";
 const Page = styled.div`
+margin: auto;
   display: flex;
   width: 1200px;
   flex-direction: column;
