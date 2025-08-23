@@ -10,6 +10,7 @@ import Map from "../components/CoworkC/CoworkMap.jsx";
 import axios from "axios";
 
 const Page = styled.div`
+margin: 0 auto;
   display: flex;
   width: 1200px;
   flex-direction: column;
