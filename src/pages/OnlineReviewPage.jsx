@@ -134,11 +134,15 @@ function OnlineReviewPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/review/analysis/`, {
-          params: { term: termMap[selectedRange] ?? 0 },
-        });
 
-        const data = response.data.data; // 백엔드 Response 구조: { statusCode, message, data }
+        const response = await axios.get(`${backendUrl}/review/analysis`, {
+          params: { term: termMap[selectedRange] ?? 0 },
+          withCredentials: true, // ✅ 쿠키 기반 인증
+          
+        }
+      );
+
+        const data = response.data.data;
 
         setStoreName(data.storeName || "정보 없음");
         setGoodPoint(data.goodPoint || "데이터 없음");
