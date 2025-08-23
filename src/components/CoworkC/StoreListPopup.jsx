@@ -6,16 +6,16 @@ import Close from "../../assets/Icons/XIcon.svg"; // 엑스 아이콘
 import axios from "axios";
 
 const Overlay = styled.div`
-  position: fixed; /* 화면 전체 덮기 */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.53); /* 반투명 검정 */
+  background: rgba(0, 0, 0, 0.53);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999; /* 다른 요소 위에 표시 */
+  z-index: 999;
 `;
 const PopupBox = styled.div`
   display: flex;
@@ -40,7 +40,6 @@ const TextWrapper = styled.div`
 const Title = styled.div`
   color: #17171b;
   text-align: center;
-
   font-family: SUIT;
   font-size: 25px;
   font-style: normal;
@@ -62,7 +61,6 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
 `;
-
 const Content = styled.div`
   color: #494954;
   text-align: center;
@@ -98,12 +96,13 @@ const TextBox = styled.textarea`
   font-weight: 500;
   line-height: normal;
 `;
+
 function StoreListPopup({
   storeName,
   storeType,
   phoneNumber,
   requestContent,
-  collaborateId, // 꼭 받아오기
+  collaborateId,
   onClose,
 }) {
   const [content, setContent] = useState(requestContent);
@@ -111,26 +110,54 @@ function StoreListPopup({
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const secretKey = import.meta.env.VITE_SECRET_KEY;
 
+  // 메모 수정
   const handleSave = async () => {
     try {
       const response = await axios.patch(
         `${backendUrl}/collaboration/memo`,
         {
-          collaborateId: collaborateId,
+          collaborateId,
           memo: content,
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${secretKey}`,
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${secretKey}`,
           },
         }
       );
 
       console.log(response.data); // {status:200, message:"수정 완료", data:{memo: "..."}}
-      onClose(); // 팝업 닫기
+      alert(response.data.message);
+      onClose();
     } catch (err) {
-      console.error('메모 수정 실패:', err);
+      console.error("메모 수정 실패:", err);
+      alert("메모 수정에 실패했습니다.");
+    }
+  };
+
+  // 협업 종료
+  const handleEndCollaboration = async () => {
+    try {
+      const response = await axios.delete(
+        `${backendUrl}/collaboration/${collaborateId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${secretKey}`,
+          },
+        }
+      );
+
+      if (response.data.status === 200) {
+        alert(response.data.message); // "삭제 완료"
+        onClose();
+      } else {
+        alert("협업 종료 실패: " + response.data.message);
+      }
+    } catch (err) {
+      console.error("협업 종료 실패:", err);
+      alert("서버 오류로 협업 종료에 실패했습니다.");
     }
   };
 
@@ -146,20 +173,26 @@ function StoreListPopup({
             </Content>
             <Content>전화 번호 : {phoneNumber}</Content>
             <Content>협업 내용</Content>
-            <TextBox
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            />
+            <TextBox value={content} onChange={(e) => setContent(e.target.value)} />
           </ContentWrapper>
         </TextWrapper>
         <BtnWrapper>
-          <Btn btnName="수정완료" width="221px" color="#9D9D9D" onClick={handleSave} />
-          <Btn btnName="협업종료"  width="221px" color="#FF9762"/>
+          <Btn
+            btnName="수정완료"
+            width="221px"
+            color="#9D9D9D"
+            onClick={handleSave}
+          />
+          <Btn
+            btnName="협업종료"
+            width="221px"
+            color="#FF9762"
+            onClick={handleEndCollaboration}
+          />
         </BtnWrapper>
       </PopupBox>
     </Overlay>
   );
 }
-
 
 export default StoreListPopup;
