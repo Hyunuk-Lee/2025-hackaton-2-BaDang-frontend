@@ -45,14 +45,12 @@ function MainPage() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const secretKey = import.meta.env.VITE_SECRET_KEY;
 
-  const [username, setUsername] = useState(""); // 초기값 빈 문자열
-  useEffect(() => {
-    const savedUsername = localStorage.getItem("badang:username");
-    const savedUserId = localStorage.getItem("badang:userId");
+  const [username, setUsername] = useState("");
 
-    if (savedUsername) setUsername(savedUsername);
-    if (savedUserId) setUserId(savedUserId);
-  }, []);
+useEffect(() => {
+  const savedUsername = localStorage.getItem("ownerName");
+  if (savedUsername) setUsername(savedUsername);
+}, []);
 
   return (
     <Page>

@@ -13,7 +13,7 @@ import Popup1 from "../assets/Popups/Popup1.svg";
 import Popup2 from "../assets/Popups/Popup2.svg";
 import Popup3 from "../assets/Popups/Popup3.svg";
 import Popup4 from "../assets/Popups/Popup4.svg";
-
+import LoadingPage from "./LoadingPage"
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -108,39 +108,31 @@ const PageContainer = styled.div`
 function OnlineReviewPage() {
   const options = ["전체", "한 달", "일주일"];
   const termMap = { 전체: 0, "한 달": 1, 일주일: 2 };
-
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [selectedRange, setSelectedRange] = useState("전체");
-  const [storeName, setStoreName] = useState("가게 이름 불러오는 중...");
-  const [goodPoint, setGoodPoint] = useState("리뷰 데이터 불러오는 중...");
-  const [badPoint, setBadPoint] = useState("리뷰 데이터 불러오는 중...");
+  const [loading, setLoading] = useState(true); // ✅ 로딩 상태 추가
+
+  const [storeName, setStoreName] = useState("");
+  const [goodPoint, setGoodPoint] = useState("");
+  const [badPoint, setBadPoint] = useState("");
   const [percentage, setPercentage] = useState({
     goodPercentage: 0,
     middlePercentage: 0,
     badPercentage: 0,
   });
-  const [analysisKeyword, setAnalysisKeyword] = useState(
-    "키워드 분석 데이터 불러오는 중..."
-  );
-  const [analysisProblem, setAnalysisProblem] = useState(
-    "개선점 데이터 불러오는 중..."
-  );
-  const [analysisSolution, setAnalysisSolution] = useState(
-    "제안 데이터 불러오는 중..."
-  );
+  const [analysisKeyword, setAnalysisKeyword] = useState("");
+  const [analysisProblem, setAnalysisProblem] = useState("");
+  const [analysisSolution, setAnalysisSolution] = useState("");
 
-  // selectedRange가 바뀌면 API 호출
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // ✅ 로딩 시작
       try {
-
         const response = await axios.get(`${backendUrl}/review/analysis`, {
           params: { term: termMap[selectedRange] ?? 0 },
-          withCredentials: true, // ✅ 쿠키 기반 인증
-          
-        }
-      );
+          withCredentials: true,
+        });
 
         const data = response.data.data;
 
@@ -160,11 +152,20 @@ function OnlineReviewPage() {
       } catch (err) {
         console.error("데이터 불러오기 실패:", err);
         setStoreName("에러 발생");
+      } finally {
+        setLoading(false); // ✅ 로딩 끝
       }
     };
 
     fetchData();
   }, [selectedRange]);
+
+  // ✅ 로딩 중이면 LoadingPage 렌더링
+  if (loading) {
+    return <LoadingPage />;
+  }
+
+
 
   return (
     <PageContainer>
