@@ -85,17 +85,17 @@ const BtnWrapper=styled.div`
 
 function CoworkPopup({ storeName, storeType, requestContent, collaborateId, onClose }) {
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const secretKey = import.meta.env.VITE_SECRET_KEY;
 
   const handleDecision = async (isAccepted) => {
     try {
+console.log("가게이름",storeName)
       
 const response = await fetch(`${backendUrl}/collaboration/accept`, {
   method: 'PATCH',
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${secretKey}`, 
   },
+  credentials: 'include', 
   body: JSON.stringify({
     collaborateId: collaborateId,
     isAccepted: isAccepted,
