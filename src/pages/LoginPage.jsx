@@ -1,11 +1,12 @@
-// pages/LoginPage.jsx
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Robot from "../assets/Icons/LoginRobotIcon.svg";
+import { useAuth } from "../context/AuthContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [form, setForm] = useState({ username: "", password: "" });
   const [touched, setTouched] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -28,28 +29,27 @@ export default function LoginPage() {
 
     setSubmitting(true);
     try {
-      // ✅ 1. 로그인 API 호출
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/main/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // ✅ 2. HttpOnly 쿠키를 주고받기 위한 설정
         credentials: 'include',
         body: JSON.stringify({
-          // 백엔드 API가 id를 받으므로 username을 id로 매핑
-          id: form.username.trim(),
+        id: form.username.trim(),
           password: form.password,
         }),
       });
 
-      // ✅ 3. 로그인 실패 시 에러 처리
       if (!response.ok) {
-        const errorData = await response.json();
-        // 백엔드에서 보내주는 에러 메시지를 alert로 표시
-        throw new Error(errorData.error || "아이디 또는 비밀번호가 올바르지 않습니다.");
+        const text = await response.text();
+        let message = "로그인에 실패했습니다.";
+        try {
+          const json = JSON.parse(text);
+          message = json.message || message;
+        } catch (_) { /* HTML일 수도 있음 */ }
+        throw new Error(message);
       }
       
-      // ✅ 4. 로그인 성공 시 메인 페이지로 이동
-      // 성공 시 서버가 쿠키를 설정해주므로 프론트에서 별도 토큰 저장은 불필요
+      login();
       navigate("/", { replace: true });
 
     } catch (error) {
@@ -145,7 +145,7 @@ const Head = styled.div`
 `;
 
 const RobotIcon = styled.img`
-  width: 92px;        /* 필요 시 96~120px로 조절 */
+  width: 92px;
   height: 92px;
   object-fit: contain;
   border-radius: 20px;
@@ -254,7 +254,7 @@ const SecondaryBtn = styled.button`
   color: #fff;
   font-weight: 800;
   font-size: 18px;
-  background: #e69463; /* 사진과 비슷한 오렌지 톤 */
+  background: #e69463;
   cursor: pointer;
   transition: transform 0.03s ease;
 
