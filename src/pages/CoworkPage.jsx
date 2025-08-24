@@ -107,7 +107,7 @@ function CoworkPage() {
           activeRes.data.data.collaborateStores.map((item) => ({
             allData: item.collaborateStore,
             collaborateId: item.collaborateId,
-            initialMemo: item.memo,
+            memo: item.memo,
           }))
         );
       } catch (err) {
@@ -208,6 +208,7 @@ function CoworkPage() {
         <SentPopup
           storeName={popup.store.allData.name}
           storeType={popup.store.allData.type}
+          storeCategory={popup.store.allData.category}
           requestContent={popup.store.initialMemo || ""}
           collaborateId={popup.store.collaborateId}
           onClose={handleClosePopup}
@@ -221,9 +222,11 @@ function CoworkPage() {
           storeName={popup.store.allData.name}
           storeId={popup.store.allData.storeId}
           storeType={popup.store.allData.type}
-          phoneNumber={popup.store.allData.phoneNumber}
-          requestContent={popup.store.memo }
+          storeCategory={popup.store.allData.category}
+          phoneNumber={popup.store.allData.number}
+          requestContent={popup.store.memo}
           collaborateId={popup.store.collaborateId}
+          startedAt={popup.store.startedAt}
         />
       )}
 

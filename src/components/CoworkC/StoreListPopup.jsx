@@ -96,25 +96,107 @@ const TextBox = styled.textarea`
   font-weight: 500;
   line-height: normal;
 `;
+const subCategoryOptions = {
+  음식: [
+    "한식",
+    "중식",
+    "일식",
+    "서양식",
+    "기타외국식",
+    "분식",
+    "패스트푸드",
+    "제과제빵",
+    "카페",
+  ],
+  소매: [
+    "슈퍼마켓",
+    "편의점",
+    "전통시장",
+    "농축수산물",
+    "건강식품",
+    "의류",
+    "패션잡화",
+    "생활잡화",
+    "가전제품",
+    "서적/문구",
+    "애완용품",
+  ],
+  생활서비스: [
+    "미용실",
+    "네일숍",
+    "피부관리",
+    "세탁소",
+    "수선/수리",
+    "사진관",
+    "예식/행사",
+    "인테리어",
+  ],
+  교육: [
+    "입시/보습학원",
+    "외국어학원",
+    "예체능학원",
+    "컴퓨터/IT교육",
+    "평생교육",
+  ],
+  숙박: ["호텔", "모텔", "게스트하우스", "펜션/민박"],
+  "오락/여가": [
+    "PC방",
+    "노래방",
+    "게임방",
+    "스크린골프",
+    "당구장",
+    "헬스/요가/필라테스",
+  ],
+  "의료/건강": ["약국", "한의원", "병원", "안경점", "헬스용품"],
+  "운송/자동차": ["주유소", "세차장", "자동차수리", "렌터카"],
+  "제조/생산": ["식품제조", "의류제조", "가구제조", "인쇄/출판"],
+  기타: ["부동산중개", "여행사", "종교단체", "비영리단체"],
+};
+const storeTypeMap = {
+  1: "음식",
+  2: "소매",
+  3: "생활서비스",
+  4: "교육",
+  5: "숙박",
+  6: "오락/여가",
+  7: "의료/건강",
+  8: "운송/자동차",
+  9: "제조/생산",
+  10: "기타",
+};
+
+const getCategoryName = (type, categoryNumber) => {
+  const typeName = storeTypeMap[type];
+  if (!typeName) return "알 수 없음";
+
+  const subCategories = subCategoryOptions[typeName];
+  if (!subCategories) return "알 수 없음";
+
+  return subCategories[categoryNumber - 1] || "알 수 없음"; // 1부터 시작하므로 -1
+};
 
 function StoreListPopup({
   storeName,
   storeType,
+  storeCategory,
   phoneNumber,
   requestContent,
   collaborateId,
   onClose,
+  startedAt,
+  
 }) {
   const [content, setContent] = useState(requestContent);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  console.log(collaborateId);
+  console.log(collaborateId,requestContent);
   // 메모 수정
   const handleSave = async () => {
     try {
       const response = await axios.patch(
         `${backendUrl}/collaboration/memo`,
-        { collaborateId, memo: content },
+        { collaborateId,
+           memo: content },
         {
           withCredentials: true, // 수정 위치
           headers: {
@@ -165,9 +247,13 @@ function StoreListPopup({
           <Title>{storeName}</Title>
           <ContentWrapper>
             <Content>
-              {storeName} : {storeType}
+              {storeName} : {storeTypeMap[storeType] || "알 수 없음"} -{" "}
+              {getCategoryName(storeType, storeCategory)}
             </Content>
+
             <Content>전화 번호 : {phoneNumber}</Content>
+            <Content>협업 시작 일시 : {startedAt}</Content>
+
             <Content>협업 내용</Content>
             <TextBox
               value={content}
