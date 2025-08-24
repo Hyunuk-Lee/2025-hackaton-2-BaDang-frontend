@@ -63,7 +63,7 @@ const LogoLink=styled(Link)`
   width: auto;
   height: 100%;
 `;
-const StyledNavLink = styled()`
+const StyledNavLink = styled.a`
     color:  #494954;
     text-align: center;
     font-family: SUIT;

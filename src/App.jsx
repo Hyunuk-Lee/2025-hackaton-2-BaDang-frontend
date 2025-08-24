@@ -16,7 +16,7 @@ import CreateReportPage from './pages/CreateReportPage.jsx';
 import NewsDetailPage from './pages/NewsDetailPage.jsx';
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
-// import InformationEdit from "./pages/InformationEditPage"
+import ProfileEditPage from "./pages/ProfileEditPage"
 
 import { FavoritesProvider } from "./context/FavoritesContext";
 import { useAuth } from './context/AuthContext'; // useAuth 훅 임포트
@@ -80,6 +80,7 @@ function App() {
                       <Route path="/collaboration-management" element={<CoworkPage />} />
                       <Route path="/create-report" element={<CreateReportPage />} />
                       <Route path="/news/:id" element={<NewsDetailPage />} />
+                      <Route path="/profile-edit" element={<ProfileEditPage />} />
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                   </MainContent>
