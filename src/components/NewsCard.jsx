@@ -5,22 +5,27 @@ import NoHeart from '../assets/NoHeart.svg';
 import YesHeart from '../assets/YesHeart.svg';
 
 const Card = styled.div`
-  display: flex;
-  width: 384px;
-  height: 418px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  border-radius: 8px;
-  background: #FFF;
-  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.15);
+display: flex;
+width: 384px;
+height: 418px;
+flex-direction: column;
+justify-content: flex-start;
+align-items: center;
+ border-radius: 20px;
+border: 1.5px solid #D8D8D8;
+background: #FFF;
+
+/* button shadow */
+box-shadow: 0 8px 24.3px 0 rgba(0, 0, 0, 0.06);
   cursor: pointer;
 `;
 
 const ThumbnailContainer = styled.div`
   position: relative;
-  width: 384px;
-  height: 288px;
+   border-radius:20px 20px 0px 0px;
+  width: 100%;
+  height: 259px;
+  background-color: aliceblue
 `;
 
 const Thumbnail = styled.img`
@@ -43,7 +48,7 @@ const HeartButton = styled.img`
 const Textbox = styled.div`
   display: flex;
   width: 384px;
-  height: 130px;
+  height: 150px;
   padding: 16px 16px 16px 16px;
   flex-direction: column;
   align-items: flex-start;
@@ -78,26 +83,32 @@ const Keyword = styled(BaseText)`
 `;
 
 const Date = styled(BaseText)`
-  color: #17171B;
+  color: #494954;
   border-color: ${(props) => (props.isOrange ? '#FF9762' : '#759AFC')};
   font-family: NanumSquareOTF;
 `;
 
-const Title = styled.h3`
-  width: 310px;
-  height: 50px;
+const Title = styled.div`
+  width: 347px;
+  height: 60px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.2;
-  color: #17171B;
+  color: #494954;
   transition: color 0.2s ease;
   font-family: SUIT;
 
+color: var(--Typo-Black01, #494954);
+font-family: SUIT;
+font-size: 25px;
+font-style: normal;
+font-weight: 700;
+line-height: 30px; /* 120% */
   ${Card}:hover & {
-    color: ${(props) => (props.isOrange ? '#FF9762' : '#0046FF')};
+    color: ${(props) => (props.isOrange ? '#FF9762' : '#759AFC')};
   }
 `;
 
@@ -130,8 +141,8 @@ function NewsCard({
 
       <Textbox>
         <KeyWrapper>
-          <Keyword isOrange={isOrange}>{keyword}</Keyword>
-          <Date isOrange={isOrange}>{date}</Date>
+          <Keyword isOrange={isOrange}>{keyword|| "키워드 불러오는 중..."}</Keyword>
+          <Date isOrange={isOrange}>{date|| "날짜 불러오는 중..."}</Date>
         </KeyWrapper>
         <Title isOrange={isOrange}>{title}</Title>
       </Textbox>

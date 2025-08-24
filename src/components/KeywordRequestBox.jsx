@@ -1,11 +1,12 @@
 // components/KeywordRequestBox.jsx
 import React from "react";
 import styled from "styled-components";
+import RightIcon from "../assets/Icons/RightIcon.svg"
 
 export default function KeywordRequestBox({
   recent = [],                 // string[]
   onSelect,                    // (keyword) => void
-  onRemove,                    // (keyword) => void   ✅ 추가
+  onRemove,                    // (keyword) => void
   onMakeReport,                // () => void
 }) {
   // 키보드 접근성(Enter/Space로 chip 선택)
@@ -33,7 +34,7 @@ export default function KeywordRequestBox({
               type="button"
               aria-label={`${kw} 삭제`}
               onClick={(e) => {
-                e.stopPropagation();      // ✅ 칩 선택과 분리
+                e.stopPropagation();
                 onRemove?.(kw);
               }}
               title="최근 검색어에서 제거"
@@ -46,9 +47,9 @@ export default function KeywordRequestBox({
 
       <ReportButton type="button" onClick={onMakeReport}>
         <ReportText>
-          <Accent>보고서</Accent> 직접 만들기
+          <Accent>보고서</Accent>직접 만들기
         </ReportText>
-        <Arrow aria-hidden>→</Arrow>
+        <ReportIcon src={RightIcon} alt="report icon" />
       </ReportButton>
     </Wrap>
   );
@@ -56,32 +57,42 @@ export default function KeywordRequestBox({
 
 /** ===== styled ===== */
 const Wrap = styled.div`
+max-height: 63px;
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
-  flex-wrap: nowrap;      /* 한 줄 유지 */
+  flex-wrap: nowrap;
 `;
 
 const ChipsRow = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 16px;
   flex-shrink: 0;
-  white-space: nowrap;    /* 줄바꿈 방지 */
+  white-space: nowrap;
 `;
 
 const Chip = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border-radius: 24px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  color: #17171b;
-  font-size: 16px;
+display: flex;
+padding: 20px 15px;
+height: 63px;
+justify-content: center;
+align-items: center;
+gap: 10px;
+border-radius: 20px;
+border: 1px solid  #D8D8D8;
+background:#FFF;
+
+box-shadow: 0 8px 24.3px 0 rgba(0, 0, 0, 0.06);
+color:  #494954;
+text-align: center;
+font-family: NanumSquareOTF;
+font-size: 20px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 
   &:hover { background: #f9fafb; }
   &:focus-visible { outline: 2px solid #0046ff; outline-offset: 2px; }
@@ -105,41 +116,42 @@ const RemoveBtn = styled.button`
 `;
 
 const ReportButton = styled.button`
-  flex: 1;
+max-height: 63px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 18px 16px 24px;
-  border-radius: 28px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
+  white-space: nowrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 88px;
+  padding: 14px 16px 15px 16px;
+  border-radius: 20px;
+  border: 1px solid  #D8D8D8;
+  background:#FFF;
+  box-shadow: 0 8px 24.3px 0 rgba(0, 0, 0, 0.06);
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  height: 53px;
-
-  &:hover { background: #f9fafb; }
 `;
 
 const ReportText = styled.span`
-  font-size: 18px;
-  color: #17171b;
+  font-size: 20px;
+  font-family: NanumSquareOTF;
+  font-style: normal;
+  line-height: 155%;
+  font-weight: 500;
+
+  color:  #494954;
 `;
 
 const Accent = styled.span`
-  color: #ff8040;
-  font-weight: 700;
+  color: #FF9762;
+  font-weight: 500;
+  font-family: NanumSquareOTF;
+  font-size: 20px;
+  font-style: normal;
+  line-height: 155%;
   margin-right: 4px;
 `;
 
-const Arrow = styled.span`
+const ReportIcon = styled.img`
   width: 30px;
   height: 30px;
   border-radius: 999px;
-  background: #2f3137;
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
 `;
-
