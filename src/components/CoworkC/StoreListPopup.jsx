@@ -1,4 +1,4 @@
-// components/CoworkC/CoworkPopup.jsx
+// components/CoworkC/StoreListPopup.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
 import Btn from "../CoworkC/PopupButton.jsx";
@@ -108,26 +108,22 @@ function StoreListPopup({
   const [content, setContent] = useState(requestContent);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const secretKey = import.meta.env.VITE_SECRET_KEY;
-
+  console.log(collaborateId);
   // 메모 수정
   const handleSave = async () => {
     try {
       const response = await axios.patch(
         `${backendUrl}/collaboration/memo`,
+        { collaborateId, memo: content },
         {
-          collaborateId,
-          memo: content,
-        },
-        {
+          withCredentials: true, // 수정 위치
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${secretKey}`,
           },
         }
       );
 
-      console.log(response.data); // {status:200, message:"수정 완료", data:{memo: "..."}}
+      console.log(response.data);
       alert(response.data.message);
       onClose();
     } catch (err) {
@@ -142,18 +138,18 @@ function StoreListPopup({
       const response = await axios.delete(
         `${backendUrl}/collaboration/${collaborateId}`,
         {
+          withCredentials: true, // 수정 위치
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${secretKey}`,
           },
         }
       );
 
-      if (response.data.status === 200) {
-        alert(response.data.message); // "삭제 완료"
+      if (response.status === 200) {
+        alert("협업 종료 완료");
         onClose();
       } else {
-        alert("협업 종료 실패: " + response.data.message);
+        alert("협업 종료 실패");
       }
     } catch (err) {
       console.error("협업 종료 실패:", err);
@@ -173,7 +169,10 @@ function StoreListPopup({
             </Content>
             <Content>전화 번호 : {phoneNumber}</Content>
             <Content>협업 내용</Content>
-            <TextBox value={content} onChange={(e) => setContent(e.target.value)} />
+            <TextBox
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
           </ContentWrapper>
         </TextWrapper>
         <BtnWrapper>

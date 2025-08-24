@@ -5,6 +5,8 @@ import StoreList from "../components/CoworkC/StoreList";
 import CoworkPopup from "../components/CoworkC/CoworkPopup";
 import StoreListPopup from "../components/CoworkC/StoreListPopup.jsx";
 import RequestPopup from "../components/CoworkC/RequestPopup.jsx";
+import SentPopup from "../components/CoworkC/SentPopup.jsx";
+
 import CoworkUnavailable from "../components/CoworkC/CoworkUnavailable.jsx";
 import Map from "../components/CoworkC/CoworkMap.jsx";
 import axios from "axios";
@@ -102,9 +104,11 @@ function CoworkPage() {
         );
 
         setCollaborateStores(
-          activeRes.data.data.collaborateStores.map(
-            (item) => item.collaborateStore
-          )
+          activeRes.data.data.collaborateStores.map((item) => ({
+            allData: item.collaborateStore,
+            collaborateId: item.collaborateId,
+            initialMemo: item.memo,
+          }))
         );
       } catch (err) {
         console.error("협업 데이터 불러오기 실패:", err);
@@ -135,11 +139,15 @@ function CoworkPage() {
     setCollaborateStores((prev) => [...prev, store]);
     setRequestStores((prev) => prev.filter((s) => s.id !== store.id));
     setPopup({ type: null, store: null });
-  }
+  };
 
   const handleConfirm = async () => {
     try {
-      await axios.post(`${backendUrl}/collaboration/confirm`, { storeId: storeId }, { withCredentials: true });
+      await axios.post(
+        `${backendUrl}/collaboration/confirm`,
+        { storeId: storeId },
+        { withCredentials: true }
+      );
       await fetchData();
       handleClosePopup();
     } catch (err) {
@@ -155,10 +163,10 @@ function CoworkPage() {
       // 부모 컴포넌트에 삭제 사실 전달
       onDelete(storeId);
       handleClosePopup(); // 팝업 닫기
-  } catch (err) {
-    console.error("삭제 실패:", err);
-    alert("삭제에 실패했습니다.");
-  }
+    } catch (err) {
+      console.error("삭제 실패:", err);
+      alert("삭제에 실패했습니다.");
+    }
   };
 
   return (
@@ -181,6 +189,8 @@ function CoworkPage() {
           onConfirm={handleRequestCollaborate} // 추가
         />
       )}
+
+      {/* 요청받은 */}
       {popup.type === "cowork" && popup.store && (
         <>
           <CoworkPopup
@@ -190,17 +200,29 @@ function CoworkPage() {
             collaborateId={popup.store.collaborateId}
             onClose={handleClosePopup}
           />
-        {console.log("모든 정보",popup.store.allData)}
+          {console.log("모든 정보", popup.store.allData)}
         </>
       )}
+      {/* 요청한 */}
+      {popup.type === "sent" && popup.store && (
+        <SentPopup
+          storeName={popup.store.allData.name}
+          storeType={popup.store.allData.type}
+          requestContent={popup.store.initialMemo || ""}
+          collaborateId={popup.store.collaborateId}
+          onClose={handleClosePopup}
+        />
+      )}
 
+      {/* 협업 중인 */}
       {popup.type === "list" && popup.store && (
         <StoreListPopup
           onClose={handleClosePopup}
-          storeName={popup.store.name}
-          storeType={popup.store.type}
-          phoneNumber={popup.store.phoneNumber}
-          requestContent={popup.store.memo || ""}
+          storeName={popup.store.allData.name}
+          storeId={popup.store.allData.storeId}
+          storeType={popup.store.allData.type}
+          phoneNumber={popup.store.allData.phoneNumber}
+          requestContent={popup.store.memo }
           collaborateId={popup.store.collaborateId}
         />
       )}
@@ -210,20 +232,20 @@ function CoworkPage() {
         <StoreList
           title="협업 요청받은 가게"
           stores={requestStores}
-          nothing="아직 협업을 요청한 가게가 없어요"
+          nothing="아직 협업 요청을 보낸 가게가 없어요"
           onClick={(storeItem) => handleStoreClick(storeItem, "cowork")}
         />
         <StoreList
           title="협업 요청한 가게"
           stores={requestSentStores}
           nothing="아직 협업 요청을 보내지 않으셨어요"
-          // onClick={(storeItem) => handleStoreClick(storeItem, "list")}
+          onClick={(storeItem) => handleStoreClick(storeItem, "sent")}
         />
         <StoreList
           title="협업 중인 가게"
           stores={collaborateStores}
           nothing="아직 협업 중인 가게가 없어요"
-          onClick={(store) => handleStoreClick(store, "list")}
+          onClick={(storeItem) => handleStoreClick(storeItem, "list")}
         />
       </ListBox>
     </Page>
