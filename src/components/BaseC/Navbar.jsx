@@ -63,7 +63,7 @@ const LogoLink=styled(Link)`
   width: auto;
   height: 100%;
 `;
-const StyledNavLink = styled(NavLink)`
+const StyledNavLink = styled()`
     color:  #494954;
     text-align: center;
     font-family: SUIT;
@@ -121,16 +121,16 @@ function Navbar() {
         </LogoLink>
         <Menu>
             <MenuItem>
-                <StyledNavLink to="/online-review">온라인 리뷰 분석</StyledNavLink>
+                <StyledNavLink onClick={() => window.location.href="/online-review"}>온라인 리뷰 분석</StyledNavLink>
             </MenuItem>
             <MenuItem>
-                <StyledNavLink to="/custom-keyword-news">맞춤형 키워드 뉴스</StyledNavLink>
+                <StyledNavLink onClick={() => window.location.href="/custom-keyword-news"}>맞춤형 키워드 뉴스</StyledNavLink>
             </MenuItem>
             <MenuItem>
-                <StyledNavLink to="/collaboration-management">협업 관리</StyledNavLink>
+                <StyledNavLink onClick={() => window.location.href="/collaboration-management"}>협업 관리</StyledNavLink>
             </MenuItem>
             <MenuItem>
-                <StyledNavLink to="/profile-edit">정보 수정</StyledNavLink>
+                <StyledNavLink onClick={() => window.location.href="/profile-edit"}>정보 수정</StyledNavLink>
             </MenuItem>
         </Menu>
         {/* ✅ 4. LogOut div에 onClick 이벤트를 연결합니다. */}
