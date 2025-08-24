@@ -305,7 +305,9 @@ export default function CustomKeywordNewsPage() {
           />
           <FavoritePanel
             active={favoriteOnly}
-            count={likedIds.size}
+            count={
+              baseNews.filter((n) => isLiked(n.id)).length
+            }
             onToggle={() => {
               setFavoriteOnly((v) => !v);
               setCurrentPage(1);
@@ -325,10 +327,10 @@ export default function CustomKeywordNewsPage() {
                 key={item.id}
                 id={item.id}
                 title={item.title}
-                keyword={item.keyword}
-                date={item.date}
-                imageUrl={item.imageUrl}
-                isOrange={item.isOrange}
+                keyword={item.keywords[0].keywordName}
+                date={item.createdAt}
+                imageUrl={item.keywords[0].keywordImageUrl}
+                isOrange={item.isUserMade}
                 liked={isLiked(item.id)}
                 onToggleLike={() => toggleLike(item.id)}
                 onClick={() =>
