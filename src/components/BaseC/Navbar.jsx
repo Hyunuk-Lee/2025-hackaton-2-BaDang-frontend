@@ -63,7 +63,7 @@ const LogoLink=styled(Link)`
   width: auto;
   height: 100%;
 `;
-const StyledNavLink = styled(NavLink)`
+const StyledNavLink = styled.a`
     color:  #494954;
     text-align: center;
     font-family: SUIT;
@@ -97,22 +97,34 @@ const StyledNavLink = styled(NavLink)`
 
 function Navbar() {
   const navigate = useNavigate();
-  const { logout } = useAuth(); // ✅ 2. AuthContext에서 logout 함수 가져오기
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
-    try {
-      await fetch(`${import.meta.env.VITE_BACKEND_URL}/main/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-    } catch (error) {
-      console.error("로그아웃 중 오류 발생:", error);
-    } finally {
-      // ✅ 3. 로그아웃 시 전역 상태 업데이트
-      logout();
-      navigate('/login', { replace: true });
+  try {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/main/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      // 서버에서 오류 발생 시
+      const errorData = await res.json();
+      console.error("서버 로그아웃 실패:", errorData.detail);
+      return;
     }
-  };
+
+    // 서버 로그아웃 완료 후 localStorage 및 상태 업데이트
+    logout(); // 전역 상태 초기화
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+
+    // 로그인 페이지로 이동
+    window.location.href = '/login';
+  } catch (error) {
+    console.error("로그아웃 중 오류 발생:", error);
+  }
+};
+
 
   return (
     <NavbarContainer>
@@ -121,16 +133,16 @@ function Navbar() {
         </LogoLink>
         <Menu>
             <MenuItem>
-                <StyledNavLink to="/online-review">온라인 리뷰 분석</StyledNavLink>
+                <StyledNavLink onClick={() => window.location.href="/online-review"}>온라인 리뷰 분석</StyledNavLink>
             </MenuItem>
             <MenuItem>
-                <StyledNavLink to="/custom-keyword-news">맞춤형 키워드 뉴스</StyledNavLink>
+                <StyledNavLink onClick={() => window.location.href="/custom-keyword-news"}>맞춤형 키워드 뉴스</StyledNavLink>
             </MenuItem>
             <MenuItem>
-                <StyledNavLink to="/collaboration-management">협업 관리</StyledNavLink>
+                <StyledNavLink onClick={() => window.location.href="/collaboration-management"}>협업 관리</StyledNavLink>
             </MenuItem>
             <MenuItem>
-                <StyledNavLink to="/profile-edit">정보 수정</StyledNavLink>
+                <StyledNavLink onClick={() => window.location.href="/profile-edit"}>정보 수정</StyledNavLink>
             </MenuItem>
         </Menu>
         {/* ✅ 4. LogOut div에 onClick 이벤트를 연결합니다. */}
