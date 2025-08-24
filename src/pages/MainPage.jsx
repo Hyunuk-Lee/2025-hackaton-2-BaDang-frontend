@@ -1,20 +1,18 @@
 // pages/MainPage.jsx
-
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Advertisement from "../components/MainC/Advertisement";
 import BigCards from "../components/MainC/BigCards";
+import Advertisement from "../components/MainC/Advertisement";
 import SmallCards from "../components/MainC/SmallCards";
+import { useAuth } from "../context/AuthContext";
+import { useGetNewsletterList } from "../hooks/queries/useGetNewsletterList";
 
 const Page = styled.div`
   margin: auto;
   display: flex;
   width: 1200px;
   flex-direction: column;
-  height: 1238px;
   min-height: 100vh;
-  align-items: flex-start;
 `;
 
 const HelloText = styled.div`
@@ -25,7 +23,6 @@ const HelloText = styled.div`
   text-align: center;
   font-family: SUIT;
   font-size: 40px;
-  font-style: normal;
   font-weight: 800;
   line-height: 60px;
 `;
@@ -45,47 +42,38 @@ const CardWrapper = styled.div`
   height: 418px;
 `;
 
-function MainPage() {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+export default function MainPage() {
+  const { user } = useAuth();
+  const storeId = user?.storeId;
 
-  const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(true);
+  // 최신 2개 뉴스레터만 담을 상태
+  const [latestTwo, setLatestTwo] = useState([]);
+
+  // 훅으로 전체 뉴스레터 불러오기
+  const { newsletters, loading, error, loadMore } = useGetNewsletterList(storeId, 9);
 
   useEffect(() => {
-    const fetchMe = async () => {
-      try {
-        const response = await axios.get(`${backendUrl}/main/me`, {
-          withCredentials: true, // 쿠키 기반 인증일 경우 필요
-        });
-            console.log("me response:", response.data); // <- 여기 추가
-
-        setUsername(response.data.username); // me 안의 ownerName 사용
-      } catch (error) {
-        console.error("Failed to fetch me:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMe();
-  }, [backendUrl]);
+    if (newsletters.length > 0) {
+      // 최신 2개만 추출
+      setLatestTwo(newsletters.slice(0, 2));
+    }
+  }, [newsletters]);
 
   if (loading) return <Page>Loading...</Page>;
 
   return (
     <Page>
       <HelloText>
-        안녕하세요 {username} <Blue>사장님</Blue> <br />
-        리뷰를 <Orange>분석</Orange>하고 이번주 <Orange>보고서</Orange>를
-        확인해보세요!
+        안녕하세요 {user?.username} <Blue>사장님</Blue> <br />
+        리뷰를 <Orange>분석</Orange>하고 이번주 <Orange>보고서</Orange>를 확인해보세요!
       </HelloText>
+
       <CardWrapper>
-        <BigCards />
+        {/* 최신 2개 뉴스레터 전달 */}
+        <BigCards newsletters={latestTwo} />
         <Advertisement />
         <SmallCards />
       </CardWrapper>
     </Page>
   );
 }
-
-export default MainPage;

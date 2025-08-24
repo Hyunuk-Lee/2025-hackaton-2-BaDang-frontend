@@ -1,12 +1,3 @@
-/**
- * 리뷰 분석 데이터 객체 묶음 처리 및 커스텀 훅으로 api 연동 리팩토링
- * 확인 시 주석 지우고 깃에 올려주세요
- * 추가로 css 수정도 필요해보입니다.
- *
- * @author 곽도윤
- * **/
-
-
 import React, { useState, useEffect } from "react";
 import TimeBtnGroup from "../components/TimeBtnGroup";
 import ReviewSection from "../components/ReviewC/ReviewSection";
