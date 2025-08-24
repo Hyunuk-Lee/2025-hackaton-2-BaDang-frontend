@@ -2,16 +2,32 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import RobotIcon from "../assets/Icons/CreateReportRobotIcon.svg";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateReportPage() {
   const [keyword, setKeyword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const term = keyword.trim();
     if (!term) return;
-    // TODO: 실제 제작 로직/라우팅 연결
-    console.log("보고서 제작 시작:", term);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/trend/keywords`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ keyword: term }),
+      });
+      const data = await response.json();
+      console.log("응답:", data);
+
+      navigate("/report");
+    } catch (error) {
+      console.error("에러:", error);
+    }
   };
 
   return (
