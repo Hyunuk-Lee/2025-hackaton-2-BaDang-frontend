@@ -115,6 +115,36 @@ setRequestSentStores(
     return <CoworkUnavailable />;
   }
 
+  const handleRequestCollaborate = (store) => {
+    setCollaborateStores((prev) => [...prev, store]);
+    setRequestStores((prev) => prev.filter((s) => s.id !== store.id));
+    setPopup({ type: null, store: null });
+  }
+
+  const handleConfirm = async () => {
+    try {
+      await axios.post(`${backendUrl}/collaboration/confirm`, { storeId: storeId }, { withCredentials: true });
+      await fetchData();
+      handleClosePopup();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${backendUrl}/collaboration/request/${storeId}`, {
+        withCredentials: true,
+      });
+      // 부모 컴포넌트에 삭제 사실 전달
+      onDelete(storeId);
+      handleClosePopup(); // 팝업 닫기
+  } catch (err) {
+    console.error("삭제 실패:", err);
+    alert("삭제에 실패했습니다.");
+  }
+  };
+
   return (
     <Page>
       {/* <div>
@@ -129,7 +159,11 @@ setRequestSentStores(
 
       {/* 팝업 렌더링 */}
       {popup.type === "request" && (
-        <RequestPopup store={popup.store} onClose={handleClosePopup} />
+        <RequestPopup
+          store={popup.store}
+          onClose={handleClosePopup}
+          onConfirm={handleRequestCollaborate} // 추가
+        />
       )}
       {popup.type === "cowork" && popup.store && (
         <CoworkPopup
