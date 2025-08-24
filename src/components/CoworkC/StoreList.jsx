@@ -39,11 +39,11 @@ function StoreList({ title, nothing, stores = [], onClick }) {
       <Title>{title}</Title>
       <List>
         {stores.length > 0 ? (
-          stores.map((store, idx) => (
+          stores.map((storeItem, idx) => (
             <StoreBtn 
             key={idx}
-            storeName={store.name} 
-            onClick={onClick} />
+            storeName={storeItem.allData?.name|| storeItem.allData?.storeName||"이름 없음"} 
+             onClick={() => onClick(storeItem)} />
           ))
         ) : (
           <NothingText>{nothing}</NothingText>

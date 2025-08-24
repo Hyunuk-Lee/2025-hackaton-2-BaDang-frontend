@@ -41,6 +41,7 @@ const StoreName = styled.div`
 `;
 
 function formatStoreName(name) {
+   if (!name) return ""; // name이 undefined/null이면 빈 문자열 반환
   // 띄어쓰기 있는 경우 먼저 줄바꿈
   if (name.includes(" ")) {
     const words = name.split(" ");
