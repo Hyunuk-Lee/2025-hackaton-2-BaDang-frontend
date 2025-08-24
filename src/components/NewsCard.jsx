@@ -131,7 +131,7 @@ function NewsCard({
   return (
     <Card onClick={onClick}>
       <ThumbnailContainer>
-        <Thumbnail src={imageUrl} alt="썸네일" />z
+        <Thumbnail src={imageUrl} alt="썸네일" />
         <HeartButton
           src={liked ? YesHeart : NoHeart}
           alt="찜하기"
