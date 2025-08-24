@@ -147,6 +147,8 @@ function CoworkPage() {
       {popup.type === "request" && (
         <RequestPopup store={popup.store} onClose={handleClosePopup} />
       )}
+
+      {/* 요청받은 */}
       {popup.type === "cowork" && popup.store && (
         <>
           <CoworkPopup
@@ -159,7 +161,7 @@ function CoworkPage() {
         {console.log("모든 정보",popup.store.allData)}
         </>
       )}
-
+      {/*  */}
       {popup.type === "list" && popup.store && (
         <StoreListPopup
           onClose={handleClosePopup}
