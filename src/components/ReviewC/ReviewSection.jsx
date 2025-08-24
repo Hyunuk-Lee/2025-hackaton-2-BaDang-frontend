@@ -39,21 +39,22 @@ const SectionIcon = styled.img`
   width: 20px;
   height: 20px;
 `;
+const SmallQWrapper = styled.div`
+  position: relative; /* 기준 컨테이너로 잡기 */
+  display: inline-block;
+`;
 
 const SmallQIcon = styled.img`
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
   width: 18px;
   height: 18px;
   cursor: pointer;
 `;
 
 const PopupIcon = styled.img`
-  position: absolute;
-  bottom: 34px;
-  right: -40px;
-  width: 380px;
+position: absolute;
+  bottom: 100%; /* SmallQIcon 바로 위 */
+  left: 50%;
+  transform: translateX(-50%) translateY(+5px); /* 중앙 정렬 + 살짝 띄움 */
   height: auto;
   z-index: 10;
 `;
@@ -97,11 +98,8 @@ function ReviewSection({ title, icon, showSmallQ = true, className, ratios, popu
       <SectionTitleWrapper>
         <SectionTitle>{title}</SectionTitle>
         {icon && <SectionIcon src={icon} alt="icon" />}
-      </SectionTitleWrapper>
-
-
-      {showSmallQ && (
-        <>
+        {showSmallQ && (
+        <SmallQWrapper>
           <SmallQIcon 
             src={SmallQ} 
             alt="SmallQ" 
@@ -109,8 +107,12 @@ function ReviewSection({ title, icon, showSmallQ = true, className, ratios, popu
             onMouseLeave={() => setShowPopup(false)}
           />
           {showPopup && popupImage && <PopupIcon src={popupImage} alt="Popup" />}
-        </>
+        </SmallQWrapper>
       )}
+      </SectionTitleWrapper>
+
+
+      
       {/* 콘텐츠를 children 프롭스로 받아오는 구조라 해당 부분 추가 */}
       <SectionContent>
         {typeof children !== 'undefined' ? children : null}

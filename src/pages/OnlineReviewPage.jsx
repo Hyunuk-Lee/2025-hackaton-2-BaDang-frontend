@@ -30,10 +30,10 @@ const Header = styled.div`
 `;
 
 const BigQPopup = styled.img`
-  position: absolute;
-  top: -50px;
-  left: 20px;
-  width: 568px;
+    position: absolute;
+  top: 50%;              /* 아이콘 세로 중앙 기준 */
+  left: 100%;            /* QWrapper 오른쪽 바로 옆 */
+  transform: translateY(-50%) translateX(4px); /* 세로 중앙 맞추고 약간 간격 띄움 */
   height: auto;
   z-index: 10;
   display: none;
@@ -41,8 +41,7 @@ const BigQPopup = styled.img`
 
 const QWrapper = styled.div`
   position: relative;
-  display: flex;
-  align-items: baseline;
+  display: inline-block;
   &:hover ${BigQPopup} {
     display: block;
   }
@@ -90,18 +89,18 @@ const QIcon = styled.img`
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 132px 169px 170px 159px;
+   grid-auto-rows: min-content; 
   gap: 24px;
   padding: 36px 120px;
 `;
 
 const StyledReviewSection = styled(ReviewSection)`
-  &.section-1 { height: 132px; width: 588px; }
-  &.section-2 { height: 132px; width: 587px; }
-  &.section-3 { grid-row: 2 / 4; height: 363px; width: 588px; }
-  &.section-4 { height: 169px; width: 588px; }
-  &.section-5 { height: 170px; }
-  &.section-6 { grid-column: 1 / 3; height: 159px; width: 100%; }
+  &.section-1 {  width: 588px; }
+  &.section-2 {  width: 587px; }
+  &.section-3 { grid-row: 2 / 4;  width: 588px; }
+  &.section-4 {  width: 588px; }
+  &.section-5 { }
+  &.section-6 { grid-column: 1 / 3;  width: 100%; }
 `;
 
 const PageContainer = styled.div`
