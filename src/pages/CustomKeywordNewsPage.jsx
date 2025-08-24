@@ -12,6 +12,7 @@ import { useFavorites } from "../context/FavoritesContext";
 import { useGetNewsletterList } from "../hooks/queries/useGetNewsletterList";
 import { useGetNewsletterSearch } from "../hooks/queries/useGetNewsletterSearch";
 import { useAuth } from "../context/AuthContext";
+import useNewsletterWeek from "../hooks/useNewsletterWeek";
 
 /** ===== 레이아웃 ===== */
 const Page = styled.div`
@@ -322,22 +323,27 @@ export default function CustomKeywordNewsPage() {
             <NoResult onMakeReport={handleMakeReport} />
           )}
           <CardsGrid>
-            {displayedNewsletters.map((item) => (
-              <NewsCard
-                key={item.id}
-                id={item.id}
-                title={item.title}
-                keyword={item.keywords[0].keywordName}
-                date={item.createdAt}
-                imageUrl={item.keywords[0].keywordImageUrl}
-                isOrange={item.isUserMade}
-                liked={isLiked(item.id)}
-                onToggleLike={() => toggleLike(item.id)}
-                onClick={() =>
-                  navigate(`/news/${item.id}`, { state: { item } })
-                }
-              />
-            ))}
+            {displayedNewsletters.map((item) => {
+              // 월, 주차 파싱
+              const {year, month, week} = useNewsletterWeek(item.createdAt);
+
+              return (
+                <NewsCard
+                  key={item.id}
+                  id={item.id}
+                  title={item.title}
+                  keyword={item.keywords[0].keywordName}
+                  date={`${year}년 ${month}월 ${week}주차`}
+                  imageUrl={item.keywords[0].keywordImageUrl}
+                  isOrange={item.isUserMade}
+                  liked={isLiked(item.id)}
+                  onToggleLike={() => toggleLike(item.id)}
+                  onClick={() =>
+                    navigate(`/news/${item.id}`, { state: { item } })
+                  }
+                />
+              );
+            })}
           </CardsGrid>
         </Section>
 
