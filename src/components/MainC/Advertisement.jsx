@@ -15,9 +15,9 @@ const AdContainer = styled.div`
 
 const SlideWrapper = styled.div`
   display: flex;
-  width: ${props => props.numImages * 1200}px;
+  width: ${props => props.$numImages * 1200}px;
   transition: transform 1s ease; // 슬라이드 이동 속도
-  transform: translateX(${props => -props.currentIndex * 1200}px);
+  transform: translateX(${props => -props.$currentIndex * 1200}px);
 `;
 
 const AdContent = styled.img`
@@ -38,7 +38,7 @@ const Dot = styled.div`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: ${props => (props.active ? "#759AFC" : "#9D9D9D")};
+  background-color: ${props => (props.$active ? "#759AFC" : "#9D9D9D")};
   cursor: pointer;
 `;
 
@@ -67,7 +67,7 @@ function Advertisement() {
   return (
     <>
       <AdContainer>
-        <SlideWrapper currentIndex={currentIndex} numImages={ads.length}>
+        <SlideWrapper $currentIndex={currentIndex} $numImages={ads.length}>
           {ads.map((ad, idx) => (
             <AdContent key={idx} src={ad} alt={`광고${idx}`} />
           ))}
@@ -75,13 +75,13 @@ function Advertisement() {
       </AdContainer>
 
       <DotContainer>
-        {ads.map((_, idx) => (
-          <Dot
-            key={idx}
-            active={idx === currentIndex}
-            onClick={() => goToSlide(idx)}
-          />
-        ))}
+          {ads.map((_, idx) => (
+            <Dot
+              key={idx}
+              $active={idx === currentIndex}
+              onClick={() => goToSlide(idx)}
+            />
+          ))}
       </DotContainer>
     </>
   );
