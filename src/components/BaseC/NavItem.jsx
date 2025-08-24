@@ -1,3 +1,5 @@
+// window.location.href를 활용한 리랜더링 전략을 위한 컴포넌트
+
 import styled from "styled-components";
 import React from "react";
 import { useLocation } from "react-router-dom";
@@ -30,7 +32,7 @@ const StyledNavItem = styled.div`
       background-color: #759AFC;
       color: #FAF9F6;
   `}
-  
+
   &:hover {
     background-color: #eaf0ff; /* 살짝 연한 블루로 hover 표시 */
     color: #759AFC;
