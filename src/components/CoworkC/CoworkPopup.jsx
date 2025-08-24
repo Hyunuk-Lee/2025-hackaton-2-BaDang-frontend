@@ -1,8 +1,10 @@
 // components/CoworkC/CoworkPopup.jsx
-import React from "react";
-import styled from "styled-components";
-import Btn from "../CoworkC/PopupButton.jsx";
-import Close from "../../assets/Icons/XIcon.svg"; // 엑스 아이콘
+import React from 'react';
+import styled from 'styled-components';
+import Btn from '../CoworkC/PopupButton.jsx';
+import Close from '../../assets/Icons/XIcon.svg'; // 엑스 아이콘
+import axios from 'axios';
+
 
 const Overlay = styled.div`
   position: fixed; /* 화면 전체 덮기 */
@@ -121,6 +123,30 @@ function CoworkPopup({
     }
   };
 
+    const handleConfirm = async () => {
+    try {
+      await axios.post(`${backendUrl}/collaboration/confirm`, { storeId: storeId }, { withCredentials: true });
+      await fetchData();
+      handleClosePopup();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${backendUrl}/collaboration/request/${storeId}`, {
+        withCredentials: true,
+      });
+      // 부모 컴포넌트에 삭제 사실 전달
+      onDelete(storeId);
+      handleClosePopup(); // 팝업 닫기
+  } catch (err) {
+    console.error("삭제 실패:", err);
+    alert("삭제에 실패했습니다.");
+  }
+  };
+
   return (
     <Overlay onClick={onClose}>
       <PopupBox onClick={(e) => e.stopPropagation()}>
@@ -137,18 +163,10 @@ function CoworkPopup({
           </ContentWrapper>
         </TextWrapper>
         <BtnWrapper>
-          <Btn
-            btnName="수락하기"
-            color="#759AFC"
-            width="221px"
-            onClick={() => handleDecision("ACCEPTED")}
-          />
-          <Btn
-            btnName="거절하기"
-            color="#FF9762"
-            width="221px"
-            onClick={() => handleDecision("REJECTED")}
-          />
+          <Btn btnName='수락하기' color='#759AFC' width="221px" 
+               onClick={() => handleConfirm()} />
+          <Btn btnName='거절하기' color='#FF9762' width="221px" 
+               onClick={() => handleDelete()} />
         </BtnWrapper>
       </PopupBox>
     </Overlay>
