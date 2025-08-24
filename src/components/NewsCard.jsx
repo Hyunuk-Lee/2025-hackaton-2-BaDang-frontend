@@ -67,19 +67,19 @@ const BaseText = styled.h3`
   align-items: center;
   font-size: 14px;
   font-weight: 600;
-  border: 1.5px solid #0046FF;
+  border: 1.5px solid #759AFC;
 `;
 
 const Keyword = styled(BaseText)`
   color: #FAF9F6;
-  background-color: ${(props) => (props.isOrange ? '#FF8040' : '#0046FF')};
-  border-color: ${(props) => (props.isOrange ? '#FF8040' : '#0046FF')};
+  background-color: ${(props) => (props.isOrange ? '#FF9762' : '#759AFC')};
+  border-color: ${(props) => (props.isOrange ? '#FF9762' : '#759AFC')};
   font-family: NanumSquareOTF;
 `;
 
 const Date = styled(BaseText)`
   color: #17171B;
-  border-color: ${(props) => (props.isOrange ? '#FF8040' : '#0046FF')};
+  border-color: ${(props) => (props.isOrange ? '#FF9762' : '#759AFC')};
   font-family: NanumSquareOTF;
 `;
 
@@ -97,7 +97,7 @@ const Title = styled.h3`
   font-family: SUIT;
 
   ${Card}:hover & {
-    color: ${(props) => (props.isOrange ? '#FF8040' : '#0046FF')};
+    color: ${(props) => (props.isOrange ? '#FF9762' : '#0046FF')};
   }
 `;
 
