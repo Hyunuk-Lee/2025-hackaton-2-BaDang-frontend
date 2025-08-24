@@ -240,32 +240,36 @@ function CoworkMap({ onStoreClick }) {
 
     const categoryIndex =
       newBig && newSub ? subCategoryOptions[newBig].indexOf(newSub) + 1 : null;
- try {
-    // 요청 데이터 구성
-    const requestData = {};
-    if (searchKeyword.trim()) requestData.query = searchKeyword.trim();
-    if (!searchKeyword.trim()) {
-      if (typeIndex) requestData.type = typeIndex;
-      if (categoryIndex) requestData.category = categoryIndex;
-    }
-    requestData.storeId = storeId || "";
+    try {
+      // 요청 데이터 구성
+      const requestData = {};
+      if (searchKeyword.trim()) requestData.query = searchKeyword.trim();
+      if (!searchKeyword.trim()) {
+        if (typeIndex) requestData.type = typeIndex;
+        if (categoryIndex) requestData.category = categoryIndex;
+      }
+      requestData.storeId = storeId || "";
 
-    const res = await axios.post(`${backendUrl}/collaboration/search`, requestData, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
+      const res = await axios.post(
+        `${backendUrl}/collaboration/search`,
+        requestData,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
 
-    if (res.data?.data?.store) {
-      setPlaces(res.data.data.store);
+      if (res.data?.data?.store) {
+        setPlaces(res.data.data.store);
+      }
+    } catch (err) {
+      console.error(err);
     }
-  } catch (err) {
-    console.error(err);
-  }
   };
 
   const moveToPlace = (place) => {
     if (!map) return;
-    const pos = new window.kakao.maps.LatLng(place.latitude, place.longitude);
+    const pos = new window.kakao.maps.LatLng(place.store.latitude, place.store.longitude);
     map.setCenter(pos);
     clearMarkers();
     const marker = new window.kakao.maps.Marker({ map, position: pos });
@@ -340,6 +344,7 @@ function CoworkMap({ onStoreClick }) {
                 moveToPlace(place);
                 onStoreClick && onStoreClick(place);
               }}
+              
             />
           ))}
         </ButtonsBox>

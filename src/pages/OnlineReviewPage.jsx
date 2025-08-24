@@ -93,7 +93,10 @@ const GridContainer = styled.div`
   gap: 24px;
   padding: 36px 120px;
 `;
-
+const KeywordBox = styled.div`
+  white-space: pre-line; 
+  word-break: keep-all;
+`;
 const StyledReviewSection = styled(ReviewSection)`
   &.section-1 {  width: 588px; }
   &.section-2 {  width: 587px; }
@@ -195,7 +198,10 @@ function OnlineReviewPage() {
           className="section-4"
           popupImage={Popup2}
         >
+          <KeywordBox>
           {analysisKeyword}
+
+          </KeywordBox>
         </StyledReviewSection>
 
         <StyledReviewSection
