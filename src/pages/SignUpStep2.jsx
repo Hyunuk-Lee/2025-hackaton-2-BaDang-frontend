@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Robot from "../assets/Icons/WelcomeRobotIcon.svg";
 
 /** 2단계: 전화번호 / 주소 / 가게명 */
-export default function SignUpStep2({ defaultValues, onNext }) {
+export default function SignUpStep2({ defaultValues, onNext, onBack }) {
   const [form, setForm] = useState({
     phoneNumber: defaultValues?.phoneNumber ?? "",
     address: defaultValues?.address ?? "",
@@ -91,6 +91,11 @@ export default function SignUpStep2({ defaultValues, onNext }) {
           </Group>
 
           <Footer>
+            {onBack && (
+              <BackButton type="button" onClick={onBack}>
+                이전
+              </BackButton>
+            )}
             <NextButton type="submit" disabled={!isValid}>다음</NextButton>
           </Footer>
         </Form>
@@ -166,6 +171,19 @@ const Error = styled.span`
 
 const Footer = styled.div`
   display: flex; justify-content: center; margin-top: 12px;
+`;
+
+const BackButton = styled.button`
+  height: 56px;
+  padding: 0 18px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #17171b;
+  font-weight: 700;
+  cursor: pointer;
+  &:hover { background: #f9fafb; }
+  margin-right: 15px;
 `;
 
 const NextButton = styled.button`
