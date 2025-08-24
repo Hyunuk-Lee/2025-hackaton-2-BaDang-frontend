@@ -39,7 +39,6 @@ const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 42px;
-  height: 418px;
 `;
 
 export default function MainPage() {
