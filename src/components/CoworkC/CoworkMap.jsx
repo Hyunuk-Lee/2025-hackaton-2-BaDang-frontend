@@ -240,29 +240,27 @@ function CoworkMap({ onStoreClick }) {
 
     const categoryIndex =
       newBig && newSub ? subCategoryOptions[newBig].indexOf(newSub) + 1 : null;
-
-    try {
-      // 쿠키 기반 인증 적용
-      const res = await axios.post(
-        `${backendUrl}/collaboration/search`,
-        {
-          type: typeIndex || "",
-          category: categoryIndex || "",
-          query: searchKeyword.trim() || "",
-          storeId: storeId || "",
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-
-      if (res.data?.data?.store) {
-        setPlaces(res.data.data.store);
-      }
-    } catch (err) {
-      console.error(err);
+ try {
+    // 요청 데이터 구성
+    const requestData = {};
+    if (searchKeyword.trim()) requestData.query = searchKeyword.trim();
+    if (!searchKeyword.trim()) {
+      if (typeIndex) requestData.type = typeIndex;
+      if (categoryIndex) requestData.category = categoryIndex;
     }
+    requestData.storeId = storeId || "";
+
+    const res = await axios.post(`${backendUrl}/collaboration/search`, requestData, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
+
+    if (res.data?.data?.store) {
+      setPlaces(res.data.data.store);
+    }
+  } catch (err) {
+    console.error(err);
+  }
   };
 
   const moveToPlace = (place) => {
