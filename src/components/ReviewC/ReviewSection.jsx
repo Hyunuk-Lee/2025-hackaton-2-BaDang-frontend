@@ -60,6 +60,9 @@ position: absolute;
 `;
 
 const SectionContent = styled.div`
+ word-break: keep-all;
+  overflow-wrap: break-word;
+  white-space: normal;
   display: flex;
   text-align: start;
   align-items: flex-start;
