@@ -230,9 +230,9 @@ function CoworkPage() {
       {/* 협업 리스트 */}
       <ListBox>
         <StoreList
-          title="협업 요청받은 가게"
+          title="나와 협업하고 싶어하는 가게"
           stores={requestStores}
-          nothing="아직 협업 요청을 보낸 가게가 없어요"
+          nothing="아직 아무도 요청을 보내지 않았어요! 먼저 협업을 요청해보세요!"
           onClick={(storeItem) => handleStoreClick(storeItem, "cowork")}
         />
         <StoreList
@@ -242,7 +242,7 @@ function CoworkPage() {
           onClick={(storeItem) => handleStoreClick(storeItem, "sent")}
         />
         <StoreList
-          title="협업 중인 가게"
+          title="현재 협업 중인 가게"
           stores={collaborateStores}
           nothing="아직 협업 중인 가게가 없어요"
           onClick={(storeItem) => handleStoreClick(storeItem, "list")}
