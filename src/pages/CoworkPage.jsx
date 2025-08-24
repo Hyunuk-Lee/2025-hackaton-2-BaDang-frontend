@@ -47,7 +47,7 @@ function CoworkPage() {
         const response = await axios.get(`${backendUrl}/main/me`, {
           withCredentials: true,
         });
-        console.log("me response:", response.data);
+        // console.log("me response:", response.data);
         const id = response.data.stores[0]?.id;
         setStoreId(id);
         setIsWilling(response.data.isWillingCollaborate);
@@ -62,30 +62,44 @@ function CoworkPage() {
 
   // 협업 관련 데이터 가져오기
   useEffect(() => {
-      if (!storeId) return;
+    if (!storeId) return;
     const fetchData = async () => {
       try {
         // 협업 데이터 3개 병렬 요청
         const [activeRes, responseRes, requestRes] = await Promise.all([
+          // 중인
           axios.get(`${backendUrl}/collaboration/active`, {
             withCredentials: true,
           }),
+          // 요청받은
           axios.get(`${backendUrl}/collaboration/response`, {
             withCredentials: true,
           }),
+          // 요청한
           axios.get(`${backendUrl}/collaboration/request`, {
             withCredentials: true,
           }),
         ]);
-console.log("협업 신청 보낸 가게 (response)", responseRes.data.data);
+        console.log(
+          "협업 신청 보낸 가게 (response)",
+          responseRes.data.data.responseStores
+        );
 
-       setRequestStores(
-  responseRes.data.data.responseStores.map(item => item.requestStore)
-);
+        setRequestStores(
+          responseRes.data.data.responseStores.map((item) => ({
+            allData: item.requestStore,
+            collaborateId: item.collaborateId,
+            initialMemo: item.initialMemo,
+          }))
+        );
 
-setRequestSentStores(
-  requestRes.data.data.requestStores.map(item => item.requestStore)
-);
+        setRequestSentStores(
+          requestRes.data.data.requestStores.map((item) => ({
+            allData: item.responseStore,
+            collaborateId: item.collaborateId,
+            initialMemo: item.initialMemo,
+          }))
+        );
 
         setCollaborateStores(
           activeRes.data.data.collaborateStores.map(
@@ -96,14 +110,16 @@ setRequestSentStores(
         console.error("협업 데이터 불러오기 실패:", err);
       }
     };
-    console.log("가게 목록",requestStores);
+    // console.log("가게 목록", requestStores);
     fetchData();
   }, [storeId, backendUrl]);
 
   // 팝업 열기/닫기 핸들러
-  const handleStoreClick = (store, type) => {
-    setPopup({ type, store });
+  const handleStoreClick = (storeItem, type) => {
+    // storeItem은 이미 { allData, collaborateId, initialMemo } 형태
+    setPopup({ type, store: storeItem });
   };
+
   const handleClosePopup = () => {
     setPopup({ type: null, store: null });
   };
@@ -132,14 +148,18 @@ setRequestSentStores(
         <RequestPopup store={popup.store} onClose={handleClosePopup} />
       )}
       {popup.type === "cowork" && popup.store && (
-        <CoworkPopup
-          storeName={popup.store.name}
-          storeType={popup.store.type}
-          requestContent={popup.store.requestContent || ""}
-          collaborateId={popup.store.collaborateId}
-          onClose={handleClosePopup}
-        />
+        <>
+          <CoworkPopup
+            storeName={popup.store.allData.name} // allData 안 필드 사용
+            storeType={popup.store.allData.type} // 필요 시 allData.type
+            requestContent={popup.store.initialMemo || ""}
+            collaborateId={popup.store.collaborateId}
+            onClose={handleClosePopup}
+          />
+        {console.log("모든 정보",popup.store.allData)}
+        </>
       )}
+
       {popup.type === "list" && popup.store && (
         <StoreListPopup
           onClose={handleClosePopup}
@@ -157,13 +177,13 @@ setRequestSentStores(
           title="협업 요청받은 가게"
           stores={requestStores}
           nothing="아직 협업을 요청한 가게가 없어요"
-          onClick={(store) => handleStoreClick(store, "cowork")}
+          onClick={(storeItem) => handleStoreClick(storeItem, "cowork")}
         />
         <StoreList
           title="협업 요청한 가게"
           stores={requestSentStores}
           nothing="아직 협업 요청을 보내지 않으셨어요"
-          onClick={(store) => handleStoreClick(store, "cowork")}
+          // onClick={(storeItem) => handleStoreClick(storeItem, "list")}
         />
         <StoreList
           title="협업 중인 가게"
