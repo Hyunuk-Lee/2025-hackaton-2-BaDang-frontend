@@ -71,14 +71,14 @@ const TabBtn = styled.button`
   transition: all 0.2s ease;
 
   &.active {
-    background: #0046ff;    /* 브랜드 블루 */
+    background: #759AFC;    /* 브랜드 블루 */
     color: #fff;
   }
   &:hover:not(.active) {
     color: #759afc;
   }
   &:focus-visible {
-    outline: 2px solid #0046ff;
+    outline: 2px solid #759AFC;
     outline-offset: 2px;
   }
 `;
