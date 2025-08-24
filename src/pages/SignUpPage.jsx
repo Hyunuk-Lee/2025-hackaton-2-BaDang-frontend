@@ -95,7 +95,7 @@ export default function SignUpPage() {
             },
             isWillingCollaborate: finalData.consent === "동의",
             storeContent: finalData.note,
-            menus: finalData.items.map(item => ({ name: item.name, price: Number(item.price) })),
+            menu: finalData.items.map(item => ({ name: item.name, price: Number(item.price) })),
         };
     
         try {

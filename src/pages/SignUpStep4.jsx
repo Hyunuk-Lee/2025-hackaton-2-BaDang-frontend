@@ -1,25 +1,50 @@
-// pages/SignUpStep4.jsx
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react"; // ✅ useEffect 추가
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Robot from "../assets/Icons/WelcomeRobotIcon.svg";
-
+// ... (나머지 import 및 상수 선언은 동일)
 const GENDER_OPTIONS = ["남자", "여자"];
 const AGE_OPTIONS = ["청소년", "청년", "중년층", "노년층", "외국인"];
 const CONSENT_OPTIONS = ["동의", "비동의"];
 
-export default function SignUpStep4({ defaultValues, onComplete, onBack, isChanged }) {
+// ✅ Set과 Array를 비교하기 위한 헬퍼 함수
+const areSetsEqual = (setA, setB) => {
+  if (setA.size !== setB.size) return false;
+  for (const item of setA) {
+    if (!setB.has(item)) return false;
+  }
+  return true;
+};
+
+export default function SignUpStep4({ defaultValues, onComplete, onBack }) { // ❌ isChanged prop 제거
   const navigate = useNavigate();
 
   const [gender, setGender] = useState(defaultValues?.gender ?? "");
   const [ages, setAges] = useState(new Set(defaultValues?.ages ?? []));
   const [consent, setConsent] = useState(defaultValues?.consent ?? "");
   const [note, setNote] = useState(defaultValues?.note ?? "");
+  
+  // ✅ 변경 여부를 추적하는 내부 상태 추가
+  const [isChanged, setIsChanged] = useState(false);
 
   const isValid = useMemo(
     () => !!gender && ages.size > 0 && !!consent,
     [gender, ages, consent]
   );
+
+  // ✅ useEffect를 사용해 현재 상태가 defaultValues와 다른지 감지
+  useEffect(() => {
+    const defaultAgesSet = new Set(defaultValues?.ages ?? []);
+    
+    const changed =
+      gender !== (defaultValues?.gender ?? "") ||
+      !areSetsEqual(ages, defaultAgesSet) ||
+      consent !== (defaultValues?.consent ?? "") ||
+      note !== (defaultValues?.note ?? "");
+      
+    setIsChanged(changed);
+  }, [gender, ages, consent, note, defaultValues]);
+
 
   const toggleAge = (label) => {
     setAges((prev) => {
@@ -40,22 +65,17 @@ export default function SignUpStep4({ defaultValues, onComplete, onBack, isChang
       note: note.trim(),
     };
     
-    // ❌ 임시 로그인 처리 및 페이지 이동 코드 제거
-    // localStorage.setItem("isAuthed", "1");
-    // navigate("/");
-
-    // ✅ 부모 컴포넌트에 데이터만 전달하는 역할만 수행
     onComplete?.(payload);
   };
 
   return (
     <Page>
       <Card>
+        {/* ... Header, Form 등 나머지 JSX는 기존과 동일 ... */}
         <Header>
           <h1>바당 시작하기</h1>
           <RobotImg src={Robot} alt="" />
         </Header>
-
         <Form onSubmit={handleSubmit}>
           {/* 성별 */}
           <Field>
@@ -104,7 +124,6 @@ export default function SignUpStep4({ defaultValues, onComplete, onBack, isChang
                 </Tooltip>
               </Help>
             </LabelWithHelp>
-
             <ChipsRow>
               {CONSENT_OPTIONS.map((c) => (
                 <Chip
@@ -142,17 +161,16 @@ export default function SignUpStep4({ defaultValues, onComplete, onBack, isChang
               rows={6}
             />
           </Field>
-
+          
           <Footer>
-            {/* ✅ onBack을 위한 이전 버튼 추가 */}
             {onBack && (
-                <BackButton type="button" onClick={onBack}>
-                    이전
-                </BackButton>
+              <BackButton type="button" onClick={onBack}>
+                이전
+              </BackButton>
             )}
-            {/* ✅ 2. SubmitButton의 disabled 조건에 !isChanged를 추가합니다. */}
+            {/* ✅ 이제 내부 isChanged 상태를 사용합니다. */}
             <SubmitButton type="submit" disabled={!isValid || !isChanged}>
-                완료
+              완료
             </SubmitButton>
           </Footer>
         </Form>
@@ -161,7 +179,8 @@ export default function SignUpStep4({ defaultValues, onComplete, onBack, isChang
   );
 }
 
-/* ---------- styled ---------- */
+/* ---------- styled-components 코드는 기존과 동일 ---------- */
+// ... (Page, Card, Header, Form, Field 등 모든 스타일 컴포넌트)
 const Page = styled.div`
   min-height: 100vh;
   display: flex;
@@ -317,7 +336,6 @@ const Textarea = styled.textarea`
 const Footer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 8px;
 `;
 
 const SubmitButton = styled.button`
