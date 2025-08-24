@@ -8,7 +8,7 @@ const GENDER_OPTIONS = ["남자", "여자"];
 const AGE_OPTIONS = ["청소년", "청년", "중년층", "노년층", "외국인"];
 const CONSENT_OPTIONS = ["동의", "비동의"];
 
-export default function SignUpStep4({ defaultValues, onComplete }) {
+export default function SignUpStep4({ defaultValues, onComplete, onBack, isChanged }) {
   const navigate = useNavigate();
 
   const [gender, setGender] = useState(defaultValues?.gender ?? "");
@@ -144,8 +144,15 @@ export default function SignUpStep4({ defaultValues, onComplete }) {
           </Field>
 
           <Footer>
-            <SubmitButton type="submit" disabled={!isValid}>
-              완료
+            {/* ✅ onBack을 위한 이전 버튼 추가 */}
+            {onBack && (
+                <BackButton type="button" onClick={onBack}>
+                    이전
+                </BackButton>
+            )}
+            {/* ✅ 2. SubmitButton의 disabled 조건에 !isChanged를 추가합니다. */}
+            <SubmitButton type="submit" disabled={!isValid || !isChanged}>
+                완료
             </SubmitButton>
           </Footer>
         </Form>
@@ -314,7 +321,8 @@ const Footer = styled.div`
 `;
 
 const SubmitButton = styled.button`
-  width: 70%;
+  flex: 1; /* 너비를 유연하게 조절 */
+  max-width: 520px;
   height: 56px;
   border: none;
   border-radius: 14px;
@@ -333,4 +341,17 @@ const SubmitButton = styled.button`
   &:active:not(:disabled) {
     transform: translateY(1px);
   }
+`;
+
+const BackButton = styled.button`
+  height: 56px;
+  padding: 0 24px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #17171b;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  &:hover { background: #f9fafb; }
 `;
