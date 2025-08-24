@@ -7,7 +7,7 @@ const Wrap = styled.form`
   align-items: center;
   gap: 10px;
   background: #ffffff;
-  border: 1px solid #0046ff;
+  border: 1px solid #759AFC;
   border-radius: 50px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.06);
   width: 620px;
@@ -54,7 +54,7 @@ const ClearBtn = styled.button`
 
 const SearchBtn = styled.button`
   border: none;
-  background: #0046ff;
+  background: #759AFC;
   color: #fff;
   border-radius: 0 80px 80px 0;
   padding: 8px 14px;
