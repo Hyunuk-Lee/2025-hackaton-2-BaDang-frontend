@@ -72,7 +72,7 @@ export default function LoginPage() {
           <Tagline>
             <p>매주 받아보는 맞춤형 분석</p>
             <strong>
-              AI로 <em>바</em>뀌는 <orange>당</orange>신의 가게
+              AI로 <orange>바</orange>뀌는 <em>당</em>신의 가게
             </strong>
           </Tagline>
         </Head>
@@ -158,10 +158,10 @@ const Wordmark = styled.div`
   line-height: 1;
   letter-spacing: 0.5px;
   font-family: GangwonEduPower;
-  .ba {
+  .dang {
     color: #5f74ff;
   }
-  .dang {
+  .ba {
     color: #ff8040;
     margin-left: 2px;
   }
