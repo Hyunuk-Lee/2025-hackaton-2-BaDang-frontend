@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
     const verifyUser = async () => {
       try {
         // 백엔드에 추가된 /main/me/ API를 호출합니다.
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/main/me`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/main/me/`, {
           method: 'GET',
           credentials: 'include', // 인증을 위해 쿠키를 함께 보냅니다.
         });
