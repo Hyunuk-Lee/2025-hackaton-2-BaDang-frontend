@@ -26,20 +26,30 @@ const Pill = styled.button`
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 16px;
-  border-radius: 28px;
-  border: 1px solid #e5e7eb;
+  height: 63px;
+  border-radius: 20px;
+  display: flex;
+padding: 20px 16px;
+align-items: center;
+gap: 10px;
+  border: 1px solid #d8d8d8;
   background: #fff;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 24.3px 0 rgba(0, 0, 0, 0.06);
   cursor: pointer;
 
-  &:hover { background: #f9fafb; }
+  &:hover {
+    background: #f9fafb;
+  }
 `;
 
 const Label = styled.span`
-  font-size: 18px;
-  color: #17171b;
-  font-weight: 600;
+  color: var(--Typo-Black01, #494954);
+  text-align: center;
+  font-family: NanumSquareOTF;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 `;
 
 const Icon = styled.img`
@@ -50,13 +60,13 @@ const Icon = styled.img`
 
 const Badge = styled.span`
   position: absolute;
-  top: -8px;
-  right: -8px;
+  top: -5px;
+  right: -5px;
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
   border-radius: 999px;
-  background: #ff6a3d;
+  background: #ff9762;
   color: #fff;
   font-size: 12px;
   line-height: 20px;

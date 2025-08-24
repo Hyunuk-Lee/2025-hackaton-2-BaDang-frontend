@@ -28,7 +28,7 @@ export default function CategoryTabs({ options = [], value, onChange }) {
       {options.map((opt, i) => {
         const active = value === opt;
         return (
-          <TabBtn
+          <BtnWrapper
             key={opt}
             ref={(el) => (btnRefs.current[i] = el)}
             className={active ? "active" : ""}
@@ -38,8 +38,8 @@ export default function CategoryTabs({ options = [], value, onChange }) {
             aria-selected={active}
             tabIndex={active ? 0 : -1}
           >
-            {opt}
-          </TabBtn>
+            <BtnText>{opt}</BtnText>
+          </BtnWrapper>
         );
       })}
     </Group>
@@ -50,35 +50,50 @@ export default function CategoryTabs({ options = [], value, onChange }) {
 const Group = styled.div`
   display: inline-flex;
   align-items: center;
-  padding: 4px;
   border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  width: 295px;
+  height: 63px;
+border: 1px solid var(--Primary-gray2, #D8D8D8);
+background: var(--Background-White, #FFF);
+
+/* button shadow */
+box-shadow: 0 8px 24.3px 0 rgba(0, 0, 0, 0.06);
 `;
 
-const TabBtn = styled.button`
-  display: inline-flex;
-  align-items: center;
+const BtnWrapper = styled.div`
+  display: flex;
+  padding: 20px 15px;
   justify-content: center;
-  padding: 10px 14px;
-  border: none;
-  background: transparent;
-  color: #494954;
-  border-radius: 16px;
-  font-weight: 600;
+  align-items: center;
+  gap: 10px;
+  border-radius: 20px;
   cursor: pointer;
+  background: transparent;
   transition: all 0.2s ease;
 
   &.active {
-    background: #759AFC;    /* 브랜드 블루 */
-    color: #fff;
+    background: var(--Primary-Blue01, #759AFC);
+    color: #FAF9F6;
   }
+
   &:hover:not(.active) {
-    color: #759afc;
+    color: #759AFC;
   }
-  &:focus-visible {
-    outline: 2px solid #759AFC;
-    outline-offset: 2px;
+`;
+
+const BtnText = styled.div`
+  color: #494954;
+  text-align: center;
+  font-family: "NanumSquareOTF";
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  transition: all 0.2s ease;
+
+  ${BtnWrapper}.active & {
+    color: #FFF;
+  }
+
+  ${BtnWrapper}:hover:not(.active) & {
+    color: #759AFC;
   }
 `;
