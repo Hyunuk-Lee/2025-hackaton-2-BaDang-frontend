@@ -37,8 +37,13 @@ export default function NewsDetailPage() {
             </MetaRow>
 
             <Hero
-              src={newsletter?.thumbnail || newsletter?.imageUrl || ""}
-              alt=""
+              src={
+                newsletter?.keywords?.[0]?.keywordImageUrl ||
+                newsletter?.thumbnail ||
+                newsletter?.imageUrl ||
+                ""
+              }
+              alt="뉴스레터 썸네일"
             />
 
             {/* 썸네일 여기에 넣어야 함....!*/}
