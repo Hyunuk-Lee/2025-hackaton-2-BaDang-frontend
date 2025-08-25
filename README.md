@@ -3,7 +3,7 @@ BaDang(바당)은 AI를 활용한 시니어 자영업자 대상 온라인 가게
 이 저장소는 BaDang의 프론트엔드 개발을 담당하는 레포지토리입니다.
 <br />
 <br />
-<img width="3284" height="1975" alt="image" src="https://github.com/user-attachments/assets/5e51ab8c-de57-4a81-8b10-fd7d96b7e7f1" />
+<img width="3284" height="1975" alt="image"/>
 
 
 
