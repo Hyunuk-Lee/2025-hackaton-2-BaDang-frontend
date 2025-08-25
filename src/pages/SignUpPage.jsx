@@ -1,10 +1,10 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SignUpStep1 from "./SignUpStep1";
-import SignUpStep2 from "./SignUpStep2";
-import SignUpStep3 from "./SignUpStep3";
-import SignUpStep4 from "./SignUpStep4";
+import SignUpStep1 from "../components/SignupC/SignUpStep1";
+import SignUpStep2 from "../components/SignupC/SignUpStep2";
+import SignUpStep3 from "../components/SignupC/SignUpStep3";
+import SignUpStep4 from "../components/SignupC/SignUpStep4";
 
 // --- Data Transformation Maps (for API) ---
 const CATEGORY_MAIN_MAP = { "음식": 1, "소매": 2, "생활서비스": 3, "교육": 4, "숙박": 5, "오락/여가": 6, "의료/건강": 7, "운송/자동차": 8, "제조/생산": 9, "기타": 10 };
