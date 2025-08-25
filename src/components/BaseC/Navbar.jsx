@@ -1,73 +1,73 @@
-// components/BaseC/Navbar.jsx 
+// components/BaseC/Navbar.jsx
 
-import styled from 'styled-components'; 
-import React from 'react'; 
-import { NavLink, Link, useNavigate } from 'react-router-dom'; // NavLink가 기본으로 사용됩니다.
-import logoSvg from '../../assets/BadangLogo.svg'; 
-import { useAuth } from '../../context/AuthContext'; 
-import NavItem from './NavItem';
+import styled from "styled-components";
+import React from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom"; // NavLink가 기본으로 사용됩니다.
+import logoSvg from "../../assets/BadangLogo.svg";
+import { useAuth } from "../../context/AuthContext";
+import NavItem from "./NavItem";
 
 // 로고 및 기본 컨테이너 스타일 (기존과 동일)
 const Logo = styled.img`
-    height: 48px;
-    cursor: pointer;
+  height: 48px;
+  cursor: pointer;
 `;
 
 const NavbarContainer = styled.div`
-    z-index: 999;
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    box-sizing: border-box;
-    height: 80px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px 5%;
-    background: #FFF;
-    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.05);
-    gap: 16px;
-    border-bottom: 1px solid #D8D8D8;
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  box-sizing: border-box;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 5%;
+  background: #fff;
+  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.05);
+  gap: 16px;
+  border-bottom: 1px solid #d8d8d8;
 `;
 
 const Menu = styled.ul`
-    width: 602px;
-    height: 41px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-inline-start: 0;  
-    gap: 16px;
+  width: 602px;
+  height: 41px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline-start: 0;
+  gap: 16px;
 `;
 
 const MenuItem = styled.li`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
 `;
 
 const LogOut = styled.div`
-    color: #9D9D9D;
-    text-align: center;
-    font-family: "Nanum Gothic";
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    white-space: nowrap;
-    cursor: pointer;
+  color: #9d9d9d;
+  text-align: center;
+  font-family: "Nanum Gothic";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+  cursor: pointer;
 `;
 
 const LogoLink = styled(Link)`
-    color: inherit;      
-    text-decoration: none;    
-    display: flex;          
-    justify-content: center;
-    align-items: center;
-    width: auto;
-    height: 100%;
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  height: 100%;
 `;
 
 const StyledNavItem = styled.div`
@@ -112,46 +112,55 @@ function Navbar() {
   // ✅ 수정된 로그아웃 핸들러
   const handleLogout = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/main/logout`, {
-        method: 'POST',
-        credentials: 'include', // HttpOnly 쿠키 전송을 위해 필수
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/main/logout`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.error("서버 로그아웃 실패:", errorData.detail || '오류가 발생했습니다.');
+      if (res.ok) {
+        // Successful server logout -> clear client state and redirect
+        logout();
+        return;
       }
 
+      // If server returned error, log and clear client state only
+      const errorData = await res.json().catch(() => ({}));
+      console.error(
+        "서버 로그아웃 실패:",
+        errorData.detail || "오류가 발생했습니다."
+      );
+      logout();
     } catch (error) {
       console.error("로그아웃 요청 중 오류 발생:", error);
-    } finally {
-      // API 요청 성공 여부와 관계없이 클라이언트 측 상태를 초기화하고 로그인 페이지로 보냅니다.
-      logout(); // 전역 상태(AuthContext) 초기화
-      navigate('/login'); // 로그인 페이지로 이동
+      // Network or other error: clear client state to avoid stuck UI
+      logout();
     }
   };
 
   return (
     <NavbarContainer>
-        <LogoLink to="/">
-            <Logo src={logoSvg} alt="badang logo" />
-        </LogoLink>
-        <Menu>
-            {/* ✅ onClick 대신 to prop을 사용합니다. */}
-            <MenuItem>
-                <NavItem to="/online-review">온라인 리뷰 분석</NavItem>
-            </MenuItem>
-            <MenuItem>
-                <NavItem to="/custom-keyword-news">맞춤형 키워드 뉴스</NavItem>
-            </MenuItem>
-            <MenuItem>
-                <NavItem to="/collaboration-management">협업 관리</NavItem>
-            </MenuItem>
-            <MenuItem>
-                <NavItem to="/profile-edit">정보 수정</NavItem>
-            </MenuItem>
-        </Menu>
-        <LogOut onClick={handleLogout}>로그아웃</LogOut>
+      <LogoLink to="/">
+        <Logo src={logoSvg} alt="badang logo" />
+      </LogoLink>
+      <Menu>
+        {/* ✅ onClick 대신 to prop을 사용합니다. */}
+        <MenuItem>
+          <NavItem to="/online-review">온라인 리뷰 분석</NavItem>
+        </MenuItem>
+        <MenuItem>
+          <NavItem to="/custom-keyword-news">맞춤형 키워드 뉴스</NavItem>
+        </MenuItem>
+        <MenuItem>
+          <NavItem to="/collaboration-management">협업 관리</NavItem>
+        </MenuItem>
+        <MenuItem>
+          <NavItem to="/profile-edit">정보 수정</NavItem>
+        </MenuItem>
+      </Menu>
+      <LogOut onClick={handleLogout}>로그아웃</LogOut>
     </NavbarContainer>
   );
 }
