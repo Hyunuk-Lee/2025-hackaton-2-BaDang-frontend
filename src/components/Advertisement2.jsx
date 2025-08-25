@@ -1,7 +1,7 @@
 // components/Advertisement2.jsx
 import React from 'react';
 import styled from 'styled-components';
-
+import AdImage from "../assets/Ads/AdNews.svg";
 const AdContainer = styled.div`
 display: flex;
 height: 195px;
@@ -13,7 +13,7 @@ margin-top: 65px;
 background: var(--Typo-Black01, #494954);
 `;
 
-const AdContent = styled.div`
+const AdContent = styled.img`
 color: var(--Typo-White01, #FAF9F6);
 
 /* B1 */
@@ -27,7 +27,7 @@ line-height: 28px; /* 140% */
 function Advertisement2() {
   return (
     <AdContainer>
-      <AdContent>광고 영역</AdContent>
+      <AdContent src={AdImage}></AdContent>
     </AdContainer>
   );
 }
