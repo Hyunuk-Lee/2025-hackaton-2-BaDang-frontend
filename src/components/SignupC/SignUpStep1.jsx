@@ -1,7 +1,7 @@
 // pages/SignUpStep1.jsx
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
-import Robot from "../assets/Icons/WelcomeRobotIcon.svg";
+import Robot from "../../assets/Icons/WelcomeRobotIcon.svg";
 
 export default function SignUpStep1({ defaultValues, onNext }) {
   const [form, setForm] = useState({
