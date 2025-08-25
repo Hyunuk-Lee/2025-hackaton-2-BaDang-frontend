@@ -60,7 +60,7 @@ export default function SignUpStep4({ defaultValues, onComplete, onBack }) { // 
 
     const payload = {
       gender,
-      ages: Array.from(ages),
+      age,
       consent,
       note: note.trim(),
     };
