@@ -1,5 +1,5 @@
 // components/BigCards.jsx
-import React, { use } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import NewsCard from '../NewsCard';
 import BlueCardBtn from './BigCardBtn';
@@ -17,41 +17,43 @@ const Page = styled.div`
 `;
 
 function BigCards({ newsletters = [] }) {
-  // 최신 뉴스 2개만 선택
   const latestTwo = newsletters.slice(0, 2);
+
+  // 항상 2자리 유지 → 부족한 부분은 null로 채움
+  const filledCards = [
+    ...latestTwo,
+    ...Array(2 - latestTwo.length).fill(null)
+  ];
 
   return (
     <Page>
-      {latestTwo.length > 0 ? (
-        latestTwo.map((item) => {
-          const { year, month, week } = useNewsletterWeek(item.createdAt);
+      {filledCards.map((item, idx) => {
+        if (!item) {
           return (
-            <NewsCard
-              key={item.id}
-              id={item.id}
-              title={item.title}
-              keyword={item.keywords?.[0]?.keywordName || ''}
-              date={`${year}년 ${month}월 ${week}주차`}
-              imageUrl={item.keywords?.[0]?.keywordImageUrl || ''}
-              isOrange={item.isUserMade}
-              liked={item.isLiked}
-              onToggleLike={item.onToggleLike}
-              onClick={item.onClick}
+            <NothingCard
+              key={`nothing-${idx}`}
+              imageUrl={idx === 0 ? NotebookIcon : RobotIcon}
+              text="앗! 아직 보고서가 없어요"
             />
           );
-        })
-      ) : (
-        <>
-          <NothingCard
-            imageUrl={NotebookIcon}
-            text="앗! 아직 보고서가 없어요"
+        }
+
+        const { year, month, week } = useNewsletterWeek(item.createdAt);
+        return (
+          <NewsCard
+            key={item.id}
+            id={item.id}
+            title={item.title}
+            keyword={item.keywords?.[0]?.keywordName || ''}
+            date={`${year}년 ${month}월 ${week}주차`}
+            imageUrl={item.keywords?.[0]?.keywordImageUrl || ''}
+            isOrange={item.isUserMade}
+            liked={item.isLiked}
+            onToggleLike={item.onToggleLike}
+            onClick={item.onClick}
           />
-          <NothingCard
-          imageUrl={RobotIcon}
-          text="앗! 아직 보고서가 없어요"
-        />
-        </>
-      )}
+        );
+      })}
 
       <BlueCardBtn />
     </Page>
