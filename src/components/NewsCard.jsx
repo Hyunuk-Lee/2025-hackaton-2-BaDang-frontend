@@ -142,7 +142,7 @@ function NewsCard({
       <Textbox>
         <KeyWrapper>
           <Keyword isOrange={isOrange}>{keyword|| "키워드 불러오는 중..."}</Keyword>
-          <Date isOrange={isOrange}>{date|| "날짜 불러오는 중..."}</Date>
+          <Date isOrange={isOrange}>{isOrange ? "사용자 생성 보고서" : date}</Date>
         </KeyWrapper>
         <Title isOrange={isOrange}>{title}</Title>
       </Textbox>
