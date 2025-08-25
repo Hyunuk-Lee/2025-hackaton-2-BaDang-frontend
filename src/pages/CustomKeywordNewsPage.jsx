@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import NewsCard from "../components/NewsCard";
@@ -113,6 +113,39 @@ export default function CustomKeywordNewsPage() {
   const [favoriteOnly, setFavoriteOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 1;
+
+  // 페이지 진입 시(또는 storeId 변경시) 서버에 자동 생성 요청
+  useEffect(() => {
+    if (!storeId) return;
+
+    const generate = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/newsletter/newsletters/${storeId}/generate`,
+          {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        if (res.ok) {
+          console.log("뉴스레터 자동생성 요청 성공");
+          // 생성 후 목록을 즉시 반영하려면 페이지 리로드 또는 리스트 재요청 필요
+          // 여기서는 간단히 페이지를 새로고침하여 최신 목록을 가져옵니다.
+          window.location.reload();
+        } else {
+          const err = await res.json().catch(() => null);
+          console.warn("뉴스레터 자동생성 실패:", err);
+        }
+      } catch (e) {
+        console.error("뉴스레터 자동생성 중 오류:", e);
+      }
+    };
+
+    generate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storeId]);
 
   // 전체 목록
   const {
