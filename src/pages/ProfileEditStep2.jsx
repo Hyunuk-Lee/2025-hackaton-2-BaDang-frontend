@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react"; // ✅ useEffect 추가
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import Robot from "../assets/Icons/WelcomeRobotIcon.svg";
 // ... (나머지 import 및 상수 선언은 동일)
 const GENDER_OPTIONS = ["남자", "여자"];
 const AGE_OPTIONS = ["청소년", "청년", "중년층", "노년층", "외국인"];
@@ -20,38 +19,31 @@ export default function ProfileEditStep2({ defaultValues, onComplete, onBack }) 
   const navigate = useNavigate();
 
   const [gender, setGender] = useState(defaultValues?.gender ?? "");
-  const [ages, setAges] = useState(new Set(defaultValues?.ages ?? []));
+  const [age, setAge] = useState(defaultValues?.ages?.[0] ?? "");  // Set에서 string으로 변경
   const [consent, setConsent] = useState(defaultValues?.consent ?? "");
   const [note, setNote] = useState(defaultValues?.note ?? "");
-  
+
   // ✅ 변경 여부를 추적하는 내부 상태 추가
   const [isChanged, setIsChanged] = useState(false);
 
   const isValid = useMemo(
-    () => !!gender && ages.size > 0 && !!consent,
-    [gender, ages, consent]
+    () => !!gender && !!age && !!consent,  // age는 단일 선택 값
+    [gender, age, consent]
   );
 
   // ✅ useEffect를 사용해 현재 상태가 defaultValues와 다른지 감지
   useEffect(() => {
-    const defaultAgesSet = new Set(defaultValues?.ages ?? []);
-    
     const changed =
       gender !== (defaultValues?.gender ?? "") ||
-      !areSetsEqual(ages, defaultAgesSet) ||
+      age !== (defaultValues?.ages?.[0] ?? "") ||  // 단일 선택으로 변경된 나이대 비교
       consent !== (defaultValues?.consent ?? "") ||
       note !== (defaultValues?.note ?? "");
       
     setIsChanged(changed);
-  }, [gender, ages, consent, note, defaultValues]);
+  }, [gender, age, consent, note, defaultValues]);
 
-
-  const toggleAge = (label) => {
-    setAges((prev) => {
-      const next = new Set(prev);
-      next.has(label) ? next.delete(label) : next.add(label);
-      return next;
-    });
+  const handleAgeSelect = (label) => {
+    setAge(label);  // 단일 선택으로 설정
   };
 
   const handleSubmit = (e) => {
@@ -60,7 +52,7 @@ export default function ProfileEditStep2({ defaultValues, onComplete, onBack }) 
 
     const payload = {
       gender,
-      ages: Array.from(ages),
+      ages: [age],  // 단일 값 배열로 전달
       consent,
       note: note.trim(),
     };
@@ -90,7 +82,7 @@ export default function ProfileEditStep2({ defaultValues, onComplete, onBack }) 
             </ChipsRow>
           </Field>
 
-          {/* 나이대 (다중선택) */}
+          {/* 나이대 (단일선택) */}
           <Field>
             <FieldLabel>주요 고객 나이대</FieldLabel>
             <ChipsRow>
@@ -98,8 +90,8 @@ export default function ProfileEditStep2({ defaultValues, onComplete, onBack }) 
                 <Chip
                   key={a}
                   type="button"
-                  active={ages.has(a)}
-                  onClick={() => toggleAge(a)}
+                  active={age === a}  // 단일 선택 값
+                  onClick={() => handleAgeSelect(a)}  // 클릭 시 해당 나이대만 선택
                 >
                   {a}
                 </Chip>
