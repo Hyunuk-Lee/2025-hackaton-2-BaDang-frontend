@@ -28,7 +28,7 @@ export default function NewsDetailPage() {
             <Title>{newsletter?.title}</Title>
 
             <MetaRow>
-              <ChipPrimary>{newsletter?.keyword}</ChipPrimary>
+              <ChipPrimary>{newsletter?.keywords[0].keywordName}</ChipPrimary>
               <ChipLine>{newsletter?.createdAt}</ChipLine>
               <LikeBtn type="button" onClick={() => toggleLike(id)}>
                 찜하기
@@ -79,11 +79,15 @@ const IssueBadge = styled.span`
   height: 28px;
   padding: 0 10px;
   border-radius: 999px;
-  background: #ff6a3d;
-  color: #fff;
-  font-weight: 800;
-  font-size: 14px;
-  margin-bottom: 12px;
+  background: #FF9762;
+
+color: var(--Typo-White01, #FAF9F6);
+text-align: center;
+font-family: NanumSquareOTF;
+font-size: 20px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
 `;
 
 const Title = styled.h1`
@@ -104,36 +108,55 @@ const MetaRow = styled.div`
 `;
 
 const ChipBase = styled.span`
-  display: inline-flex;
-  align-items: center;
-  height: 52px;
-  padding: 0 12px;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 14px;
+height: 63px;
+display: flex;
+padding: 20px 15px;
+justify-content: center;
+align-items: center;
+gap: 10px;
+text-align: center;
+font-family: NanumSquareOTF;
+font-size: 20px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
 `;
 
 const ChipPrimary = styled(ChipBase)`
-  color: #fff;
-  background: #0046ff;
+ border-radius: 20px;
+background:  #759AFC;
+color:  #FAF9F6;
+
 `;
 
 const ChipLine = styled(ChipBase)`
-  color: #17171b;
-  border: 1px solid #e5e7eb;
-  background: #fff;
+  border-radius: 20px;
+border: 1.5px solid #759AFC;
+background: #FFF;
+color:  #494954;
+
 `;
 
 const LikeBtn = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 52px;
-  padding: 0 12px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  color: #17171b;
+all: unset; 
+
+color: var(--Typo-Black01, #494954);
+text-align: center;
+font-family: NanumSquareOTF;
+font-size: 20px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+display: flex;
+padding: 20px 16px;
+align-items: center;
+gap: 10px;
+border-radius: 20px;
+border: 1px solid var(--Primary-gray2, #D8D8D8);
+background: var(--Background-White, #FFF);
+
+/* button shadow */
+box-shadow: 0 8px 24.3px 0 rgba(0, 0, 0, 0.06);
   cursor: pointer;
 
   &:hover {
