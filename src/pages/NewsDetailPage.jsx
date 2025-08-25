@@ -19,7 +19,7 @@ export default function NewsDetailPage() {
   return (
     <Page>
       <Article>
-        <IssueBadge>{id}</IssueBadge>
+        <IssueBadge>{id}번째 기사</IssueBadge>
 
         {loading && <div>불러오는 중...</div>}
         {error && <div>데이터 로드 실패: {String(error)}</div>}
@@ -78,8 +78,9 @@ const IssueBadge = styled.span`
   min-width: 40px;
   height: 28px;
   padding: 0 10px;
-  border-radius: 999px;
+  border-radius: 20px;
   background: #FF9762;
+  margin-bottom: 10px;
 
 color: var(--Typo-White01, #FAF9F6);
 text-align: center;
@@ -139,7 +140,7 @@ color:  #494954;
 
 const LikeBtn = styled.button`
 all: unset; 
-
+max-height: 63px;
 color: var(--Typo-Black01, #494954);
 text-align: center;
 font-family: NanumSquareOTF;
@@ -152,6 +153,7 @@ padding: 20px 16px;
 align-items: center;
 gap: 10px;
 border-radius: 20px;
+box-sizing: border-box;
 border: 1px solid var(--Primary-gray2, #D8D8D8);
 background: var(--Background-White, #FFF);
 
