@@ -12,6 +12,7 @@ import Popup3 from "../assets/Popups/Popup3.svg";
 import Popup4 from "../assets/Popups/Popup4.svg";
 import LoadingPage from "./LoadingPage"
 import useGetReviewAnalysis from "../hooks/queries/useGetReviewAnalysis";
+import NoReview from "../components/ReviewC/NoReview";
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -120,10 +121,7 @@ function OnlineReviewPage() {
   }
 
   console.log(analysisData);
-  // 분석 데이터가 없을 경우 처리
-  if (analysisData?.error) {
-    return <div>{analysisData.message || "분석 결과가 없습니다."}</div>;
-  }
+ 
   const {
     storeName,
     goodPoint,
@@ -137,16 +135,22 @@ function OnlineReviewPage() {
   return (
     <PageContainer>
       <Header>
-        <TitleSection>
-          <Title>
-            <TitleLarge>{storeName}</TitleLarge>
-            <TitleSmall>의 전체 리뷰 분석</TitleSmall>
-          </Title>
-          <QWrapper>
-            <QIcon src={BigQ} alt="BigQ" />
-            <BigQPopup src={Popup1} alt="Popup1" />
-          </QWrapper>
-        </TitleSection>
+       {/* storeName이 있을 때만 TitleSection 렌더링 */}
+      {/* 왼쪽 TitleSection, 없으면 빈 div로 공간 확보 */}
+  {storeName ? (
+    <TitleSection>
+      <Title>
+        <TitleLarge>{storeName}</TitleLarge>
+        <TitleSmall>의 전체 리뷰 분석</TitleSmall>
+      </Title>
+      <QWrapper>
+        <QIcon src={BigQ} alt="BigQ" />
+        <BigQPopup src={Popup1} alt="Popup1" />
+      </QWrapper>
+    </TitleSection>
+  ) : (
+    <div style={{ width: "auto" }} /> // 또는 고정 width를 줘도 됨
+  )}
 
         <TimeBtnGroup
           options={options}
@@ -154,7 +158,10 @@ function OnlineReviewPage() {
           onSelect={setSelectedOption}
         />
       </Header>
-
+    {/* 분석 데이터 없으면 NoReview 렌더링, 있으면 GridContainer */}
+      {analysisData?.error ? (
+        <NoReview />
+      ) : (
       <GridContainer>
         <StyledReviewSection
           title="좋았어요"
@@ -213,7 +220,7 @@ function OnlineReviewPage() {
         >
           {analysisSolution}
         </StyledReviewSection>
-      </GridContainer>
+      </GridContainer>)}
     </PageContainer>
   );
 }
