@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react"; // ✅ useEffect 추가
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import Robot from "../assets/Icons/WelcomeRobotIcon.svg";
+import Robot from "../../assets/Icons/WelcomeRobotIcon.svg";
 // ... (나머지 import 및 상수 선언은 동일)
 const GENDER_OPTIONS = ["남자", "여자"];
 const AGE_OPTIONS = ["청소년", "청년", "중년층", "노년층", "외국인"];

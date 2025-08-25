@@ -1,7 +1,7 @@
 // pages/SignUpStep2.jsx
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
-import Robot from "../assets/Icons/WelcomeRobotIcon.svg";
+import Robot from "../../assets/Icons/WelcomeRobotIcon.svg";
 
 /** 2단계: 전화번호 / 주소 / 가게명 */
 export default function SignUpStep2({ defaultValues, onNext, onBack }) {

@@ -1,7 +1,7 @@
 // pages/SignUpStep3.jsx
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
-import Robot from "../assets/Icons/WelcomeRobotIcon.svg";
+import Robot from "../../assets/Icons/WelcomeRobotIcon.svg";
 
 /** ====== 업종 옵션 ====== */
 const CATEGORY_OPTIONS = {
