@@ -6,7 +6,7 @@ import styled from "styled-components";
 import BigQ from "../assets/Popups/BigQ.svg";
 import GoodIcon from "../assets/Icons/GoodIcon.svg";
 import BadIcon from "../assets/Icons/BadIcon.svg";
-import Popup1 from "../assets/Popups/Popup1.svg";
+import Popup1 from "../assets/Popups/Popup1.png";
 import Popup2 from "../assets/Popups/Popup2.svg";
 import Popup3 from "../assets/Popups/Popup3.svg";
 import Popup4 from "../assets/Popups/Popup4.svg";
@@ -120,7 +120,10 @@ function OnlineReviewPage() {
   }
 
   console.log(analysisData);
-
+  // 분석 데이터가 없을 경우 처리
+  if (analysisData?.error) {
+    return <div>{analysisData.message || "분석 결과가 없습니다."}</div>;
+  }
   const {
     storeName,
     goodPoint,
